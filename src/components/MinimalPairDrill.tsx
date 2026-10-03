@@ -3,6 +3,7 @@ import { MinimalPairItem } from '../types/phonics';
 import { audioService } from '../services/audioService';
 import { KidButton } from './KidButton';
 import { Volume2, HelpCircle, CheckCircle2, Award } from 'lucide-react';
+import { CartoonSun, CartoonDog, CartoonCat } from './illustrations/KidIllustrations';
 import confetti from 'canvas-confetti';
 
 interface MinimalPairDrillProps {
@@ -14,10 +15,6 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
   const [isAnswered, setIsAnswered] = useState<boolean>(false);
   const [showHint, setShowHint] = useState<boolean>(false);
-
-  const handlePlayPrompt = () => {
-    audioService.speakEnglish(drill.questionPrompt, 0.85);
-  };
 
   const handleHearTargetWord = () => {
     audioService.speakEnglish(drill.targetWord, 0.85);
@@ -52,6 +49,14 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
 
   const isCorrect = selectedWord === drill.targetWord;
 
+  const renderVisual = (word: string, fallbackEmoji: string) => {
+    const lower = word.toLowerCase();
+    if (lower === 'sun') return <CartoonSun size={70} className="mb-2" />;
+    if (lower === 'dog') return <CartoonDog size={70} className="mb-2" />;
+    if (lower === 'cat') return <CartoonCat size={70} className="mb-2" />;
+    return <span className="text-6xl md:text-7xl mb-2">{fallbackEmoji}</span>;
+  };
+
   return (
     <div className="bg-gradient-to-b from-purple-100 to-pink-50 rounded-3xl p-6 border-4 border-purple-300 shadow-xl max-w-xl mx-auto text-center">
       <div className="flex items-center justify-between mb-4">
@@ -60,7 +65,7 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
         </span>
         <button
           onClick={() => setShowHint(!showHint)}
-          className="p-1.5 bg-white text-purple-700 hover:text-purple-900 rounded-full shadow border border-purple-200"
+          className="p-1.5 bg-white text-purple-700 hover:text-purple-900 rounded-full shadow border border-purple-200 cursor-pointer"
           title="Xem bí quyết phụ huynh"
         >
           <HelpCircle className="w-5 h-5" />
@@ -80,7 +85,7 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
         </h3>
         <button
           onClick={handleHearTargetWord}
-          className="inline-flex items-center space-x-2 bg-purple-500 hover:bg-purple-600 text-white font-extrabold px-5 py-2.5 rounded-2xl shadow-md active:scale-95 transition-transform"
+          className="inline-flex items-center space-x-2 bg-purple-500 hover:bg-purple-600 text-white font-extrabold px-5 py-2.5 rounded-2xl shadow-md active:scale-95 transition-transform cursor-pointer"
         >
           <Volume2 className="w-5 h-5 animate-pulse" />
           <span>Nghe từ cần tìm</span>
@@ -98,7 +103,7 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
               : 'bg-white border-purple-200 hover:border-purple-400'
           }`}
         >
-          <span className="text-6xl md:text-7xl mb-2">{drill.targetEmoji}</span>
+          {renderVisual(drill.targetWord, drill.targetEmoji)}
           <span className="text-2xl font-black text-purple-950 uppercase">{drill.targetWord}</span>
           {isAnswered && isCorrect && (
             <span className="mt-2 text-xs font-bold text-emerald-700 flex items-center space-x-1">
@@ -117,7 +122,7 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
               : 'bg-white border-purple-200 hover:border-purple-400'
           }`}
         >
-          <span className="text-6xl md:text-7xl mb-2">{drill.distractorEmoji}</span>
+          {renderVisual(drill.distractorWord, drill.distractorEmoji)}
           <span className="text-2xl font-black text-purple-950 uppercase">{drill.distractorWord}</span>
           {isAnswered && selectedWord === drill.distractorWord && (
             <span className="mt-2 text-xs font-bold text-amber-700">
@@ -143,7 +148,7 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
           ) : (
             <div className="space-y-3">
               <p className="text-sm font-bold text-purple-900">
-                Hãy nghe lại xem âm /p/ thổi hơi gió mát thế nào nhé!
+                Hãy nghe lại xem âm phân biệt gió thế nào nhé!
               </p>
               <KidButton variant="secondary" size="md" onClick={handleHearTargetWord}>
                 🔊 Nghe Lại Mẫu

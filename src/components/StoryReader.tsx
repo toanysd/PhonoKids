@@ -5,6 +5,11 @@ import { childSpeechService, SpeechEvaluationResult } from '../services/speechRe
 import { storageService } from '../services/storageService';
 import { KidButton } from './KidButton';
 import { 
+  CartoonCat, 
+  CartoonDog, 
+  CartoonSun 
+} from './illustrations/KidIllustrations';
+import { 
   ChevronLeft, 
   ChevronRight, 
   Volume2, 
@@ -98,7 +103,6 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
     
     // Check if Parent has granted microphone consent in Parent Dashboard
     if (!settings.isMicrophoneConsentGranted) {
-      // Gentle alternative: Leo pronounces for child, no guilt or frustration
       audioService.speakEnglish(target, 0.8);
       setMicNotice('🎙️ Microphone đang tắt để bảo vệ riêng tư. Leo đã đọc mẫu cho bé nghe!');
       setTimeout(() => setMicNotice(null), 4000);
@@ -127,7 +131,6 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
   };
 
   const handleAnswerComprehension = (isCorrect: boolean) => {
-    // Purely celebratory touch-to-answer, never blocks
     if (isCorrect) {
       audioService.playSuccessJingle();
       try {
@@ -162,13 +165,20 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
     }
   };
 
+  const renderHotspotVisual = (hs: Hotspot) => {
+    if (hs.soundName === 'meow') return <CartoonCat size={85} className="filter drop-shadow-md" />;
+    if (hs.soundName === 'bark') return <CartoonDog size={85} className="filter drop-shadow-md" />;
+    if (hs.soundName === 'sun_chime') return <CartoonSun size={85} className="filter drop-shadow-md animate-spin" />;
+    return <span className="text-5xl md:text-6xl filter drop-shadow-md">{hs.emoji}</span>;
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-2">
       {/* Top Bar Navigation */}
       <div className="flex items-center justify-between mb-4">
         <button
           onClick={onBackToHome}
-          className="flex items-center space-x-1.5 bg-white/90 hover:bg-white text-amber-900 font-extrabold px-4 py-2 rounded-2xl shadow border-2 border-amber-200 active:scale-95 transition-transform"
+          className="flex items-center space-x-1.5 bg-white/90 hover:bg-white text-amber-900 font-extrabold px-4 py-2 rounded-2xl shadow border-2 border-amber-200 active:scale-95 transition-transform cursor-pointer"
         >
           <Home className="w-5 h-5 text-amber-600" />
           <span>Thư Viện Truyện</span>
@@ -208,16 +218,16 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
                   isTapped ? 'scale-125 z-20' : 'hover:scale-110 z-10'
                 }`}
               >
-                <div className={`text-6xl md:text-7xl filter drop-shadow-md ${
+                <div className={`flex items-center justify-center ${
                   hs.animationType === 'jump' && isTapped ? 'animate-bounce' :
                   hs.animationType === 'spin' && isTapped ? 'animate-spin' :
                   hs.animationType === 'shake' && isTapped ? 'animate-wiggle' : ''
                 }`}>
-                  {hs.emoji}
+                  {renderHotspotVisual(hs)}
                 </div>
 
                 {isTapped && hs.speechText && (
-                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-amber-400 text-amber-950 font-black text-xs px-3 py-1.5 rounded-2xl shadow-lg whitespace-nowrap animate-bounce">
+                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-amber-400 text-amber-950 font-black text-xs px-3 py-1.5 rounded-2xl shadow-lg whitespace-nowrap animate-bounce z-30">
                     {hs.speechText}
                   </div>
                 )}
@@ -302,7 +312,7 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
                 <button
                   key={opt.id}
                   onClick={() => handleAnswerComprehension(opt.isCorrect)}
-                  className="bg-white hover:bg-amber-50 border-3 border-amber-400 rounded-2xl p-2.5 flex items-center justify-center space-x-2 active:scale-95 transition-all shadow"
+                  className="bg-white hover:bg-amber-50 border-3 border-amber-400 rounded-2xl p-2.5 flex items-center justify-center space-x-2 active:scale-95 transition-all shadow cursor-pointer"
                 >
                   <span className="text-2xl">{opt.emoji}</span>
                   <span className="font-extrabold text-amber-950 text-sm md:text-base">{opt.text}</span>

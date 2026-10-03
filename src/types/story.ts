@@ -42,8 +42,10 @@ export interface StoryPage {
 export interface DecodableStory {
   id: string;
   title: string;
-  level: 1 | 2 | 3;
+  level: 1 | 2 | 3 | 4;
   levelName: string;
+  stage: 1 | 2 | 3 | 4;
+  ageBand: string;
   coverEmoji: string;
   summaryVi: string;
   targetPhonics: string[];

@@ -3,6 +3,7 @@ export interface PhonemeInfo {
   grapheme: string; // 's'
   ipa: string; // '/s/'
   group: number; // 1 to 7
+  stage: 1 | 2 | 3 | 4; // 1: 3-4yo, 2: 4-5yo, 3: 5-6yo, 4: 6-8yo
   soundDescription: string;
   sampleWords: {
     word: string;
@@ -26,6 +27,9 @@ export interface PhonemeInfo {
 
 export interface PhonicsGroup {
   groupNumber: number;
+  stage: 1 | 2 | 3 | 4;
+  stageName: string;
+  ageBand: string;
   name: string;
   islandTheme: string;
   themeColor: string;

@@ -10,11 +10,10 @@ import { ParentDashboard } from './components/ParentDashboard';
 import { CharacterCompanion } from './components/CharacterCompanion';
 import { RestBreakModal } from './components/RestBreakModal';
 
-import { PhonicsGroup, PhonemeInfo } from './types/phonics';
+import { PhonemeInfo } from './types/phonics';
 import { DecodableStory } from './types/story';
 import { ChildProfile, SessionSettings } from './types/user';
 
-import { PHONEMES_DATA } from './data/phonicsGroups';
 import { storageService } from './services/storageService';
 import { audioService } from './services/audioService';
 
@@ -68,13 +67,9 @@ export const App: React.FC = () => {
     audioService.setSoundEnabled(nextState);
   };
 
-  const handleSelectGroup = (group: PhonicsGroup) => {
-    const firstPhonemeId = group.phonemes[0];
-    const phInfo = PHONEMES_DATA[firstPhonemeId];
-    if (phInfo) {
-      setActivePhoneme(phInfo);
-      setCurrentView('lesson');
-    }
+  const handleSelectPhoneme = (phInfo: PhonemeInfo) => {
+    setActivePhoneme(phInfo);
+    setCurrentView('lesson');
   };
 
   const handleFinishLesson = (phonemeId: string) => {
@@ -123,7 +118,7 @@ export const App: React.FC = () => {
         {currentView === 'island_map' && (
           <PhonicsIslandMap
             unlockedGroups={profile.unlockedGroups}
-            onSelectGroup={handleSelectGroup}
+            onSelectPhoneme={handleSelectPhoneme}
           />
         )}
 
