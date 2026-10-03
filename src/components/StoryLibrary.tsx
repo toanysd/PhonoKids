@@ -3,6 +3,7 @@ import { DECODABLE_STORIES } from '../data/stories';
 import { DecodableStory } from '../types/story';
 import { BookOpen, Sparkles, CheckCircle2, Filter } from 'lucide-react';
 import { audioService } from '../services/audioService';
+import { getStoryCoverVisual } from '../services/imageService';
 
 interface StoryLibraryProps {
   completedStories: string[];
@@ -25,29 +26,29 @@ export const StoryLibrary: React.FC<StoryLibraryProps> = ({
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-3">
-      <div className="text-center mb-6">
-        <div className="inline-flex items-center space-x-2 bg-amber-200/80 px-4 py-1.5 rounded-full border border-amber-300 text-amber-950 font-black text-xs md:text-sm mb-2">
-          <BookOpen className="w-4 h-4 text-amber-700" />
-          <span>Thư Viện Tranh Truyện Đọc Giải Mã (Decodable Readers)</span>
+    <div className="max-w-7xl mx-auto px-4 py-4">
+      <div className="text-center mb-8">
+        <div className="inline-flex items-center space-x-2 bg-amber-200/90 px-5 py-2 rounded-full border border-amber-300 text-amber-950 font-black text-sm mb-3 shadow-xs">
+          <BookOpen className="w-5 h-5 text-amber-700" />
+          <span>Thư Viện Tranh Truyện Ehon Đọc Giải Mã (Decodable Picture Books)</span>
         </div>
-        <h2 className="text-2xl md:text-4xl font-black text-amber-950 tracking-tight">
-          Cùng Khám Phá Thư Viện Truyện! 📚
+        <h2 className="text-3xl md:text-5xl font-black text-amber-950 tracking-tight">
+          Cùng Khám Phá Thư Viện Tranh Truyện Ehon! 📚
         </h2>
-        <p className="text-xs md:text-sm font-bold text-amber-800 mt-1 max-w-xl mx-auto">
-          Truyện tranh tương tác đa tầng theo lộ trình 4 cấp độ: Từ từ vựng 3 chữ cái đơn giản (CVC) đến vần phức tiểu học!
+        <p className="text-sm md:text-base font-bold text-amber-800 mt-2 max-w-2xl mx-auto">
+          Tranh vẽ cắt dán nghệ thuật nhiều màu sắc rực rỡ, tích hợp đọc giải mã âm tự nhiên từng từ theo 4 cấp độ từ mầm non đến tiểu học.
         </p>
 
         {/* Stage Filter */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mt-4 bg-white/80 p-2 rounded-2xl border-2 border-amber-200 shadow-xs max-w-3xl mx-auto">
+        <div className="flex flex-wrap items-center justify-center gap-2 mt-5 bg-white/90 p-2.5 rounded-2xl border-2 border-amber-200 shadow-md max-w-3xl mx-auto">
           <span className="text-xs font-black text-amber-900 flex items-center space-x-1 px-2">
-            <Filter className="w-3.5 h-3.5 text-amber-600" />
+            <Filter className="w-4 h-4 text-amber-600" />
             <span>Cấp độ:</span>
           </span>
 
           <button
             onClick={() => setSelectedStage('all')}
-            className={`px-3 py-1.5 rounded-xl font-black text-xs transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl font-black text-xs md:text-sm transition-all cursor-pointer ${
               selectedStage === 'all'
                 ? 'bg-amber-400 text-amber-950 shadow-xs'
                 : 'text-gray-600 hover:bg-amber-100'
@@ -58,7 +59,7 @@ export const StoryLibrary: React.FC<StoryLibraryProps> = ({
 
           <button
             onClick={() => setSelectedStage(1)}
-            className={`px-3 py-1.5 rounded-xl font-black text-xs transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl font-black text-xs md:text-sm transition-all cursor-pointer ${
               selectedStage === 1
                 ? 'bg-amber-400 text-amber-950 shadow-xs'
                 : 'text-gray-600 hover:bg-amber-100'
@@ -69,7 +70,7 @@ export const StoryLibrary: React.FC<StoryLibraryProps> = ({
 
           <button
             onClick={() => setSelectedStage(2)}
-            className={`px-3 py-1.5 rounded-xl font-black text-xs transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl font-black text-xs md:text-sm transition-all cursor-pointer ${
               selectedStage === 2
                 ? 'bg-amber-400 text-amber-950 shadow-xs'
                 : 'text-gray-600 hover:bg-amber-100'
@@ -80,7 +81,7 @@ export const StoryLibrary: React.FC<StoryLibraryProps> = ({
 
           <button
             onClick={() => setSelectedStage(3)}
-            className={`px-3 py-1.5 rounded-xl font-black text-xs transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl font-black text-xs md:text-sm transition-all cursor-pointer ${
               selectedStage === 3
                 ? 'bg-amber-400 text-amber-950 shadow-xs'
                 : 'text-gray-600 hover:bg-amber-100'
@@ -91,34 +92,36 @@ export const StoryLibrary: React.FC<StoryLibraryProps> = ({
 
           <button
             onClick={() => setSelectedStage(4)}
-            className={`px-3 py-1.5 rounded-xl font-black text-xs transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl font-black text-xs md:text-sm transition-all cursor-pointer ${
               selectedStage === 4
                 ? 'bg-amber-400 text-amber-950 shadow-xs'
                 : 'text-gray-600 hover:bg-amber-100'
             }`}
           >
-            Stage 4 (6–8t Tiểu học Lớp 1-2)
+            Stage 4 (6–8t Lớp 1-2)
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredStories.map((story) => {
           const isCompleted = completedStories.includes(story.id);
+          const visual = getStoryCoverVisual(story.id);
+
           return (
             <div
               key={story.id}
               onClick={() => handleStoryClick(story)}
-              className="bg-white rounded-3xl p-6 border-6 border-amber-300 hover:border-amber-400 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 active:scale-95 cursor-pointer flex flex-col justify-between"
+              className="bg-white rounded-3xl p-5 border-4 border-amber-300 hover:border-amber-500 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 active:scale-95 cursor-pointer flex flex-col justify-between group overflow-hidden"
             >
               <div>
                 {/* Level badge */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-1.5">
-                    <span className="text-[11px] font-black bg-amber-100 text-amber-900 px-3 py-1 rounded-full uppercase tracking-wider">
+                    <span className="text-xs font-black bg-amber-100 text-amber-900 px-3 py-1 rounded-full uppercase tracking-wider">
                       Level {story.level}
                     </span>
-                    <span className="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+                    <span className="text-[11px] font-bold text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full">
                       {story.ageBand}
                     </span>
                   </div>
@@ -131,39 +134,48 @@ export const StoryLibrary: React.FC<StoryLibraryProps> = ({
                   )}
                 </div>
 
-                {/* Big Cover Emoji */}
-                <div className="text-center py-5">
-                  <span className="text-7xl md:text-8xl block filter drop-shadow hover:scale-110 transition-transform">
-                    {story.coverEmoji}
-                  </span>
+                {/* Big Ehon Painted Artwork Cover */}
+                <div className="relative w-full h-52 sm:h-56 rounded-2xl overflow-hidden border-2 border-amber-200/90 shadow-md mb-4 bg-amber-50">
+                  <img
+                    src={visual.url}
+                    alt={visual.alt}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                  <div className="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-xs text-white text-[11px] font-black px-2.5 py-1 rounded-full flex items-center space-x-1 shadow">
+                    <span>🎨 Tranh Ehon</span>
+                  </div>
+                  <div className="absolute bottom-2 left-2 bg-white/90 backdrop-blur-xs text-amber-950 text-[10px] font-black px-2 py-0.5 rounded-lg border border-amber-200">
+                    {visual.alt}
+                  </div>
                 </div>
 
-                <h3 className="text-xl md:text-2xl font-black text-amber-950 text-center mb-1">
+                <h3 className="text-2xl font-black text-amber-950 text-center mb-1 group-hover:text-amber-700 transition-colors">
                   {story.title}
                 </h3>
-                <p className="text-xs font-bold text-amber-800 text-center mb-4 leading-relaxed">
+                <p className="text-xs md:text-sm font-bold text-amber-800 text-center mb-4 leading-relaxed line-clamp-2">
                   {story.summaryVi}
                 </p>
               </div>
 
               {/* Target Phonics badges */}
               <div className="pt-3 border-t-2 border-amber-100">
-                <div className="text-[10px] font-black text-amber-700 uppercase mb-1.5">
+                <div className="text-[10px] font-black text-amber-700 uppercase mb-2">
                   Âm vị rèn luyện trong bài:
                 </div>
                 <div className="flex flex-wrap gap-1.5 mb-4">
                   {story.targetPhonics.map((ph) => (
                     <span
                       key={ph}
-                      className="bg-amber-100 text-amber-950 font-black text-xs px-2.5 py-0.5 rounded-xl border border-amber-200"
+                      className="bg-amber-100 text-amber-950 font-black text-xs px-2.5 py-1 rounded-xl border border-amber-200"
                     >
                       /{ph}/
                     </span>
                   ))}
                 </div>
 
-                <button className="w-full py-3 bg-amber-400 hover:bg-amber-500 text-amber-950 font-black rounded-2xl shadow-md border-b-4 border-amber-500 flex items-center justify-center space-x-2 active:translate-y-0.5">
-                  <Sparkles className="w-4 h-4 text-amber-800" />
+                <button className="w-full py-3.5 bg-amber-400 hover:bg-amber-500 text-amber-950 font-black text-base rounded-2xl shadow-md border-b-4 border-amber-500 flex items-center justify-center space-x-2 active:translate-y-0.5 transition-all cursor-pointer">
+                  <Sparkles className="w-5 h-5 text-amber-800" />
                   <span>Mở Sách Ra Đọc</span>
                 </button>
               </div>

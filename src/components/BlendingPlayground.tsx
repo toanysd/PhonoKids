@@ -34,7 +34,7 @@ export const BlendingPlayground: React.FC<BlendingPlaygroundProps> = ({ onAddSta
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-4">
+    <div className="max-w-6xl mx-auto px-4 py-4">
       {/* Title */}
       <div className="text-center mb-6">
         <div className="inline-flex items-center space-x-2 bg-sky-200/80 px-4 py-1.5 rounded-full border border-sky-300 text-sky-950 font-black text-sm mb-2">

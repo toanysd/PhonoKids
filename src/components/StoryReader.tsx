@@ -3,12 +3,8 @@ import { DecodableStory, StoryPage, Hotspot } from '../types/story';
 import { audioService } from '../services/audioService';
 import { childSpeechService, SpeechEvaluationResult } from '../services/speechRecognition';
 import { storageService } from '../services/storageService';
+import { getStoryCoverVisual } from '../services/imageService';
 import { KidButton } from './KidButton';
-import { 
-  CartoonCat, 
-  CartoonDog, 
-  CartoonSun 
-} from './illustrations/KidIllustrations';
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -43,6 +39,7 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
   const settings = storageService.getSettings();
   const currentPage: StoryPage = story.pages[currentPageIndex];
   const isLastPage = currentPageIndex === story.pages.length - 1;
+  const storyVisual = getStoryCoverVisual(story.id);
 
   useEffect(() => {
     setActiveWordIndex(null);
@@ -64,7 +61,7 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
         setActiveWordIndex(i);
       }
       await audioService.speakEnglish(words[i].cleanWord, 0.82);
-      await new Promise(r => setTimeout(r, 100));
+      await new Promise(r => setTimeout(r, 120));
     }
 
     setActiveWordIndex(null);
@@ -95,7 +92,7 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
 
     setTimeout(() => {
       setActiveHotspot(null);
-    }, 2000);
+    }, 2200);
   };
 
   const handleRecordOrSpeak = () => {
@@ -165,48 +162,49 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
     }
   };
 
-  const renderHotspotVisual = (hs: Hotspot) => {
-    if (hs.soundName === 'meow') return <CartoonCat size={85} className="filter drop-shadow-md" />;
-    if (hs.soundName === 'bark') return <CartoonDog size={85} className="filter drop-shadow-md" />;
-    if (hs.soundName === 'sun_chime') return <CartoonSun size={85} className="filter drop-shadow-md animate-spin" />;
-    return <span className="text-5xl md:text-6xl filter drop-shadow-md">{hs.emoji}</span>;
-  };
-
   return (
-    <div className="max-w-4xl mx-auto px-4 py-2">
+    <div className="max-w-6xl mx-auto px-4 py-3">
       {/* Top Bar Navigation */}
       <div className="flex items-center justify-between mb-4">
         <button
           onClick={onBackToHome}
-          className="flex items-center space-x-1.5 bg-white/90 hover:bg-white text-amber-900 font-extrabold px-4 py-2 rounded-2xl shadow border-2 border-amber-200 active:scale-95 transition-transform cursor-pointer"
+          className="flex items-center space-x-2 bg-white/95 hover:bg-white text-amber-900 font-black px-4 py-2.5 rounded-2xl shadow-md border-2 border-amber-300 active:scale-95 transition-transform cursor-pointer"
         >
           <Home className="w-5 h-5 text-amber-600" />
-          <span>Thư Viện Truyện</span>
+          <span>Thư Viện Tranh Truyện</span>
         </button>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-3 bg-white/90 px-4 py-2 rounded-2xl border-2 border-amber-200 shadow-xs">
           <BookOpen className="w-5 h-5 text-amber-600" />
-          <span className="font-black text-amber-950 text-base md:text-lg">{story.title}</span>
-          <span className="text-xs bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-full">
+          <span className="font-black text-amber-950 text-base md:text-xl">{story.title}</span>
+          <span className="text-xs bg-amber-300 text-amber-950 font-black px-3 py-1 rounded-full shadow-xs">
             Trang {currentPageIndex + 1} / {story.pages.length}
           </span>
         </div>
       </div>
 
       {/* Main Interactive Book Canvas */}
-      <div className={`relative rounded-3xl border-8 border-amber-300 shadow-2xl p-6 md:p-8 transition-colors duration-500 overflow-hidden ${currentPage.backgroundTheme} min-h-[460px] flex flex-col justify-between`}>
+      <div className="relative rounded-3xl border-8 border-amber-300 shadow-2xl p-6 md:p-8 bg-amber-50/90 transition-colors duration-500 overflow-hidden min-h-[500px] flex flex-col justify-between">
         
-        {/* Scenery Background Floating Emojis */}
-        <div className="absolute top-4 right-6 text-7xl opacity-20 pointer-events-none select-none">
-          {currentPage.sceneryEmoji}
-        </div>
+        {/* Full-bleed Ehon Picture Book Illustration Scene Layer */}
+        <div className="relative w-full h-64 sm:h-80 md:h-96 rounded-2xl border-4 border-amber-300 shadow-lg overflow-hidden bg-amber-100 group">
+          <img
+            src={storyVisual.url}
+            alt={storyVisual.alt}
+            className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-700"
+          />
 
-        {/* Interactive Hotspots Layer */}
-        <div className="relative w-full h-44 md:h-56 rounded-2xl border-2 border-dashed border-amber-400/40 bg-white/30 backdrop-blur-xs flex items-center justify-center overflow-hidden">
-          <div className="absolute top-2 left-3 text-[11px] font-bold text-amber-900 bg-white/80 px-2.5 py-0.5 rounded-full">
-            ✨ Chạm nhân vật để tương tác
+          {/* Artistic watermark label */}
+          <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-xs text-white text-xs font-black px-3 py-1 rounded-full flex items-center space-x-1.5 shadow z-10">
+            <span>🎨 Tranh Ehon Sơn Dầu Cắt Dán</span>
           </div>
 
+          <div className="absolute top-3 right-3 bg-amber-300/90 backdrop-blur-xs text-amber-950 text-xs font-black px-3 py-1 rounded-full shadow z-10 flex items-center space-x-1">
+            <Sparkles className="w-3.5 h-3.5 text-amber-800" />
+            <span>Chạm các điểm sáng để tương tác</span>
+          </div>
+
+          {/* Interactive Hotspots Layer overlaid on Ehon Canvas */}
           {currentPage.hotspots.map((hs) => {
             const isTapped = activeHotspot === hs.id;
             return (
@@ -215,19 +213,21 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
                 style={{ left: `${hs.xPercent}%`, top: `${hs.yPercent}%` }}
                 onClick={() => handleTapHotspot(hs)}
                 className={`absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-300 ${
-                  isTapped ? 'scale-125 z-20' : 'hover:scale-110 z-10'
+                  isTapped ? 'scale-130 z-30' : 'hover:scale-115 z-20'
                 }`}
               >
-                <div className={`flex items-center justify-center ${
-                  hs.animationType === 'jump' && isTapped ? 'animate-bounce' :
-                  hs.animationType === 'spin' && isTapped ? 'animate-spin' :
-                  hs.animationType === 'shake' && isTapped ? 'animate-wiggle' : ''
+                {/* Glowing target button */}
+                <div className={`p-2.5 rounded-full shadow-2xl border-4 flex items-center space-x-1.5 transition-all ${
+                  isTapped
+                    ? 'bg-amber-400 border-white ring-4 ring-amber-300 animate-bounce'
+                    : 'bg-white/90 border-amber-400 hover:bg-amber-100 backdrop-blur-xs'
                 }`}>
-                  {renderHotspotVisual(hs)}
+                  <span className="text-2xl">{hs.emoji}</span>
+                  <span className="text-xs font-black text-amber-950 pr-1">{hs.label}</span>
                 </div>
 
                 {isTapped && hs.speechText && (
-                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-amber-400 text-amber-950 font-black text-xs px-3 py-1.5 rounded-2xl shadow-lg whitespace-nowrap animate-bounce z-30">
+                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-amber-400 text-amber-950 font-black text-sm px-3.5 py-1.5 rounded-2xl shadow-xl whitespace-nowrap animate-bounce z-40 border-2 border-white">
                     {hs.speechText}
                   </div>
                 )}
@@ -236,19 +236,19 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
           })}
         </div>
 
-        {/* Highlighting Sentence */}
-        <div className="my-5 bg-white/95 rounded-3xl p-5 md:p-6 border-4 border-amber-300 shadow-md text-center">
-          <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3">
+        {/* Highlighting Sentence with Large Decodable Typography */}
+        <div className="my-5 bg-white rounded-3xl p-6 md:p-8 border-4 border-amber-300 shadow-lg text-center">
+          <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
             {currentPage.wordsTiming.map((w, idx) => {
               const isHighlighted = settings.showWordHighlights && activeWordIndex === idx;
               return (
                 <button
                   key={idx}
                   onClick={() => handleTapWord(w.cleanWord, idx)}
-                  className={`text-2xl md:text-4xl font-black px-3 py-1.5 rounded-2xl transition-all duration-200 cursor-pointer ${
+                  className={`text-3xl md:text-5xl font-black px-4 py-2 rounded-2xl transition-all duration-200 cursor-pointer ${
                     isHighlighted
-                      ? 'bg-amber-400 text-amber-950 scale-110 shadow-lg ring-4 ring-amber-300'
-                      : 'text-amber-950 hover:bg-amber-100 hover:text-amber-900'
+                      ? 'bg-amber-400 text-amber-950 scale-110 shadow-xl ring-4 ring-amber-300'
+                      : 'text-amber-950 hover:bg-amber-100 hover:text-amber-900 border-2 border-amber-200/60'
                   }`}
                 >
                   {w.word}
@@ -257,65 +257,65 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
             })}
           </div>
 
-          <p className="mt-2 text-sm md:text-base font-bold text-amber-800">
+          <p className="mt-3 text-base md:text-lg font-bold text-amber-800">
             {currentPage.vietnameseMeaning}
           </p>
 
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-4">
             <KidButton
               variant="warning"
-              size="md"
+              size="lg"
               onClick={handleReadFullPage}
               disabled={isPlayingNarration}
             >
-              <Volume2 className="w-5 h-5 mr-1.5" />
+              <Volume2 className="w-6 h-6 mr-2" />
               <span>{isPlayingNarration ? 'Đang Đọc...' : 'Đọc Cả Trang'}</span>
             </KidButton>
 
             {currentPage.speakingTargetWord && (
               <KidButton
                 variant={isRecording ? 'accent' : 'secondary'}
-                size="md"
+                size="lg"
                 onClick={handleRecordOrSpeak}
               >
-                <Mic className={`w-5 h-5 mr-1.5 ${isRecording ? 'animate-ping' : ''}`} />
+                <Mic className={`w-6 h-6 mr-2 ${isRecording ? 'animate-ping' : ''}`} />
                 <span>{isRecording ? 'Đang Lắng Nghe...' : `Nghe / Nói: "${currentPage.speakingTargetWord}"`}</span>
               </KidButton>
             )}
           </div>
 
           {micNotice && (
-            <div className="mt-3 p-2 bg-sky-100 border border-sky-300 text-sky-950 rounded-xl text-xs font-bold flex items-center justify-center space-x-1 animate-fadeIn">
-              <Info className="w-4 h-4 text-sky-700 shrink-0" />
+            <div className="mt-3 p-3 bg-sky-100 border border-sky-300 text-sky-950 rounded-xl text-xs md:text-sm font-bold flex items-center justify-center space-x-2 animate-fadeIn">
+              <Info className="w-5 h-5 text-sky-700 shrink-0" />
               <span>{micNotice}</span>
             </div>
           )}
 
           {speechResult && (
-            <div className="mt-3 p-3 rounded-2xl border-2 text-center bg-emerald-100 border-emerald-400 text-emerald-950 animate-fadeIn">
-              <div className="font-black text-sm">{speechResult.encouragement}</div>
-              <div className="text-xs font-bold mt-0.5">{speechResult.feedbackVi}</div>
+            <div className="mt-3 p-3.5 rounded-2xl border-2 text-center bg-emerald-100 border-emerald-400 text-emerald-950 animate-fadeIn">
+              <div className="font-black text-base">{speechResult.encouragement}</div>
+              <div className="text-xs md:text-sm font-bold mt-0.5">{speechResult.feedbackVi}</div>
             </div>
           )}
         </div>
 
         {/* Touch-to-Answer Comprehension Check */}
         {currentPage.comprehension && (
-          <div className="bg-amber-200/90 rounded-2xl p-4 border-2 border-amber-300 mb-3">
-            <div className="flex items-center space-x-2 text-amber-950 font-black text-xs md:text-sm mb-2">
-              <Sparkles className="w-4 h-4 text-amber-700" />
-              <span>Tương tác vui: {currentPage.comprehension.questionText}</span>
+          <div className="bg-amber-200/90 rounded-2xl p-4 md:p-5 border-2 border-amber-300 mb-4">
+            <div className="flex items-center space-x-2 text-amber-950 font-black text-sm md:text-base mb-3">
+              <Sparkles className="w-5 h-5 text-amber-700" />
+              <span>Câu hỏi tương tác vui: {currentPage.comprehension.questionText}</span>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-4">
               {currentPage.comprehension.options.map((opt) => (
                 <button
                   key={opt.id}
                   onClick={() => handleAnswerComprehension(opt.isCorrect)}
-                  className="bg-white hover:bg-amber-50 border-3 border-amber-400 rounded-2xl p-2.5 flex items-center justify-center space-x-2 active:scale-95 transition-all shadow cursor-pointer"
+                  className="bg-white hover:bg-amber-50 border-4 border-amber-400 rounded-2xl p-3 md:p-4 flex items-center justify-center space-x-3 active:scale-95 transition-all shadow-md cursor-pointer"
                 >
-                  <span className="text-2xl">{opt.emoji}</span>
-                  <span className="font-extrabold text-amber-950 text-sm md:text-base">{opt.text}</span>
+                  <span className="text-3xl">{opt.emoji}</span>
+                  <span className="font-extrabold text-amber-950 text-base md:text-lg">{opt.text}</span>
                 </button>
               ))}
             </div>
@@ -326,11 +326,11 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
         <div className="flex items-center justify-between pt-2">
           <KidButton
             variant="secondary"
-            size="md"
+            size="lg"
             onClick={handlePrevPage}
             disabled={currentPageIndex === 0}
           >
-            <ChevronLeft className="w-5 h-5 mr-1" />
+            <ChevronLeft className="w-6 h-6 mr-1.5" />
             <span>Trang Trước</span>
           </KidButton>
 
@@ -339,8 +339,8 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
             size="lg"
             onClick={handleNextPage}
           >
-            <span>{isLastPage ? 'Hoàn Thành! 🏆' : 'Trang Tiếp'}</span>
-            {!isLastPage && <ChevronRight className="w-5 h-5 ml-1" />}
+            <span>{isLastPage ? 'Hoàn Thành Truyện! 🏆' : 'Trang Tiếp Theo'}</span>
+            {!isLastPage && <ChevronRight className="w-6 h-6 ml-1.5" />}
           </KidButton>
         </div>
 

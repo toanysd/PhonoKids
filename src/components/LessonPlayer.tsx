@@ -4,21 +4,16 @@ import { SoundVisemeGuide } from './SoundVisemeGuide';
 import { BubbleBlender } from './BubbleBlender';
 import { KidButton } from './KidButton';
 import { audioService } from '../services/audioService';
-import { 
-  CartoonSnake, 
-  CartoonApple, 
-  CartoonCat, 
-  CartoonDog, 
-  CartoonSun,
-  LeoCartoonMascot 
-} from './illustrations/KidIllustrations';
+import { getWordVisual } from '../services/imageService';
+import { LeoCartoonMascot } from './illustrations/KidIllustrations';
 import { 
   Volume2, 
   ArrowRight, 
   CheckCircle2, 
   ChevronLeft,
   Trophy,
-  Sparkles
+  Sparkles,
+  Palette
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -66,7 +61,7 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
     }
   };
 
-  // Safe dynamic font sizing for grapheme letters (No text overflowing or breaking outside circles)
+  // Safe dynamic font sizing for grapheme letters
   const getGraphemeFontClass = (text: string) => {
     const len = text.length;
     if (len <= 1) return 'text-6xl md:text-7xl';
@@ -75,47 +70,38 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
     return 'text-xl md:text-2xl font-bold tracking-tight';
   };
 
-  // Helper to render cute cartoon illustration if available
-  const renderFeaturedIllustration = () => {
-    switch (phoneme.id) {
-      case 's': return <CartoonSnake size={90} className="animate-float" />;
-      case 'a': return <CartoonApple size={90} className="animate-bounce-gentle" />;
-      case 'c': return <CartoonCat size={90} className="animate-float" />;
-      case 'd': return <CartoonDog size={90} className="animate-bounce-gentle" />;
-      case 'o': return <CartoonSun size={90} className="animate-spin" />;
-      default: return <LeoCartoonMascot size={90} className="animate-float" />;
-    }
-  };
+  const primaryWord = phoneme.sampleWords[0]?.word || 'cat';
+  const primaryVisual = getWordVisual(primaryWord);
 
   const stepsTitle = [
     'Làm Quen Âm Thanh',
     'Khẩu Hình Miệng Chuẩn',
     'Vận Động Toàn Thân (TPR)',
-    'Từ Vựng Tương Ứng',
+    'Từ Vựng Tương Ứng (Tranh Ehon)',
     'Thử Thách Ghép Vần',
     'Chiến Thắng!'
   ];
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-3">
-      {/* Top Breadcrumb & Back */}
-      <div className="flex items-center justify-between mb-4">
+    <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 md:px-6 py-3">
+      {/* Top Breadcrumb & Navigation Bar */}
+      <div className="flex items-center justify-between mb-3 px-2">
         <button
           onClick={onBack}
-          className="flex items-center space-x-1.5 bg-white/90 hover:bg-white text-amber-950 font-black px-4 py-2 rounded-2xl shadow border-2 border-amber-200 active:scale-95 transition-transform cursor-pointer"
+          className="flex items-center space-x-1.5 bg-white/95 hover:bg-white text-amber-950 font-black px-4 py-2.5 rounded-2xl shadow-md border-2 border-amber-200 active:scale-95 transition-transform cursor-pointer"
         >
           <ChevronLeft className="w-5 h-5 text-amber-600" />
-          <span>Quay Lại</span>
+          <span className="text-sm md:text-base">Quay Lại Đảo</span>
         </button>
 
         {/* Step Progress Pills */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 md:space-x-3 bg-white/80 px-4 py-2 rounded-2xl border border-amber-200 shadow-xs">
           {stepsTitle.map((title, idx) => (
             <div
               key={idx}
-              className={`w-3.5 h-3.5 rounded-full transition-all duration-300 ${
+              className={`w-3 md:w-3.5 h-3 md:h-3.5 rounded-full transition-all duration-300 ${
                 idx === currentStep
-                  ? 'bg-amber-500 scale-125 ring-2 ring-amber-300'
+                  ? 'bg-amber-500 scale-125 ring-3 ring-amber-300'
                   : idx < currentStep
                   ? 'bg-emerald-400'
                   : 'bg-amber-200'
@@ -125,68 +111,92 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
           ))}
         </div>
 
-        <span className="text-xs font-black text-amber-800 bg-amber-200 px-3 py-1 rounded-full">
+        <span className="text-xs md:text-sm font-black text-amber-900 bg-amber-200/90 px-3.5 py-1.5 rounded-full shadow-xs">
           Bước {currentStep + 1} / 6
         </span>
       </div>
 
-      {/* Main Step Canvas */}
-      <div className="bg-white/95 rounded-3xl p-6 md:p-8 border-6 border-amber-300 shadow-2xl min-h-[480px] flex flex-col justify-between">
+      {/* Main Full-Bleed Storybook Canvas (Expanded to fill screen comfortably) */}
+      <div className="bg-[#FFFDF9] rounded-3xl p-5 md:p-8 border-6 md:border-8 border-amber-300 shadow-2xl min-h-[580px] md:min-h-[660px] flex flex-col justify-between relative overflow-hidden">
         
-        {/* Step 0: Sound Introduction */}
+        {/* Subtle background paper texture hint */}
+        <div className="absolute top-2 right-4 text-xs font-bold text-amber-800/40 select-none flex items-center space-x-1">
+          <Palette className="w-3.5 h-3.5" />
+          <span>Ehon Storybook Canvas</span>
+        </div>
+
+        {/* ================= STEP 0: SOUND INTRODUCTION ================= */}
         {currentStep === 0 && (
           <div className="text-center py-2 animate-fadeIn flex flex-col items-center">
-            <span className="text-xs md:text-sm font-black text-amber-700 bg-amber-100 px-4 py-1 rounded-full uppercase tracking-wider mb-2">
+            <span className="text-xs md:text-sm font-black text-amber-800 bg-amber-100 px-4 py-1.5 rounded-full uppercase tracking-wider mb-2">
               {stepsTitle[0]} • Stage {phoneme.stage}
             </span>
 
-            {/* Header Titles with guaranteed spacing */}
-            <h2 className="text-2xl md:text-4xl font-black text-amber-950 mb-1">
+            <h2 className="text-3xl md:text-5xl font-black text-amber-950 mb-1">
               Chào Mừng Đến Với Âm /{phoneme.id}/!
             </h2>
-            <p className="text-sm md:text-base font-bold text-amber-800 max-w-md mx-auto mb-6">
+            <p className="text-sm md:text-lg font-bold text-amber-800 max-w-xl mx-auto mb-6">
               {phoneme.soundDescription}
             </p>
 
-            {/* Center Area: Chunky Letter Circle + Accompanying Cartoon Artwork */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 my-4">
-              {/* Giant Chunky Letter Circle (Controlled Dimensions & Clamped Font) */}
+            {/* Wide Hero Presentation: Grapheme Circle + Big Ehon Painted Plate */}
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 my-2 w-full max-w-4xl">
+              
+              {/* Clamped Chunky Letter Circle */}
               <button
                 onClick={() => audioService.speakPhoneme(phoneme.id, phoneme.ipa)}
-                className={`w-44 h-44 md:w-52 md:h-52 rounded-full border-8 border-white shadow-2xl flex flex-col items-center justify-center transform hover:scale-105 active:scale-95 transition-all cursor-pointer ${phoneme.color} text-amber-950 p-4 overflow-hidden relative`}
+                className={`w-48 h-48 md:w-60 md:h-60 rounded-full border-8 border-white shadow-2xl flex flex-col items-center justify-center transform hover:scale-105 active:scale-95 transition-all cursor-pointer ${phoneme.color} text-amber-950 p-4 overflow-hidden relative shrink-0`}
               >
                 <span className={`${getGraphemeFontClass(phoneme.grapheme)} font-black leading-none text-center block w-full px-2`}>
                   {phoneme.grapheme.toUpperCase()}
                 </span>
-                <span className="text-xl md:text-2xl font-black mt-2 font-mono bg-white/40 px-3 py-0.5 rounded-full">
+                <span className="text-xl md:text-2xl font-black mt-2 font-mono bg-white/40 px-4 py-0.5 rounded-full">
                   {phoneme.ipa}
                 </span>
-                <span className="text-[11px] font-black mt-2 bg-white/90 px-3 py-1 rounded-full flex items-center space-x-1 shadow-xs">
+                <span className="text-xs font-black mt-2 bg-white/95 px-3 py-1 rounded-full flex items-center space-x-1 shadow-xs">
                   <Volume2 className="w-3.5 h-3.5 text-amber-700" />
                   <span>Chạm nghe âm</span>
                 </span>
               </button>
 
-              {/* Accompanying Featured Cartoon Drawing */}
-              <div className="bg-amber-50 p-4 rounded-3xl border-3 border-amber-200 flex flex-col items-center justify-center shadow-md">
-                {renderFeaturedIllustration()}
-                <span className="text-xs font-black text-amber-900 mt-2">
-                  {phoneme.sampleWords[0]?.word.toUpperCase()} ({phoneme.sampleWords[0]?.meaningVi})
-                </span>
+              {/* Big Ehon Art Plate */}
+              <div 
+                onClick={() => audioService.speakEnglish(primaryWord, 0.85)}
+                className="w-full max-w-sm md:max-w-md bg-white rounded-3xl p-4 border-4 border-amber-300 shadow-xl flex flex-col items-center cursor-pointer hover:border-amber-400 transition-all transform hover:-translate-y-1"
+              >
+                <div className="w-full h-52 md:h-60 rounded-2xl overflow-hidden bg-amber-50 relative border-2 border-amber-200">
+                  <img
+                    src={primaryVisual.url}
+                    alt={primaryVisual.alt}
+                    className="w-full h-full object-cover rounded-2xl filter drop-shadow hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute top-2 left-2 bg-amber-400 text-amber-950 text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-xs">
+                    🎨 Tranh Sơn Dầu Ehon
+                  </div>
+                </div>
+                <div className="mt-3 text-center">
+                  <div className="text-3xl font-black text-amber-950 uppercase tracking-wide">
+                    {primaryWord}
+                  </div>
+                  <div className="text-sm font-bold text-amber-700">
+                    {phoneme.sampleWords[0]?.meaningVi} • <span className="underline">Chạm để nghe đọc</span> 🔊
+                  </div>
+                </div>
               </div>
+
             </div>
 
             <p className="text-xs md:text-sm font-extrabold text-amber-900 mt-4">
-              Chạm vào chữ cái to để nghe giọng phát âm chuẩn nhé!
+              Chạm vào chữ cái to hoặc tranh vẽ để nghe giọng phát âm chuẩn nhé!
             </p>
           </div>
         )}
 
-        {/* Step 1: Mouth Viseme Guide */}
+        {/* ================= STEP 1: MOUTH VISEME GUIDE ================= */}
         {currentStep === 1 && (
-          <div className="py-2 animate-fadeIn">
+          <div className="py-2 animate-fadeIn w-full">
             <div className="text-center mb-4">
-              <span className="text-xs md:text-sm font-black text-amber-700 bg-amber-100 px-4 py-1 rounded-full uppercase tracking-wider">
+              <span className="text-xs md:text-sm font-black text-amber-800 bg-amber-100 px-4 py-1.5 rounded-full uppercase tracking-wider">
                 {stepsTitle[1]}
               </span>
               <h2 className="text-2xl md:text-4xl font-black text-amber-950 mt-1">
@@ -197,29 +207,29 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
           </div>
         )}
 
-        {/* Step 2: TPR Action */}
+        {/* ================= STEP 2: TPR ACTION ================= */}
         {currentStep === 2 && (
-          <div className="text-center py-4 animate-fadeIn">
-            <span className="text-xs md:text-sm font-black text-orange-700 bg-orange-100 px-4 py-1 rounded-full uppercase tracking-wider">
+          <div className="text-center py-4 animate-fadeIn flex flex-col items-center">
+            <span className="text-xs md:text-sm font-black text-orange-800 bg-orange-100 px-4 py-1.5 rounded-full uppercase tracking-wider">
               {stepsTitle[2]}
             </span>
-            <h2 className="text-2xl md:text-4xl font-black text-amber-950 mt-2 mb-2">
+            <h2 className="text-3xl md:text-5xl font-black text-amber-950 mt-2 mb-2">
               Cùng Vận Động: {phoneme.tprAction.title}
             </h2>
-            <p className="text-sm font-bold text-amber-800 mb-6 max-w-lg mx-auto">
+            <p className="text-sm md:text-base font-bold text-amber-800 mb-6 max-w-xl mx-auto">
               Phương pháp TPR (Total Physical Response) giúp tạo phản xạ thần kinh tự nhiên thông qua chuyển động cơ thể!
             </p>
 
-            <div className="max-w-md mx-auto bg-gradient-to-br from-amber-100 to-orange-100 rounded-3xl p-6 md:p-8 border-4 border-amber-300 shadow-lg mb-4">
-              <div className="text-7xl md:text-8xl mb-4 animate-bounce">
+            <div className="w-full max-w-xl bg-gradient-to-br from-amber-100 to-orange-100 rounded-3xl p-6 md:p-10 border-4 border-amber-300 shadow-xl mb-4 text-center">
+              <div className="text-8xl md:text-9xl mb-4 animate-bounce">
                 {phoneme.tprAction.icon}
               </div>
-              <div className="bg-white/95 rounded-2xl p-4 border border-amber-200 text-base md:text-lg font-black text-amber-950 mb-4 shadow-xs">
+              <div className="bg-white/95 rounded-2xl p-4 border border-amber-200 text-lg md:text-xl font-black text-amber-950 mb-6 shadow-xs">
                 "{phoneme.tprAction.actionPrompt}"
               </div>
               <KidButton
                 variant="warning"
-                size="md"
+                size="lg"
                 onClick={() => audioService.speakEnglish(phoneme.tprAction.actionPrompt, 0.9)}
               >
                 🔊 Nghe Hướng Dẫn Vận Động
@@ -228,51 +238,79 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
           </div>
         )}
 
-        {/* Step 3: Vocabulary & Sound Discrimination */}
+        {/* ================= STEP 3: VOCABULARY (BIG EHON GALLERY) ================= */}
         {currentStep === 3 && (
-          <div className="py-2 animate-fadeIn text-center">
-            <span className="text-xs md:text-sm font-black text-emerald-700 bg-emerald-100 px-4 py-1 rounded-full uppercase tracking-wider">
+          <div className="py-2 animate-fadeIn text-center flex flex-col items-center w-full">
+            <span className="text-xs md:text-sm font-black text-emerald-800 bg-emerald-100 px-4 py-1.5 rounded-full uppercase tracking-wider">
               {stepsTitle[3]}
             </span>
-            <h2 className="text-2xl md:text-4xl font-black text-amber-950 mt-1 mb-2">
-              Các Từ Chứa Âm /{phoneme.id}/ 🌟
+            <h2 className="text-3xl md:text-5xl font-black text-amber-950 mt-1 mb-1">
+              Tranh Truyện Ehon Chứa Âm /{phoneme.id}/ 🎨
             </h2>
-            <p className="text-xs md:text-sm font-bold text-amber-800 mb-6">
-              Chạm vào từng tấm thẻ hình ảnh để nghe phát âm chuẩn nhé!
+            <p className="text-sm md:text-base font-bold text-amber-800 mb-4">
+              Chạm vào từng bức tranh lớn để nghe từ vựng và chiêm ngưỡng màu vẽ nghệ thuật!
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto mb-6">
+            {/* Widescreen 3-Column Large Art Gallery */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl mx-auto my-2">
               {phoneme.sampleWords.map((item) => {
+                const visual = getWordVisual(item.word);
                 const isSelected = selectedCards.includes(item.word);
                 return (
-                  <button
+                  <div
                     key={item.word}
                     onClick={() => handleTapSampleWord(item.word)}
-                    className={`p-6 rounded-3xl border-4 transition-all duration-200 flex flex-col items-center justify-center cursor-pointer shadow-md transform active:scale-95 ${
+                    className={`rounded-3xl border-5 md:border-6 transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer shadow-xl transform active:scale-95 ${
                       isSelected
-                        ? 'bg-amber-100 border-amber-400 ring-4 ring-amber-200 scale-105'
-                        : 'bg-white border-amber-200 hover:border-amber-400'
+                        ? 'bg-amber-50 border-amber-400 ring-4 ring-amber-200 scale-102 shadow-2xl'
+                        : 'bg-white border-amber-200 hover:border-amber-300 hover:shadow-2xl'
                     }`}
                   >
-                    <span className="text-6xl mb-2">{item.emoji}</span>
-                    <span className="text-2xl font-black text-amber-950 uppercase">{item.word}</span>
-                    <span className="text-xs font-bold text-amber-700 mt-1">{item.meaningVi}</span>
-                    {isSelected && (
-                      <span className="mt-2 text-xs font-bold text-emerald-600 flex items-center space-x-1">
-                        <CheckCircle2 className="w-4 h-4" />
-                        <span>Đã nghe!</span>
-                      </span>
-                    )}
-                  </button>
+                    {/* Big Painting Area (Occupies 70% of Card) */}
+                    <div className="w-full h-56 md:h-64 relative overflow-hidden bg-amber-50 flex items-center justify-center p-2 border-b-2 border-amber-100">
+                      <img
+                        src={visual.url}
+                        alt={visual.alt}
+                        className="w-full h-full object-cover rounded-2xl filter drop-shadow hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                      />
+                      
+                      {/* Badge Style */}
+                      <div className="absolute top-3 left-3 bg-amber-400/90 text-amber-950 text-[11px] font-black px-3 py-1 rounded-full shadow-md backdrop-blur-xs">
+                        {visual.type === 'ehon' ? '🎨 Tranh Ehon' : '📷 Hình Chân Thực'}
+                      </div>
+
+                      {/* Speaker icon hint */}
+                      <div className="absolute bottom-3 right-3 bg-white/90 p-2 rounded-full shadow-md text-amber-900">
+                        <Volume2 className="w-5 h-5 animate-pulse" />
+                      </div>
+                    </div>
+
+                    {/* Word Details (Bottom 30%) */}
+                    <div className="p-4 text-center bg-white flex flex-col items-center justify-center">
+                      <div className="text-3xl md:text-4xl font-black text-amber-950 uppercase tracking-wide">
+                        {item.word}
+                      </div>
+                      <div className="text-sm md:text-base font-bold text-amber-700 mt-0.5">
+                        {item.meaningVi}
+                      </div>
+                      {isSelected && (
+                        <div className="mt-2 text-xs font-black text-emerald-600 flex items-center space-x-1 bg-emerald-50 px-3 py-0.5 rounded-full border border-emerald-200">
+                          <CheckCircle2 className="w-4 h-4" />
+                          <span>Đã phát âm!</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 );
               })}
             </div>
           </div>
         )}
 
-        {/* Step 4: Blending Challenge */}
+        {/* ================= STEP 4: BLENDING CHALLENGE ================= */}
         {currentStep === 4 && (
-          <div className="py-2 animate-fadeIn">
+          <div className="py-2 animate-fadeIn w-full">
             <BubbleBlender
               activity={{
                 word: phoneme.sampleWords[0]?.word || 'sun',
@@ -287,30 +325,30 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
           </div>
         )}
 
-        {/* Step 5: Victory & Mastery */}
+        {/* ================= STEP 5: VICTORY & MASTERY ================= */}
         {currentStep === 5 && (
-          <div className="text-center py-6 animate-fadeIn">
+          <div className="text-center py-6 animate-fadeIn flex flex-col items-center">
             <div className="inline-flex p-4 bg-yellow-100 rounded-full mb-3 animate-bounce">
-              <Trophy className="w-14 h-14 text-yellow-500" />
+              <Trophy className="w-16 h-16 text-yellow-500" />
             </div>
             <h2 className="text-3xl md:text-5xl font-black text-amber-950 mb-2">
               Hoan Hô Bé Yêu! 🎉
             </h2>
-            <p className="text-lg md:text-xl font-extrabold text-amber-800 mb-6">
+            <p className="text-lg md:text-2xl font-extrabold text-amber-800 mb-6">
               Bé đã làm quen âm <span className="font-mono text-amber-600">/{phoneme.id}/</span> và nhận được <span className="text-amber-500 font-black">+3 ⭐</span>!
             </p>
 
-            <div className="max-w-sm mx-auto bg-amber-50 rounded-3xl p-5 border-2 border-amber-200 mb-6 flex items-center space-x-4">
-              <LeoCartoonMascot size={70} mood="wink" />
-              <p className="text-xs md:text-sm font-bold text-amber-950 text-left">
-                "Bé phát âm rất tự tin! Hãy tiếp tục phiêu lưu sang các hòn đảo âm thanh mới nhé!"
+            <div className="max-w-md mx-auto bg-amber-50 rounded-3xl p-6 border-3 border-amber-200 mb-6 flex items-center space-x-4 shadow-md">
+              <LeoCartoonMascot size={80} mood="wink" />
+              <p className="text-sm md:text-base font-bold text-amber-950 text-left">
+                "Bé phát âm rất tự tin! Hãy tiếp tục phiêu lưu sang các bức tranh Ehon mới nhé!"
               </p>
             </div>
           </div>
         )}
 
         {/* Navigation Bottom Controls */}
-        <div className="flex items-center justify-between pt-4 border-t-2 border-amber-100 mt-2">
+        <div className="flex items-center justify-between pt-4 border-t-2 border-amber-100 mt-4 px-2">
           <KidButton
             variant="secondary"
             size="md"
