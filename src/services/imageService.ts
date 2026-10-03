@@ -452,3 +452,40 @@ export const getIslandVisual = (islandNumber: number): WordVisual => {
       };
   }
 };
+
+export const getVisemePhoto = (mouthShape: string): { url: string; alt: string; labelVi: string } => {
+  switch (mouthShape) {
+    case 'teeth_together':
+      return {
+        url: '/assets/visemes/teeth_together.jpg',
+        alt: 'Ảnh thật cận cảnh khẩu hình răng khép nhẹ, môi mỉm cười (/s/, /z/)',
+        labelVi: 'Răng khép nhẹ xì luồng hơi mát qua kẽ răng'
+      };
+    case 'wide':
+      return {
+        url: '/assets/visemes/wide.jpg',
+        alt: 'Ảnh thật cận cảnh khẩu hình miệng hé rộng mỉm cười (/a/, /æ/, /e/)',
+        labelVi: 'Mỉm cười hé khóe miệng, thấy rõ răng'
+      };
+    case 'closed':
+      return {
+        url: '/assets/visemes/closed.jpg',
+        alt: 'Ảnh thật cận cảnh hai cánh môi mím chặt (/p/, /b/, /m/)',
+        labelVi: 'Hai môi mím chặt rồi bật luồng hơi'
+      };
+    case 'round':
+      return {
+        url: '/assets/visemes/round.jpg',
+        alt: 'Ảnh thật cận cảnh môi chu tròn hình chữ O (/u/, /o/, /w/)',
+        labelVi: 'Môi chu tròn hướng ra phía trước'
+      };
+    case 'open':
+    default:
+      return {
+        url: '/assets/visemes/open.jpg',
+        alt: 'Ảnh thật cận cảnh cằm hạ tự nhiên, khoang miệng mở (/ɑ/, /t/, /d/)',
+        labelVi: 'Há rộng cằm, đầu lưỡi chạm nướu trên'
+      };
+  }
+};
+

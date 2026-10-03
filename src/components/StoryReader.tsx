@@ -35,6 +35,8 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [speechResult, setSpeechResult] = useState<SpeechEvaluationResult | null>(null);
   const [micNotice, setMicNotice] = useState<string | null>(null);
+  const [showLeoTip, setShowLeoTip] = useState<boolean>(false);
+  const [leoTipText, setLeoTipText] = useState<string>('');
 
   const settings = storageService.getSettings();
   const currentPage: StoryPage = story.pages[currentPageIndex];
@@ -164,6 +166,14 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
     }
   };
 
+  const handleAskLeoStory = () => {
+    const target = currentPage.speakingTargetWord || 'cat';
+    const tip = `Bạn Leo kể cho bé nè: Tranh câu ${currentPage.pageNumber} có từ "${target}". Bé chạm vào từ trên trang sách để nghe Leo đọc mẫu nhé! 🦁⭐`;
+    setLeoTipText(tip);
+    setShowLeoTip(!showLeoTip);
+    audioService.playPopSound(540);
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-2 h-[calc(100vh-4.6rem)] flex flex-col justify-between overflow-hidden">
       {/* Top Bar Navigation */}
@@ -176,14 +186,41 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
           <span>Thư Viện Tranh Truyện</span>
         </button>
 
-        <div className="flex items-center space-x-2.5 bg-white/90 px-3.5 py-1.5 rounded-2xl border-2 border-amber-200 shadow-xs">
-          <BookOpen className="w-4 h-4 text-amber-600" />
-          <span className="font-black text-amber-950 text-sm md:text-base">{story.title}</span>
-          <span className="text-xs bg-amber-300 text-amber-950 font-black px-2.5 py-0.5 rounded-full shadow-xs">
-            Trang {currentPageIndex + 1} / {story.pages.length}
-          </span>
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={handleAskLeoStory}
+            className="flex items-center space-x-1 bg-purple-100 hover:bg-purple-200 text-purple-950 font-black px-3 py-1 rounded-full border border-purple-300 shadow-xs active:scale-95 transition-transform cursor-pointer text-xs"
+            title="Nhận gợi ý từ Bạn Sư Tử Leo"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+            <span>Hỏi Leo 🦁</span>
+          </button>
+
+          <div className="flex items-center space-x-2.5 bg-white/90 px-3.5 py-1.5 rounded-2xl border-2 border-amber-200 shadow-xs">
+            <BookOpen className="w-4 h-4 text-amber-600" />
+            <span className="font-black text-amber-950 text-sm md:text-base">{story.title}</span>
+            <span className="text-xs bg-amber-300 text-amber-950 font-black px-2.5 py-0.5 rounded-full shadow-xs">
+              Trang {currentPageIndex + 1} / {story.pages.length}
+            </span>
+          </div>
         </div>
       </div>
+
+      {/* Leo AI Tip in StoryReader */}
+      {showLeoTip && (
+        <div className="mx-2 mb-2 p-2.5 bg-purple-50 rounded-2xl border-2 border-purple-300 shadow-md flex items-center space-x-3 animate-fadeIn shrink-0">
+          <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-purple-400 shrink-0 bg-amber-100">
+            <img src="/assets/ehon/leo.jpg" alt="Leo" className="w-full h-full object-cover" />
+          </div>
+          <div className="flex-1">
+            <div className="text-xs font-black text-purple-950 flex items-center justify-between">
+              <span>Bạn Leo đồng hành cùng bé đọc truyện:</span>
+              <button onClick={() => setShowLeoTip(false)} className="text-gray-400 hover:text-gray-600 text-xs font-bold cursor-pointer">✕ Đóng</button>
+            </div>
+            <p className="text-xs font-bold text-purple-900 mt-0.5 leading-snug">{leoTipText}</p>
+          </div>
+        </div>
+      )}
 
       {/* Main Picture Book Two-Page Spread Canvas (Fills Viewport Without Scrolling) */}
       <div className="bg-[#FFFDF9] rounded-3xl border-6 md:border-8 border-amber-300 shadow-2xl p-3 md:p-4 flex-1 min-h-0 overflow-hidden flex flex-col justify-between">

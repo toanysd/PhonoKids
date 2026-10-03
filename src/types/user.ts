@@ -24,6 +24,12 @@ export interface SessionSettings {
   // Child Health & Accessibility
   reducedMotion: boolean; // false
   showWordHighlights: boolean; // true
+
+  // Gemini AI Companion Settings
+  geminiApiKey?: string; // Optional user-provided Gemini API Key
+  geminiModel?: 'gemini-2.5-flash' | 'gemini-1.5-flash'; // Default: gemini-2.5-flash
+  aiCompanionEnabled?: boolean; // Default: true
+  aiVoiceAutoPlay?: boolean; // Default: true
 }
 
 export interface PhonemeRecord {

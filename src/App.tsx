@@ -9,6 +9,7 @@ import { BlendingPlayground } from './components/BlendingPlayground';
 import { ParentDashboard } from './components/ParentDashboard';
 import { CharacterCompanion } from './components/CharacterCompanion';
 import { RestBreakModal } from './components/RestBreakModal';
+import { AiBuddyChat } from './components/AiBuddyChat';
 
 import { PhonemeInfo } from './types/phonics';
 import { DecodableStory } from './types/story';
@@ -17,7 +18,7 @@ import { ChildProfile, SessionSettings } from './types/user';
 import { storageService } from './services/storageService';
 import { audioService } from './services/audioService';
 
-type ViewMode = 'island_map' | 'stories' | 'minimal_pairs' | 'blending' | 'lesson' | 'story_reader';
+type ViewMode = 'island_map' | 'stories' | 'minimal_pairs' | 'blending' | 'lesson' | 'story_reader' | 'ai_chat';
 
 export const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewMode>('island_map');
@@ -98,7 +99,7 @@ export const App: React.FC = () => {
     handleRefreshProfile();
   };
 
-  const isViewportLockedView = currentView === 'story_reader' || currentView === 'lesson';
+  const isViewportLockedView = currentView === 'story_reader' || currentView === 'lesson' || currentView === 'ai_chat';
 
   return (
     <div className={`h-screen w-screen overflow-hidden bg-gradient-to-b from-amber-50 via-yellow-50 to-orange-50 text-amber-950 flex flex-col font-child select-none ${settings.reducedMotion ? 'motion-reduce' : ''}`}>
@@ -155,6 +156,13 @@ export const App: React.FC = () => {
 
         {currentView === 'blending' && (
           <BlendingPlayground onAddStars={handleAddStars} />
+        )}
+
+        {currentView === 'ai_chat' && (
+          <AiBuddyChat
+            onAddStars={handleAddStars}
+            onOpenParentSettings={() => setIsParentGateOpen(true)}
+          />
         )}
       </main>
 

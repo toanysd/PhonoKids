@@ -1,10 +1,10 @@
 import React from 'react';
-import { Volume2, VolumeX, Shield, Star, BookOpen, Map, Sparkles, Wand2 } from 'lucide-react';
+import { Volume2, VolumeX, Shield, Star, BookOpen, Map, Sparkles, Wand2, Bot } from 'lucide-react';
 import { audioService } from '../services/audioService';
 
 interface NavbarProps {
-  currentView: 'island_map' | 'stories' | 'minimal_pairs' | 'blending' | 'lesson';
-  onNavigate: (view: 'island_map' | 'stories' | 'minimal_pairs' | 'blending') => void;
+  currentView: 'island_map' | 'stories' | 'minimal_pairs' | 'blending' | 'lesson' | 'story_reader' | 'ai_chat';
+  onNavigate: (view: 'island_map' | 'stories' | 'minimal_pairs' | 'blending' | 'ai_chat') => void;
   stars: number;
   soundEnabled: boolean;
   onToggleSound: () => void;
@@ -94,6 +94,18 @@ export const Navbar: React.FC<NavbarProps> = ({
             <Wand2 className="w-4 h-4 text-amber-800" />
             <span>Ghép Vần Tranh Vẽ</span>
           </button>
+
+          <button
+            onClick={() => onNavigate('ai_chat')}
+            className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl font-black text-sm transition-all cursor-pointer ${
+              currentView === 'ai_chat'
+                ? 'bg-purple-600 text-white shadow-sm ring-2 ring-purple-300'
+                : 'bg-purple-100 text-purple-900 hover:bg-purple-200/80 border border-purple-300'
+            }`}
+          >
+            <Bot className="w-4 h-4 text-purple-700" />
+            <span>Bạn Leo AI 🦁</span>
+          </button>
         </nav>
 
         {/* Right Status Actions */}
@@ -162,6 +174,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           }`}
         >
           Ghép Vần
+        </button>
+        <button
+          onClick={() => onNavigate('ai_chat')}
+          className={`px-3 py-1.5 text-xs font-black rounded-xl transition-colors ${
+            currentView === 'ai_chat' ? 'bg-purple-600 text-white shadow-xs' : 'text-purple-800 font-bold bg-purple-100'
+          }`}
+        >
+          Leo AI 🦁
         </button>
       </div>
     </header>

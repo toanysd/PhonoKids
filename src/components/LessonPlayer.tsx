@@ -5,6 +5,7 @@ import { BubbleBlender } from './BubbleBlender';
 import { KidButton } from './KidButton';
 import { audioService } from '../services/audioService';
 import { getWordVisual } from '../services/imageService';
+import { geminiService } from '../services/geminiService';
 import { 
   Volume2, 
   ArrowRight, 
@@ -30,6 +31,15 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
   // Steps: 0: Intro -> 1: Viseme Mouth -> 2: TPR Action -> 3: Discrimination -> 4: Blending -> 5: Victory
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [selectedCards, setSelectedCards] = useState<string[]>([]);
+  const [showLeoTip, setShowLeoTip] = useState<boolean>(false);
+  const [leoTipText, setLeoTipText] = useState<string>('');
+
+  const handleAskLeo = () => {
+    const tip = geminiService.getPhonicsTip(phoneme.id);
+    setLeoTipText(tip);
+    setShowLeoTip(!showLeoTip);
+    audioService.playPopSound(550);
+  };
 
   const handleNextStep = () => {
     audioService.playPopSound(520);
@@ -110,10 +120,37 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
           ))}
         </div>
 
-        <span className="text-xs font-black text-amber-900 bg-amber-200/90 px-3 py-1 rounded-full shadow-xs">
-          Bước {currentStep + 1} / 6
-        </span>
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={handleAskLeo}
+            className="flex items-center space-x-1 bg-purple-100 hover:bg-purple-200 text-purple-950 font-black px-3 py-1 rounded-full border border-purple-300 shadow-xs active:scale-95 transition-transform cursor-pointer text-xs"
+            title="Nhận gợi ý phát âm từ Bạn Sư Tử Leo"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+            <span>Hỏi Leo 🦁</span>
+          </button>
+
+          <span className="text-xs font-black text-amber-900 bg-amber-200/90 px-3 py-1 rounded-full shadow-xs">
+            Bước {currentStep + 1} / 6
+          </span>
+        </div>
       </div>
+
+      {/* Leo AI Tip Floating Speech Bubble */}
+      {showLeoTip && (
+        <div className="mx-2 mb-2 p-3 bg-purple-50 rounded-2xl border-2 border-purple-300 shadow-md flex items-start space-x-3 animate-fadeIn shrink-0">
+          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-purple-400 shrink-0 bg-amber-100">
+            <img src="/assets/ehon/leo.jpg" alt="Leo" className="w-full h-full object-cover" />
+          </div>
+          <div className="flex-1">
+            <div className="text-xs font-black text-purple-950 flex items-center justify-between">
+              <span>Bạn Sư Tử Leo mách nước cho bé:</span>
+              <button onClick={() => setShowLeoTip(false)} className="text-gray-400 hover:text-gray-600 text-xs font-bold cursor-pointer">✕ Đóng</button>
+            </div>
+            <p className="text-xs md:text-sm font-bold text-purple-900 mt-0.5 leading-snug">{leoTipText}</p>
+          </div>
+        </div>
+      )}
 
       {/* Main Full-Bleed Storybook Canvas (Fills Screen Without Scrolling) */}
       <div className="bg-[#FFFDF9] rounded-3xl p-3 md:p-5 border-6 md:border-8 border-amber-300 shadow-2xl flex-1 min-h-0 flex flex-col justify-between relative overflow-hidden">

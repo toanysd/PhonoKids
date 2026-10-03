@@ -16,8 +16,13 @@ import {
   Mic,
   Trash2,
   Eye,
-  Lock
+  EyeOff,
+  Lock,
+  Bot,
+  Sparkles,
+  Key
 } from 'lucide-react';
+import { geminiService } from '../services/geminiService';
 
 interface ParentDashboardProps {
   onClose: () => void;
@@ -28,7 +33,7 @@ export const ParentDashboard: React.FC<ParentDashboardProps> = ({ onClose, onPro
   const [profile, setProfile] = useState<ChildProfile>(() => storageService.getProfile());
   const [settings, setSettings] = useState<SessionSettings>(() => storageService.getSettings());
   const [records] = useState<Record<string, PhonemeRecord>>(() => storageService.getPhonemeRecords());
-  const [activeTab, setActiveTab] = useState<'progress' | 'settings' | 'privacy' | 'coplay'>('progress');
+  const [activeTab, setActiveTab] = useState<'progress' | 'settings' | 'privacy' | 'coplay' | 'ai'>('progress');
 
   // Adult Math Gate Lock
   const [isUnlocked, setIsUnlocked] = useState<boolean>(false);
@@ -37,6 +42,15 @@ export const ParentDashboard: React.FC<ParentDashboardProps> = ({ onClose, onPro
   const [userAnswer, setUserAnswer] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [eraseConfirm, setEraseConfirm] = useState<boolean>(false);
+
+  // Gemini AI settings state
+  const [apiKeyInput, setApiKeyInput] = useState<string>(settings.geminiApiKey || '');
+  const [showApiKey, setShowApiKey] = useState<boolean>(false);
+  const [selectedModel, setSelectedModel] = useState<'gemini-2.5-flash' | 'gemini-1.5-flash'>(settings.geminiModel || 'gemini-2.5-flash');
+  const [testState, setTestState] = useState<{ status: 'idle' | 'testing' | 'success' | 'error'; message: string }>({
+    status: 'idle',
+    message: ''
+  });
 
   const handleVerifyMath = (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,6 +67,31 @@ export const ParentDashboard: React.FC<ParentDashboardProps> = ({ onClose, onPro
     setSettings(newSettings);
     storageService.saveSettings(newSettings);
     onProfileUpdated();
+  };
+
+  const handleTestConnection = async () => {
+    setTestState({ status: 'testing', message: 'Đang kiểm tra kết nối với Google Gemini...' });
+    const res = await geminiService.testConnection(apiKeyInput, selectedModel);
+    if (res.success) {
+      setTestState({ status: 'success', message: res.message });
+      handleSaveSettings({
+        ...settings,
+        geminiApiKey: apiKeyInput.trim(),
+        geminiModel: selectedModel
+      });
+    } else {
+      setTestState({ status: 'error', message: res.message });
+    }
+  };
+
+  const handleSaveAiSettings = () => {
+    handleSaveSettings({
+      ...settings,
+      geminiApiKey: apiKeyInput.trim(),
+      geminiModel: selectedModel
+    });
+    setTestState({ status: 'success', message: 'Đã lưu cấu hình AI thành công!' });
+    setTimeout(() => setTestState({ status: 'idle', message: '' }), 3500);
   };
 
   const handleUpdateAge = (age: 3 | 4 | 5) => {
@@ -182,6 +221,16 @@ export const ParentDashboard: React.FC<ParentDashboardProps> = ({ onClose, onPro
           >
             <HeartHandshake className="w-4 h-4" />
             <span>Đồng Hành (Co-Play)</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('ai')}
+            className={`py-2 px-3 rounded-2xl font-black text-xs sm:text-sm flex items-center space-x-1.5 whitespace-nowrap transition-all ${
+              activeTab === 'ai' ? 'bg-purple-500 text-white shadow-md ring-2 ring-purple-300' : 'bg-white text-purple-700 hover:bg-purple-100'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-amber-300" />
+            <span>Trí Tuệ Nhân Tạo (Gemini AI)</span>
           </button>
         </div>
 
@@ -431,6 +480,124 @@ export const ParentDashboard: React.FC<ParentDashboardProps> = ({ onClose, onPro
                 <p className="text-xs font-bold text-gray-600">
                   Khi ăn một món ngon, ba mẹ xoa tròn bụng và ngân dài "mmmmm, yummy!". Giúp kích hoạt cơ môi và âm rung vòm họng một cách hoàn toàn tự nhiên.
                 </p>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: GEMINI AI COMPANION SETTINGS */}
+          {activeTab === 'ai' && (
+            <div className="bg-white rounded-2xl p-5 border-2 border-purple-200 space-y-4">
+              <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-2xl p-4 flex items-start space-x-3">
+                <div className="p-2.5 bg-purple-100 rounded-xl text-purple-700 shrink-0">
+                  <Bot className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-black text-purple-950 flex items-center space-x-1.5">
+                    <span>Bạn Sư Tử Leo AI (Trí Tuệ Nhân Tạo Đồng Hành)</span>
+                    <span className="text-[10px] bg-purple-200 text-purple-900 font-black px-2 py-0.5 rounded-full">Google Gemini</span>
+                  </h4>
+                  <p className="text-xs font-bold text-purple-900 mt-1 leading-relaxed">
+                    Tích hợp mô hình AI ngôn ngữ tiên tiến của Google để trò chuyện cùng bé, giải thích nghĩa từ vựng bằng hình ảnh, và phản hồi phát âm chuẩn mực theo ngữ cảnh sư phạm.
+                  </p>
+                </div>
+              </div>
+
+              {/* API Key Input */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-black text-amber-950 flex items-center space-x-1.5">
+                  <Key className="w-4 h-4 text-amber-600" />
+                  <span>Google Gemini API Key:</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type={showApiKey ? 'text' : 'password'}
+                    value={apiKeyInput}
+                    onChange={(e) => setApiKeyInput(e.target.value)}
+                    placeholder="Dán API Key (bắt đầu bằng AIzaSy...)"
+                    className="w-full text-xs font-mono p-3 pr-20 border-2 border-amber-300 rounded-xl focus:outline-hidden focus:ring-3 focus:ring-amber-200 bg-amber-50/50"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowApiKey(!showApiKey)}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800 text-xs font-bold px-2 py-1 rounded-lg hover:bg-gray-200"
+                  >
+                    {showApiKey ? 'Ẩn' : 'Hiện'}
+                  </button>
+                </div>
+                <p className="text-[11px] font-bold text-gray-500 leading-normal">
+                  💡 <strong>Cách nhận API Key miễn phí:</strong> Truy cập <a href="https://aistudio.google.com" target="_blank" rel="noreferrer" className="text-amber-700 underline font-black">Google AI Studio (aistudio.google.com)</a>, đăng nhập tài khoản Google và nhấn "Get API key". Hoàn toàn miễn phí!
+                </p>
+              </div>
+
+              {/* Model Choice */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-black text-amber-950">Mô hình AI:</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedModel('gemini-2.5-flash')}
+                    className={`p-2.5 rounded-xl border-2 text-left transition-all ${
+                      selectedModel === 'gemini-2.5-flash'
+                        ? 'border-purple-500 bg-purple-50 text-purple-950 ring-2 ring-purple-200'
+                        : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className="font-black text-xs">gemini-2.5-flash ⭐ (Khuyên dùng)</div>
+                    <div className="text-[10px] text-gray-500">Thế hệ mới, phản xạ tức thì, thông minh vượt trội</div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedModel('gemini-1.5-flash')}
+                    className={`p-2.5 rounded-xl border-2 text-left transition-all ${
+                      selectedModel === 'gemini-1.5-flash'
+                        ? 'border-purple-500 bg-purple-50 text-purple-950 ring-2 ring-purple-200'
+                        : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className="font-black text-xs">gemini-1.5-flash</div>
+                    <div className="text-[10px] text-gray-500">Mô hình ổn định, tối ưu cho phản hồi ngắn</div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Buttons: Test Connection & Save */}
+              <div className="flex items-center space-x-2 pt-2">
+                <button
+                  type="button"
+                  onClick={handleTestConnection}
+                  disabled={testState.status === 'testing'}
+                  className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-black py-2.5 px-4 rounded-xl text-xs flex items-center justify-center space-x-1.5 active:scale-95 transition-all cursor-pointer shadow-xs disabled:opacity-50"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>{testState.status === 'testing' ? 'Đang Kiểm Tra...' : 'Kiểm Tra Kết Nối AI'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleSaveAiSettings}
+                  className="bg-amber-400 hover:bg-amber-500 text-amber-950 font-black py-2.5 px-4 rounded-xl text-xs active:scale-95 transition-all cursor-pointer shadow-xs"
+                >
+                  Lưu Cấu Hình
+                </button>
+              </div>
+
+              {/* Test Status Banner */}
+              {testState.message && (
+                <div className={`p-3 rounded-xl text-xs font-bold flex items-center space-x-2 ${
+                  testState.status === 'success'
+                    ? 'bg-emerald-100 text-emerald-950 border border-emerald-300'
+                    : testState.status === 'error'
+                    ? 'bg-rose-100 text-rose-950 border border-rose-300'
+                    : 'bg-amber-100 text-amber-950 border border-amber-300'
+                }`}>
+                  {testState.status === 'success' ? <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" /> : <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />}
+                  <span>{testState.message}</span>
+                </div>
+              )}
+
+              {/* Offline Guarantee Disclaimer */}
+              <div className="bg-amber-50 rounded-xl p-3 border border-amber-200 text-[11px] font-bold text-amber-900 leading-relaxed">
+                🛡️ <strong>Chế độ hoạt động an toàn & Ngoại tuyến:</strong> Nếu chưa cấu hình API Key, Bạn Sư Tử Leo vẫn hoạt động bình thường nhờ <strong>Động cơ Kịch bản Sư phạm tích hợp sẵn</strong> (Scripted Leo). Bé luôn được trò chuyện và khuyến khích học tập mà không bao giờ bị gián đoạn hay gặp lỗi.
               </div>
             </div>
           )}

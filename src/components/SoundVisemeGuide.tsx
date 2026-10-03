@@ -2,6 +2,7 @@ import React from 'react';
 import { PhonemeInfo } from '../types/phonics';
 import { Volume2, Sparkles, Wind, Smile } from 'lucide-react';
 import { audioService } from '../services/audioService';
+import { getVisemePhoto } from '../services/imageService';
 
 interface SoundVisemeGuideProps {
   phoneme: PhonemeInfo;
@@ -9,6 +10,7 @@ interface SoundVisemeGuideProps {
 
 export const SoundVisemeGuide: React.FC<SoundVisemeGuideProps> = ({ phoneme }) => {
   const { mouthGuide, tprAction } = phoneme;
+  const visemePhoto = getVisemePhoto(mouthGuide.mouthShape);
 
   const handleHearPhoneme = () => {
     audioService.speakPhoneme(phoneme.id, phoneme.ipa);
@@ -39,61 +41,39 @@ export const SoundVisemeGuide: React.FC<SoundVisemeGuideProps> = ({ phoneme }) =
         </button>
       </div>
 
-      {/* Viseme Graphic Visualization */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-        {/* Animated Mouth Avatar */}
-        <div className="relative bg-gradient-to-b from-rose-100 to-amber-100 rounded-2xl p-4 flex flex-col items-center justify-center border-2 border-rose-200 min-h-[170px]">
-          <div className="text-xs font-bold text-rose-800 uppercase tracking-wider mb-2 flex items-center space-x-1">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Mô phỏng cơ miệng</span>
-          </div>
-
-          {/* Dynamic 2D Mouth Articulation */}
-          <div className="relative w-32 h-24 flex items-center justify-center">
-            {/* Outer Lips */}
-            <div className={`relative transition-all duration-300 border-4 border-rose-400 bg-rose-300 flex items-center justify-center ${
-              mouthGuide.mouthShape === 'closed' ? 'w-24 h-4 rounded-full' :
-              mouthGuide.mouthShape === 'round' ? 'w-16 h-16 rounded-full' :
-              mouthGuide.mouthShape === 'wide' ? 'w-28 h-10 rounded-full' :
-              mouthGuide.mouthShape === 'teeth_together' ? 'w-24 h-8 rounded-full' :
-              'w-20 h-16 rounded-full'
-            }`}>
-              {/* Teeth */}
-              {(mouthGuide.mouthShape === 'teeth_together' || mouthGuide.mouthShape === 'open' || mouthGuide.mouthShape === 'wide') && (
-                <div className="absolute top-1 w-16 h-3 bg-white rounded-t-sm border-b border-rose-300" />
-              )}
-              {mouthGuide.mouthShape === 'teeth_together' && (
-                <div className="absolute bottom-1 w-14 h-3 bg-white rounded-b-sm border-t border-rose-300" />
-              )}
-
-              {/* Tongue Position */}
-              <div className={`transition-all duration-300 bg-rose-500 rounded-full ${
-                mouthGuide.tonguePosition === 'behind_top_teeth' ? 'w-6 h-4 -translate-y-1' :
-                mouthGuide.tonguePosition === 'up_back' ? 'w-8 h-4 translate-x-2' :
-                mouthGuide.tonguePosition === 'curled' ? 'w-6 h-6 rounded-t-xl' :
-                'w-10 h-3 translate-y-2'
-              }`} />
+      {/* Viseme Real Photography Visualization */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-3">
+        {/* Real Native Speaker Mouth Photography */}
+        <div className="relative bg-amber-50 rounded-2xl p-2.5 flex flex-col items-center justify-center border-2 border-amber-300 shadow-sm">
+          <div className="w-full h-44 sm:h-48 rounded-xl overflow-hidden relative shadow-inner bg-slate-900 border border-amber-200">
+            <img
+              src={visemePhoto.url}
+              alt={visemePhoto.alt}
+              className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
+            />
+            {/* Real photo badge */}
+            <div className="absolute top-2 left-2 bg-black/70 backdrop-blur-xs text-white text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center space-x-1 shadow">
+              <Sparkles className="w-3 h-3 text-amber-300" />
+              <span>📷 Ảnh Thật Khẩu Hình Chuẩn</span>
             </div>
 
-            {/* Airflow Wind indicator */}
+            {/* Airflow Wind Indicator Overlay */}
             {mouthGuide.airFlow === 'puff' && (
-              <div className="absolute -right-3 flex space-x-0.5 text-sky-500 animate-bounce">
-                <Wind className="w-6 h-6" />
+              <div className="absolute bottom-2 right-2 bg-sky-500/90 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow flex items-center space-x-1 animate-bounce">
+                <Wind className="w-3 h-3" />
+                <span>Bật hơi mạnh</span>
               </div>
             )}
             {mouthGuide.airFlow === 'continuous' && (
-              <div className="absolute -right-3 text-emerald-500 animate-pulse">
-                <Wind className="w-6 h-6" />
+              <div className="absolute bottom-2 right-2 bg-emerald-500/90 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow flex items-center space-x-1 animate-pulse">
+                <Wind className="w-3 h-3" />
+                <span>Luồng hơi đều</span>
               </div>
             )}
           </div>
 
-          <div className="mt-2 text-center text-xs font-extrabold text-amber-900 bg-white/80 px-3 py-1 rounded-full border border-amber-200">
-            {mouthGuide.mouthShape === 'closed' && 'Mím chặt môi'}
-            {mouthGuide.mouthShape === 'round' && 'Chu tròn môi'}
-            {mouthGuide.mouthShape === 'wide' && 'Mỉm cười hé khóe miệng'}
-            {mouthGuide.mouthShape === 'teeth_together' && 'Răng khép nhẹ xì hơi'}
-            {mouthGuide.mouthShape === 'open' && 'Há rộng cằm tự nhiên'}
+          <div className="mt-2 text-center text-xs font-black text-amber-950 bg-white px-3 py-1 rounded-full border border-amber-300 shadow-xs">
+            {visemePhoto.labelVi}
           </div>
         </div>
 

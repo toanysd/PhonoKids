@@ -26,6 +26,10 @@ const DEFAULT_SETTINGS: SessionSettings = {
   allowDataAnalytics: false,
   reducedMotion: false,
   showWordHighlights: true,
+  geminiApiKey: '',
+  geminiModel: 'gemini-2.5-flash',
+  aiCompanionEnabled: true,
+  aiVoiceAutoPlay: true,
 };
 
 class StorageService {
