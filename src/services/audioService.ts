@@ -215,34 +215,83 @@ class AudioService {
     });
   }
 
-  // Speak single phoneme with exaggerated clarity
-  public speakPhoneme(phonemeId: string, ipa: string): Promise<void> {
-    this.playPopSound(550);
-    // For phonemes, we provide deliberate clear pronunciation
-    const phoneticMap: Record<string, string> = {
-      's': 'sss',
-      'a': 'ah',
-      't': 't',
-      'i': 'ih',
-      'p': 'puh',
-      'n': 'nnn',
-      'c': 'kuh',
-      'k': 'kuh',
-      'e': 'eh',
-      'h': 'huh',
-      'r': 'rrr',
-      'm': 'mmm',
-      'd': 'duh',
-    };
+  private phonemeAudioCache: Record<string, HTMLAudioElement> = {};
 
-    const spokenText = phoneticMap[phonemeId] || ipa.replace(/[\/\[\]]/g, '');
-    return this.speakEnglish(spokenText, 0.8);
+  /**
+   * Play authentic pure phoneme sound recording (100% Synthetic Phonics compliant, NO schwa).
+   * E.g. /p/ plays pure unvoiced puff of air, NOT "pu" or "puh"!
+   */
+  public async playPhoneme(phonemeId: string): Promise<void> {
+    if (!this.soundEnabled) return;
+    try {
+      const cleanId = phonemeId.toLowerCase().replace(/[\/\[\]]/g, '').trim();
+      const audioKey = cleanId;
+
+      let audio = this.phonemeAudioCache[audioKey];
+      if (!audio) {
+        audio = new Audio(`/assets/audio/phonemes/${audioKey}.mp3`);
+        audio.preload = 'auto';
+        this.phonemeAudioCache[audioKey] = audio;
+      }
+
+      audio.pause();
+      audio.currentTime = 0;
+
+      return new Promise<void>((resolve) => {
+        let isDone = false;
+        const done = () => {
+          if (!isDone) {
+            isDone = true;
+            audio.removeEventListener('ended', done);
+            audio.removeEventListener('error', done);
+            resolve();
+          }
+        };
+
+        audio.addEventListener('ended', done);
+        audio.addEventListener('error', done);
+
+        audio.play().catch(() => {
+          done();
+        });
+      });
+    } catch {
+      // Fallback
+    }
+  }
+
+  /**
+   * Speak single phoneme using pure native audio recording.
+   * Completely eliminates schwa /ə/ addition (e.g. /p/ is crisp /p/, not 'puh' / 'pu').
+   */
+  public speakPhoneme(phonemeId: string, _ipa?: string): Promise<void> {
+    return this.playPhoneme(phonemeId);
+  }
+
+  /**
+   * Sequentially blend multiple phonemes with a crisp, realistic interval.
+   */
+  public async blendPhonemes(phonemeIds: string[], gapMs: number = 90): Promise<void> {
+    for (const ph of phonemeIds) {
+      await this.playPhoneme(ph);
+      await new Promise((r) => setTimeout(r, gapMs));
+    }
   }
 
   public stopSpeaking() {
+    // Stop speech synthesis if speaking
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
     }
+    // Stop any active phoneme audio
+    Object.values(this.phonemeAudioCache).forEach((audio) => {
+      try {
+        audio.pause();
+        audio.currentTime = 0;
+      } catch {
+        // Ignore
+      }
+    });
   }
 }
 

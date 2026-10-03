@@ -31,7 +31,7 @@ export const BubbleBlender: React.FC<BubbleBlenderProps> = ({
   const visual = getWordVisual(activity.word);
 
   const handleTapBubble = (index: number, phoneme: string) => {
-    audioService.speakEnglish(phoneme, 0.8);
+    audioService.speakPhoneme(phoneme);
     if (!activeBubbles.includes(index)) {
       setActiveBubbles([...activeBubbles, index]);
     }
@@ -41,11 +41,8 @@ export const BubbleBlender: React.FC<BubbleBlenderProps> = ({
     audioService.playMagicChime();
     setIsBlended(true);
 
-    // Speak phonemes in rapid sequence then the whole word
-    for (const p of activity.phonemes) {
-      await audioService.speakEnglish(p, 0.9);
-      await new Promise(r => setTimeout(r, 120));
-    }
+    // Play pure authentic phonemes in sequence
+    await audioService.blendPhonemes(activity.phonemes, 100);
 
     // Blend complete word
     await audioService.speakEnglish(activity.word, 0.85);

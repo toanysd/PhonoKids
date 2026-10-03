@@ -109,14 +109,12 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
     audioService.speakEnglish(item.word, 0.85);
   };
 
-  // Blend audio: speak each phoneme sequentially
-  const handlePlayBlend = (e: React.MouseEvent, item: PhonicsWordBankItem) => {
+  // Blend audio: speak each phoneme sequentially then full word
+  const handlePlayBlend = async (e: React.MouseEvent, item: PhonicsWordBankItem) => {
     e.stopPropagation();
-    audioService.playPopSound(560);
     setActiveWordId(item.id);
-    // Speak first phoneme, then word
-    const phText = item.phonemes.join(' . ');
-    audioService.speakEnglish(`${phText} ... ${item.word}`, 0.8);
+    await audioService.blendPhonemes(item.phonemes, 110);
+    audioService.speakEnglish(item.word, 0.85);
   };
 
   // Sentence audio
@@ -527,8 +525,7 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
                   <button
                     key={idx}
                     onClick={() => {
-                      audioService.playPopSound(500 + idx * 40);
-                      audioService.speakEnglish(ph, 0.8);
+                      audioService.speakPhoneme(ph);
                     }}
                     className="px-3.5 py-1 bg-amber-200 hover:bg-amber-300 text-amber-950 font-black rounded-xl border border-amber-400 text-sm shadow-xs cursor-pointer active:scale-90 transition-transform"
                     title={`Nghe âm /${ph}/`}
