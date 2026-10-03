@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  body {
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+}
+
+/* Custom Child-friendly interactive styles */
+.kid-shadow {
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.15);
+}
+
+.kid-shadow:active {
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+  transform: translateY(6px);
+}
+
+.bubble-glow {
+  filter: drop-shadow(0 0 12px rgba(255, 214, 112, 0.7));
+}
+
+@keyframes floatAnim {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+}
+
+.animate-float {
+  animation: floatAnim 3s ease-in-out infinite;
+}
+
+@keyframes mouthBreathe {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.15); }
+}
+
+.animate-mouth {
+  animation: mouthBreathe 1.5s ease-in-out infinite;
+}

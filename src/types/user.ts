@@ -1,0 +1,27 @@
+export interface ChildProfile {
+  id: string;
+  name: string;
+  age: 3 | 4 | 5;
+  avatar: string;
+  stars: number;
+  unlockedGroups: number[]; // e.g. [1, 2]
+  masteredPhonemes: string[]; // e.g. ['s', 'a', 't']
+  completedStories: string[];
+  lastPlayedAt: string;
+}
+
+export interface SessionSettings {
+  sessionMinutes: number; // 5, 8, 10, 15
+  accent: 'US' | 'UK';
+  voiceSpeed: number; // 0.85 for toddlers, 1.0 for normal
+  soundEffectsEnabled: boolean;
+  parentPin: string; // Default: '1234'
+}
+
+export interface PhonemeRecord {
+  phonemeId: string;
+  practicedCount: number;
+  accuracyRate: number; // 0 - 100%
+  lastPracticed: string;
+  needsReview: boolean;
+}
