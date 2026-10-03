@@ -11,6 +11,7 @@ import { CharacterCompanion } from './components/CharacterCompanion';
 import { RestBreakModal } from './components/RestBreakModal';
 import { AiBuddyChat } from './components/AiBuddyChat';
 import { StickerAlbumModal } from './components/StickerAlbumModal';
+import { ArcadePlayground } from './components/ArcadePlayground';
 
 import { PhonemeInfo } from './types/phonics';
 import { DecodableStory } from './types/story';
@@ -19,7 +20,7 @@ import { ChildProfile, SessionSettings } from './types/user';
 import { storageService } from './services/storageService';
 import { audioService } from './services/audioService';
 
-type ViewMode = 'island_map' | 'stories' | 'minimal_pairs' | 'blending' | 'lesson' | 'story_reader' | 'ai_chat';
+type ViewMode = 'island_map' | 'stories' | 'minimal_pairs' | 'blending' | 'lesson' | 'story_reader' | 'ai_chat' | 'arcade';
 
 export const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewMode>('island_map');
@@ -106,7 +107,8 @@ export const App: React.FC = () => {
     currentView === 'lesson' || 
     currentView === 'ai_chat' ||
     currentView === 'blending' ||
-    currentView === 'minimal_pairs';
+    currentView === 'minimal_pairs' ||
+    currentView === 'arcade';
 
   return (
     <div className={`h-screen w-screen overflow-hidden bg-gradient-to-b from-amber-50 via-yellow-50 to-orange-50 text-amber-950 flex flex-col font-child select-none ${settings.reducedMotion ? 'motion-reduce' : ''}`}>
@@ -164,6 +166,13 @@ export const App: React.FC = () => {
 
         {currentView === 'blending' && (
           <BlendingPlayground onAddStars={handleAddStars} />
+        )}
+
+        {currentView === 'arcade' && (
+          <ArcadePlayground
+            onAddStars={handleAddStars}
+            onBackToHome={() => setCurrentView('island_map')}
+          />
         )}
 
         {currentView === 'ai_chat' && (

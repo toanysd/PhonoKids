@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Phonics Ninja - Chém Âm Vị Ehon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Canvas Layer -->
+  <canvas id="gameCanvas"></canvas>
+
+  <!-- Pinned Zero-Scroll Kid-First HUD Header -->
+  <header id="hudHeader">
+    <button id="exitBtn" class="kid-hud-btn btn-back" title="Quay lại">
+      ⬅️ Quay Lại
+    </button>
+
+    <div id="targetSoundBanner">
+      <span class="hud-label">MỤC TIÊU:</span>
+      <span id="targetPhonemeText" class="hud-phoneme">/s/</span>
+      <button id="repeatSoundBtn" class="kid-hud-btn btn-sound" title="Nghe lại âm">
+        🔊 Nghe Âm
+      </button>
+    </div>
+
+    <div class="hud-stats">
+      <div class="stat-badge star-badge">
+        <span>⭐</span>
+        <span id="scoreText">0</span>
+      </div>
+      <button id="cameraToggleBtn" class="kid-hud-btn btn-camera" title="Bật/Tắt Camera">
+        📷 Camera AI
+      </button>
+    </div>
+  </header>
+
+  <!-- Bottom Interactive Helper Bar -->
+  <footer id="hudFooter">
+    <div class="prompt-card">
+      <span class="prompt-icon">💡</span>
+      <span id="promptText" class="prompt-text">Dùng ngón tay hoặc múa tay trước camera để chém tranh có âm mục tiêu nhé!</span>
+    </div>
+  </footer>
+
+  <!-- Hidden Video for MediaPipe Hand Tracking -->
+  <video id="webcamVideo" playsinline webkit-playsinline autoplay muted></video>
+
+  <!-- Game Over / Victory Modal -->
+  <div id="victoryModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="trophy-icon">🏆</div>
+      <h2>Hoan Hô Bé Yêu!</h2>
+      <p id="victoryMessage">Bé đã xuất sắc chém đúng các từ mang âm mục tiêu!</p>
+      <div class="reward-stars">
+        <span>Bé nhận được: </span>
+        <span class="earned-count" id="earnedStarsCount">+5 ⭐</span>
+      </div>
+      <div class="modal-actions">
+        <button id="playAgainBtn" class="kid-hud-btn btn-action">🔄 Chơi Tiếp</button>
+        <button id="modalExitBtn" class="kid-hud-btn btn-back">🏠 Về Bản Đồ</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

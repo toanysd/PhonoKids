@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Ehon Sticker Claw - Máy Gắp Thú Phonics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Machine Frame Container -->
+  <div id="arcadeWrapper">
+    <!-- Top Header HUD -->
+    <header id="clawHeader">
+      <button id="exitBtn" class="claw-btn btn-exit" title="Quay lại">
+        ⬅️ Quay Lại
+      </button>
+
+      <div class="claw-title-badge">
+        <span class="badge-icon">🧸</span>
+        <span class="badge-text">MÁY GẮP THÚ EHON</span>
+      </div>
+
+      <div class="star-badge">
+        <span>⭐</span>
+        <span id="starScore">0</span>
+      </div>
+    </header>
+
+    <!-- Main Claw Machine Glass Arena -->
+    <div id="glassCabinet">
+      <canvas id="clawCanvas"></canvas>
+
+      <!-- Prize Chute Visual (Left side) -->
+      <div id="prizeChute">
+        <span class="chute-label">CỬA TRẢ QUÀ 🎁</span>
+      </div>
+    </div>
+
+    <!-- Bottom Physical Controls Panel (3D Tactile Buttons) -->
+    <footer id="controlPanel">
+      <div class="control-row">
+        <button id="moveLeftBtn" class="control-btn btn-arrow" title="Di chuyển sang trái">
+          ⬅️ TRÁI
+        </button>
+
+        <button id="grabBtn" class="control-btn btn-grab" title="Thả càng gắp thú">
+          🎯 GẮP NGAY!
+        </button>
+
+        <button id="moveRightBtn" class="control-btn btn-arrow" title="Di chuyển sang phải">
+          PHẢI ➡️
+        </button>
+      </div>
+      <div class="control-hint">
+        <span>💡 Chạm nút hoặc dùng phím <b>Mũi tên / Phím cách</b> để điều khiển càng gắp nhé!</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Prize Celebration Modal -->
+  <div id="prizeModal" class="modal-backdrop">
+    <div class="prize-card">
+      <div class="prize-sparkle">✨</div>
+      <div id="prizeImageWrap" class="prize-img-circle">
+        <img id="prizeImg" src="/assets/ehon/leo.jpg" alt="Phần thưởng">
+      </div>
+      <h2 id="prizeName">LION</h2>
+      <p id="prizeDescription">Bé đã gắp được Bạn Sư Tử Leo dũng cảm!</p>
+      <div class="star-reward">
+        <span>Thưởng: </span>
+        <span class="star-count">+3 ⭐</span>
+      </div>
+      <button id="continueClawBtn" class="claw-btn btn-grab-continue">
+        Tiếp Tục Gắp Thú 🎮
+      </button>
+    </div>
+  </div>
+
+  <script src="claw.js"></script>
+</body>
+</html>

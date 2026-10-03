@@ -1,10 +1,10 @@
 import React from 'react';
-import { Volume2, VolumeX, Shield, Star, BookOpen, Map, Sparkles, Wand2, Bot } from 'lucide-react';
+import { Volume2, VolumeX, Shield, Star, BookOpen, Map, Sparkles, Wand2, Bot, Gamepad2 } from 'lucide-react';
 import { audioService } from '../services/audioService';
 
 interface NavbarProps {
-  currentView: 'island_map' | 'stories' | 'minimal_pairs' | 'blending' | 'lesson' | 'story_reader' | 'ai_chat';
-  onNavigate: (view: 'island_map' | 'stories' | 'minimal_pairs' | 'blending' | 'ai_chat') => void;
+  currentView: 'island_map' | 'stories' | 'minimal_pairs' | 'blending' | 'lesson' | 'story_reader' | 'ai_chat' | 'arcade';
+  onNavigate: (view: 'island_map' | 'stories' | 'minimal_pairs' | 'blending' | 'ai_chat' | 'arcade') => void;
   stars: number;
   soundEnabled: boolean;
   onToggleSound: () => void;
@@ -98,6 +98,18 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           <button
+            onClick={() => onNavigate('arcade')}
+            className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl font-black text-sm transition-all cursor-pointer ${
+              currentView === 'arcade'
+                ? 'bg-amber-400 text-amber-950 shadow-sm'
+                : 'text-amber-900 hover:bg-amber-200/60'
+            }`}
+          >
+            <Gamepad2 className="w-4 h-4 text-amber-800" />
+            <span>Khu Vui Chơi 🎮</span>
+          </button>
+
+          <button
             onClick={() => onNavigate('ai_chat')}
             className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl font-black text-sm transition-all cursor-pointer ${
               currentView === 'ai_chat'
@@ -186,6 +198,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           }`}
         >
           Ghép Vần
+        </button>
+        <button
+          onClick={() => onNavigate('arcade')}
+          className={`px-3 py-1.5 text-xs font-black rounded-xl transition-colors ${
+            currentView === 'arcade' ? 'bg-amber-400 text-amber-950 shadow-xs' : 'text-amber-800'
+          }`}
+        >
+          Vui Chơi 🎮
         </button>
         <button
           onClick={() => onNavigate('ai_chat')}
