@@ -1168,8 +1168,8 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-emerald-100",
         "sceneryEmoji": "🤗",
         "visual": {
-          "url": "/assets/ehon/sam_pat_ant.jpg",
-          "alt": "Tranh Ehon vòng tay ôm ấm áp yêu thương"
+          "url": "/assets/ehon/puppy_hug.jpg",
+          "alt": "Tranh Ehon vòng tay ôm ấm áp yêu thương của bố dành cho chú cún"
         },
         "wordsTiming": [
           {
@@ -1664,7 +1664,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
     "ageBand": "4 – 5 Tuổi (Mầm non lớn)",
     "coverEmoji": "🐸",
     "coverVisual": {
-      "url": "/assets/ehon/ant_pan.jpg",
+      "url": "/assets/ehon/frog_log.jpg",
       "alt": "Tranh Ehon chú ếch xanh ngồi trên khúc gỗ bên ao"
     },
     "summaryVi": "Chú ếch xanh ngồi trên khúc gỗ ngắm sương mù rồi nhảy tõm xuống ao.",
@@ -1688,7 +1688,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-emerald-100",
         "sceneryEmoji": "🪵",
         "visual": {
-          "url": "/assets/ehon/ant_pan.jpg",
+          "url": "/assets/ehon/frog_log.jpg",
           "alt": "Tranh Ehon chú ếch ngồi trên khúc gỗ tròn"
         },
         "wordsTiming": [
@@ -1780,8 +1780,8 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-teal-100",
         "sceneryEmoji": "🏞️",
         "visual": {
-          "url": "/assets/ehon/three_fish.jpg",
-          "alt": "Tranh Ehon chú ếch bơi lội dưới làn nước"
+          "url": "/assets/ehon/frog_log.jpg",
+          "alt": "Tranh Ehon chú ếch nhảy tõm xuống ao biếc"
         },
         "wordsTiming": [
           {
@@ -1870,7 +1870,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
     "ageBand": "4 – 5 Tuổi (Mầm non lớn)",
     "coverEmoji": "🪲",
     "coverVisual": {
-      "url": "/assets/ehon/cat_mat.jpg",
+      "url": "/assets/ehon/bug_rug.jpg",
       "alt": "Tranh Ehon chú bọ rùa nhỏ nấp trên thảm len"
     },
     "summaryVi": "Chú bọ cánh cam tí hon trốn trong thảm len ấm áp.",
@@ -1894,7 +1894,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-amber-100",
         "sceneryEmoji": "🧶",
         "visual": {
-          "url": "/assets/ehon/cat_mat.jpg",
+          "url": "/assets/ehon/bug_rug.jpg",
           "alt": "Tranh Ehon chú bọ trên tấm thảm"
         },
         "wordsTiming": [
@@ -2082,7 +2082,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
     "ageBand": "4 – 5 Tuổi (Mầm non lớn)",
     "coverEmoji": "🦊",
     "coverVisual": {
-      "url": "/assets/ehon/ant_pan.jpg",
+      "url": "/assets/ehon/fox_box.jpg",
       "alt": "Tranh Ehon chú cáo cam chui vào chiếc hộp gỗ"
     },
     "summaryVi": "Chú cáo tinh nghịch trốn trong chiếc hộp quà sắc màu.",
@@ -2106,7 +2106,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-orange-100",
         "sceneryEmoji": "📦",
         "visual": {
-          "url": "/assets/ehon/ant_pan.jpg",
+          "url": "/assets/ehon/fox_box.jpg",
           "alt": "Tranh Ehon chú cáo lấp ló trong hộp"
         },
         "wordsTiming": [
@@ -2198,8 +2198,8 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-sky-100",
         "sceneryEmoji": "🐦",
         "visual": {
-          "url": "/assets/ehon/archipelago.jpg",
-          "alt": "Tranh Ehon đàn chim bay lượn trên đảo"
+          "url": "/assets/ehon/fox_box.jpg",
+          "alt": "Tranh Ehon các bạn nhỏ ngắm nhìn chú cáo trong hộp"
         },
         "wordsTiming": [
           {
@@ -2512,7 +2512,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
     "ageBand": "4 – 6 Tuổi",
     "coverEmoji": "🚂",
     "coverVisual": {
-      "url": "/assets/ehon/archipelago.jpg",
+      "url": "/assets/ehon/train_rain.jpg",
       "alt": "Tranh Ehon đoàn tàu nhỏ chạy dưới cơn mưa rào"
     },
     "summaryVi": "Đoàn tàu nhỏ bon bon vượt qua cánh đồng hoa dưới màn mưa mát lành.",
@@ -2536,7 +2536,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-sky-100",
         "sceneryEmoji": "🌧️",
         "visual": {
-          "url": "/assets/ehon/archipelago.jpg",
+          "url": "/assets/ehon/train_rain.jpg",
           "alt": "Tranh Ehon đoàn tàu chạy qua thung lũng mưa"
         },
         "wordsTiming": [
@@ -2622,7 +2622,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-emerald-100",
         "sceneryEmoji": "🌳",
         "visual": {
-          "url": "/assets/ehon/archipelago.jpg",
+          "url": "/assets/ehon/train_rain.jpg",
           "alt": "Tranh Ehon cây sồi bên ga tàu"
         },
         "wordsTiming": [
@@ -2718,7 +2718,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
     "ageBand": "4 – 6 Tuổi",
     "coverEmoji": "🐝",
     "coverVisual": {
-      "url": "/assets/ehon/sun.jpg",
+      "url": "/assets/ehon/bee_tree.jpg",
       "alt": "Tranh Ehon chú ong chăm chỉ bay lượn bên cành cây hoa"
     },
     "summaryVi": "Chú ong chăm chỉ bay tìm mật ngọt ngào tặng các bạn nhỏ.",
@@ -2742,7 +2742,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-emerald-100",
         "sceneryEmoji": "🐝",
         "visual": {
-          "url": "/assets/ehon/sun.jpg",
+          "url": "/assets/ehon/bee_tree.jpg",
           "alt": "Tranh Ehon chú ong và cây xanh"
         },
         "wordsTiming": [
@@ -2834,7 +2834,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-yellow-100",
         "sceneryEmoji": "🍯",
         "visual": {
-          "url": "/assets/ehon/apple.jpg",
+          "url": "/assets/ehon/bee_tree.jpg",
           "alt": "Tranh Ehon hoa trái ngọt ngào"
         },
         "wordsTiming": [
@@ -2924,7 +2924,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
     "ageBand": "4 – 6 Tuổi",
     "coverEmoji": "⛵",
     "coverVisual": {
-      "url": "/assets/ehon/ship.jpg",
+      "url": "/assets/ehon/goat_boat.jpg",
       "alt": "Tranh Ehon chú dê chèo chiếc thuyền gỗ trên sông"
     },
     "summaryVi": "Chú dê mặc áo khoác ấm chèo thuyền ngắm phong cảnh bình minh.",
@@ -2948,7 +2948,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-sky-100",
         "sceneryEmoji": "🛶",
         "visual": {
-          "url": "/assets/ehon/ship.jpg",
+          "url": "/assets/ehon/goat_boat.jpg",
           "alt": "Tranh Ehon chú dê trên thuyền gỗ"
         },
         "wordsTiming": [
@@ -3040,7 +3040,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-teal-100",
         "sceneryEmoji": "🌊",
         "visual": {
-          "url": "/assets/ehon/ship.jpg",
+          "url": "/assets/ehon/goat_boat.jpg",
           "alt": "Tranh Ehon dòng nước êm đềm thuyền trôi"
         },
         "wordsTiming": [
@@ -3342,7 +3342,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
     "ageBand": "5 – 6 Tuổi (Tiền tiểu học)",
     "coverEmoji": "👑",
     "coverVisual": {
-      "url": "/assets/ehon/queen_park.jpg",
+      "url": "/assets/ehon/king_ring.jpg",
       "alt": "Tranh Ehon đức vua đeo chiếc nhẫn vàng"
     },
     "summaryVi": "Vị vua nhân từ tìm thấy chiếc nhẫn vàng lấp lánh trong khu vườn hoàng gia.",
@@ -3366,7 +3366,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-amber-100",
         "sceneryEmoji": "👑",
         "visual": {
-          "url": "/assets/ehon/queen_park.jpg",
+          "url": "/assets/ehon/king_ring.jpg",
           "alt": "Tranh Ehon vị vua hiền từ ca hát"
         },
         "wordsTiming": [
@@ -3452,7 +3452,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-yellow-100",
         "sceneryEmoji": "💍",
         "visual": {
-          "url": "/assets/ehon/queen_coin.jpg",
+          "url": "/assets/ehon/king_ring.jpg",
           "alt": "Tranh Ehon chiếc nhẫn vàng rực rỡ"
         },
         "wordsTiming": [
@@ -3542,7 +3542,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
     "ageBand": "5 – 6 Tuổi (Tiền tiểu học)",
     "coverEmoji": "🌕",
     "coverVisual": {
-      "url": "/assets/ehon/star.jpg",
+      "url": "/assets/ehon/moon_spoon.jpg",
       "alt": "Tranh Ehon vầng trăng rằm sáng lung linh soi bóng chiếc thìa bạc"
     },
     "summaryVi": "Dưới ánh trăng rằm lung linh, em bé dùng chiếc thìa bạc ăn bữa tối ấm cúng.",
@@ -3566,7 +3566,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-indigo-100",
         "sceneryEmoji": "🌕",
         "visual": {
-          "url": "/assets/ehon/star.jpg",
+          "url": "/assets/ehon/moon_spoon.jpg",
           "alt": "Tranh Ehon ánh trăng soi sáng căn phòng"
         },
         "wordsTiming": [
@@ -3658,8 +3658,8 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-purple-100",
         "sceneryEmoji": "🥄",
         "visual": {
-          "url": "/assets/ehon/cup.jpg",
-          "alt": "Tranh Ehon bữa ăn ấm cúng với thìa bạc"
+          "url": "/assets/ehon/moon_spoon.jpg",
+          "alt": "Tranh Ehon bữa ăn ấm cúng với thìa bạc và bát súp ngọt ngào"
         },
         "wordsTiming": [
           {
@@ -3748,7 +3748,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
     "ageBand": "5 – 6 Tuổi (Tiền tiểu học)",
     "coverEmoji": "📖",
     "coverVisual": {
-      "url": "/assets/ehon/sit.jpg",
+      "url": "/assets/ehon/good_book.jpg",
       "alt": "Tranh Ehon em bé say sưa đọc sách bên ngôi nhà gỗ"
     },
     "summaryVi": "Em bé ngồi đọc cuốn sách tranh Ehon tuyệt đẹp bên bìa rừng thanh bình.",
@@ -3772,7 +3772,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-emerald-100",
         "sceneryEmoji": "📖",
         "visual": {
-          "url": "/assets/ehon/sit.jpg",
+          "url": "/assets/ehon/good_book.jpg",
           "alt": "Tranh Ehon cuốn sách tranh mở ra"
         },
         "wordsTiming": [
@@ -3864,8 +3864,8 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-amber-100",
         "sceneryEmoji": "🪵",
         "visual": {
-          "url": "/assets/ehon/ant_pan.jpg",
-          "alt": "Tranh Ehon nấu súp ấm cúng bên nhà gỗ"
+          "url": "/assets/ehon/good_book.jpg",
+          "alt": "Tranh Ehon ngồi đọc sách và nấu súp ấm cúng bên nhà gỗ"
         },
         "wordsTiming": [
           {
@@ -4389,7 +4389,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
     "ageBand": "5 – 6 Tuổi",
     "coverEmoji": "🐥",
     "coverVisual": {
-      "url": "/assets/ehon/hen.jpg",
+      "url": "/assets/ehon/chick_chip.jpg",
       "alt": "Tranh Ehon chú gà con lông vàng trò chuyện ríu rít"
     },
     "summaryVi": "Chú gà con Chip trò chuyện vui vẻ cùng các bạn bên hàng rào hoa.",
@@ -4413,7 +4413,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-yellow-100",
         "sceneryEmoji": "🐥",
         "visual": {
-          "url": "/assets/ehon/hen.jpg",
+          "url": "/assets/ehon/chick_chip.jpg",
           "alt": "Tranh Ehon chú gà con líu lo"
         },
         "wordsTiming": [
@@ -4499,8 +4499,8 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-orange-100",
         "sceneryEmoji": "🥕",
         "visual": {
-          "url": "/assets/ehon/cup.jpg",
-          "alt": "Tranh Ehon củ cà rốt ngon lành"
+          "url": "/assets/ehon/chick_chip.jpg",
+          "alt": "Tranh Ehon chú gà con bên luống cà rốt giòn ngọt"
         },
         "wordsTiming": [
           {
@@ -4595,7 +4595,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
     "ageBand": "5 – 6 Tuổi",
     "coverEmoji": "🦋",
     "coverVisual": {
-      "url": "/assets/ehon/star.jpg",
+      "url": "/assets/ehon/three_moths.jpg",
       "alt": "Tranh Ehon ba chú bướm đêm vỗ cánh nhẹ nhàng bên ánh đèn"
     },
     "summaryVi": "Ba chú bướm đêm vỗ cánh bay theo lối đi lát đá ngắm trăng sao.",
@@ -4619,7 +4619,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-indigo-100",
         "sceneryEmoji": "🛤️",
         "visual": {
-          "url": "/assets/ehon/star.jpg",
+          "url": "/assets/ehon/three_moths.jpg",
           "alt": "Tranh Ehon ba chú bướm đêm bên con đường đá"
         },
         "wordsTiming": [
@@ -4711,7 +4711,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-purple-100",
         "sceneryEmoji": "✨",
         "visual": {
-          "url": "/assets/ehon/star.jpg",
+          "url": "/assets/ehon/three_moths.jpg",
           "alt": "Tranh Ehon cánh bướm lấp lánh ánh sao"
         },
         "wordsTiming": [
@@ -4807,7 +4807,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
     "ageBand": "5 – 6 Tuổi",
     "coverEmoji": "📦",
     "coverVisual": {
-      "url": "/assets/ehon/ant_pan.jpg",
+      "url": "/assets/ehon/shells_box.jpg",
       "alt": "Tranh Ehon chiếc hộp báu vật nhỏ và ngôi sao trên cao"
     },
     "summaryVi": "Bé phân biệt đồ vật ở gần và ở xa qua chiếc hộp và ngôi sao lung linh.",
@@ -4831,8 +4831,8 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-teal-100",
         "sceneryEmoji": "📦",
         "visual": {
-          "url": "/assets/ehon/ant_pan.jpg",
-          "alt": "Tranh Ehon chiếc hộp đựng vỏ ốc"
+          "url": "/assets/ehon/shells_box.jpg",
+          "alt": "Tranh Ehon chiếc hộp đựng sáu vỏ ốc xinh"
         },
         "wordsTiming": [
           {
@@ -5226,8 +5226,8 @@ export const DECODABLE_STORIES: DecodableStory[] = [
     "ageBand": "6 – 8 Tuổi (Tiểu học)",
     "coverEmoji": "☁️",
     "coverVisual": {
-      "url": "/assets/ehon/archipelago.jpg",
-      "alt": "Tranh Ehon đám mây trắng bồng bềnh như kẹo bông"
+      "url": "/assets/ehon/clown_cloud.jpg",
+      "alt": "Tranh Ehon chú hề vui tính nhào lộn trên đám mây trắng"
     },
     "summaryVi": "Chú hề vui tính nhào lộn trên đám mây trắng và cất tiếng reo vui.",
     "targetPhonics": [
@@ -5250,8 +5250,8 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-sky-100",
         "sceneryEmoji": "☁️",
         "visual": {
-          "url": "/assets/ehon/archipelago.jpg",
-          "alt": "Tranh Ehon mây trắng trên nền trời xanh"
+          "url": "/assets/ehon/clown_cloud.jpg",
+          "alt": "Tranh Ehon chú hề vui vẻ bay trên đám mây trắng"
         },
         "wordsTiming": [
           {
@@ -5438,8 +5438,8 @@ export const DECODABLE_STORIES: DecodableStory[] = [
     "ageBand": "6 – 8 Tuổi (Tiểu học)",
     "coverEmoji": "🔍",
     "coverVisual": {
-      "url": "/assets/ehon/archipelago.jpg",
-      "alt": "Tranh Ehon bản đồ thám hiểm với manh mối bí ẩn"
+      "url": "/assets/ehon/blue_clue.jpg",
+      "alt": "Tranh Ehon chú thỏ tìm manh mối dấu chân màu xanh trong rừng"
     },
     "summaryVi": "Bé tìm thấy manh mối màu xanh dẫn lối đến kho báu tri thức trên đảo.",
     "targetPhonics": [
@@ -5462,8 +5462,8 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-cyan-100",
         "sceneryEmoji": "🔍",
         "visual": {
-          "url": "/assets/ehon/archipelago.jpg",
-          "alt": "Tranh Ehon manh mối trên phiến đá"
+          "url": "/assets/ehon/blue_clue.jpg",
+          "alt": "Tranh Ehon manh mối dấu chân màu xanh"
         },
         "wordsTiming": [
           {
@@ -5554,8 +5554,8 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-amber-100",
         "sceneryEmoji": "✉️",
         "visual": {
-          "url": "/assets/ehon/cup.jpg",
-          "alt": "Tranh Ehon dán phong bì thư báu vật"
+          "url": "/assets/ehon/blue_clue.jpg",
+          "alt": "Tranh Ehon lá thư và manh mối kho báu kỳ diệu"
         },
         "wordsTiming": [
           {
@@ -5650,7 +5650,7 @@ export const DECODABLE_STORIES: DecodableStory[] = [
     "ageBand": "6 – 8 Tuổi (Tiểu học)",
     "coverEmoji": "🚜",
     "coverVisual": {
-      "url": "/assets/ehon/hen_dog.jpg",
+      "url": "/assets/ehon/farmer_barn.jpg",
       "alt": "Tranh Ehon nông trại của bác nông dân với nhà kho đỏ"
     },
     "summaryVi": "Bác nông dân và chị gái lái xe hơi đến nhà kho thóc chăm sóc các bạn thú.",
@@ -5675,8 +5675,8 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-amber-100",
         "sceneryEmoji": "🚜",
         "visual": {
-          "url": "/assets/ehon/hen_dog.jpg",
-          "alt": "Tranh Ehon bác nông dân bên nhà kho đỏ"
+          "url": "/assets/ehon/farmer_barn.jpg",
+          "alt": "Tranh Ehon bác nông dân lái xe đến nhà kho đỏ"
         },
         "wordsTiming": [
           {
@@ -5773,8 +5773,8 @@ export const DECODABLE_STORIES: DecodableStory[] = [
         "backgroundTheme": "bg-indigo-100",
         "sceneryEmoji": "💧",
         "visual": {
-          "url": "/assets/ehon/star.jpg",
-          "alt": "Tranh Ehon chị gái và em bé ngắm trời sao"
+          "url": "/assets/ehon/farmer_barn.jpg",
+          "alt": "Tranh Ehon trang trại bình yên lung linh ánh sao"
         },
         "wordsTiming": [
           {

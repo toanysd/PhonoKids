@@ -141,6 +141,9 @@ const CURATED_NEW_VISUALS = {
   'lark': { url: 'https://images.unsplash.com/photo-1444464666168-49d633b86797?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Sơn ca bay vút lên bầu trời cao cất tiếng hót mừng' }
 };
 
+const { CURATED_FULL_BANK } = require('./curated_full_bank.cjs');
+const ALL_CURATED_VISUALS = { ...CURATED_NEW_VISUALS, ...CURATED_FULL_BANK };
+
 // Generate comprehensive items
 const MASTER_WORD_BANK = [];
 const seenWords = new Set();
@@ -149,8 +152,8 @@ const seenWords = new Set();
 VOCABULARY.forEach((v, idx) => {
   const wordKey = v.word.toLowerCase();
   const theme = categorizeTheme(v.word, v.meaningVi);
-  const visual = existingVisuals[wordKey] || CURATED_NEW_VISUALS[wordKey] || {
-    url: '/assets/ehon/archipelago.jpg',
+  const visual = existingVisuals[wordKey] || ALL_CURATED_VISUALS[wordKey] || {
+    url: '/assets/ehon/cat_mat.jpg',
     type: 'ehon',
     alt: `Tranh minh họa từ ${v.word}`
   };
@@ -439,7 +442,7 @@ for (const [phId, items] of Object.entries(PHONEME_EXPANSION)) {
     const dedupKey = `${phId}_${wordKey}`;
     if (seenWords.has(dedupKey)) return;
 
-    const visual = existingVisuals[wordKey] || CURATED_NEW_VISUALS[wordKey] || {
+    const visual = existingVisuals[wordKey] || ALL_CURATED_VISUALS[wordKey] || {
       url: `/assets/ehon/theme_${item.theme}.jpg`,
       type: 'ehon',
       alt: `Tranh Ehon minh họa từ ${item.word}`
@@ -473,7 +476,7 @@ for (const [phId, items] of Object.entries(GENERIC_EXTENSIONS)) {
     const dedupKey = `${phId}_${wordKey}`;
     if (seenWords.has(dedupKey)) return;
 
-    const visual = existingVisuals[wordKey] || CURATED_NEW_VISUALS[wordKey] || {
+    const visual = existingVisuals[wordKey] || ALL_CURATED_VISUALS[wordKey] || {
       url: `/assets/ehon/theme_${item.theme}.jpg`,
       type: 'ehon',
       alt: `Tranh Ehon minh họa từ ${item.word}`
@@ -668,7 +671,7 @@ for (const [phId, items] of Object.entries(PHONEME_WORDS_DATABASE)) {
     const dedupKey = `${phId}_${wordKey}`;
     if (seenWords.has(dedupKey)) return;
 
-    const visual = existingVisuals[wordKey] || CURATED_NEW_VISUALS[wordKey] || {
+    const visual = existingVisuals[wordKey] || ALL_CURATED_VISUALS[wordKey] || {
       url: `/assets/ehon/theme_${item.theme}.jpg`,
       type: 'ehon',
       alt: `Tranh Ehon minh họa từ ${item.word}`
@@ -941,7 +944,7 @@ for (const [phId, items] of Object.entries(GROUP_5_6_7_WORDS)) {
     const dedupKey = `${phId}_${wordKey}`;
     if (seenWords.has(dedupKey)) return;
 
-    const visual = existingVisuals[wordKey] || CURATED_NEW_VISUALS[wordKey] || {
+    const visual = existingVisuals[wordKey] || ALL_CURATED_VISUALS[wordKey] || {
       url: `/assets/ehon/theme_${item.theme}.jpg`,
       type: 'ehon',
       alt: `Tranh Ehon minh họa từ ${item.word}`

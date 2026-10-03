@@ -3,10 +3,10 @@ const fs = require('fs');
 // Read existing map from build_visuals
 const content = fs.readFileSync('src/data/wordVisuals.ts', 'utf8');
 const map = {};
-const regex = /'([a-zA-Z0-9_\-]+)':\s*\{\s*url:\s*'([^']+)',\s*type:\s*'([^']+)',\s*alt:\s*'([^']+)'\s*\}/g;
+const regex = /["']([a-zA-Z0-9_\-]+)["']:\s*\{\s*["']?url["']?:\s*["']([^"']+)["'],\s*["']?type["']?:\s*["']([^"']+)["'],\s*["']?alt["']?:\s*["']([^"']+)["']\s*\}/g;
 let m;
 while ((m = regex.exec(content)) !== null) {
-  map[m[1]] = { url: m[2], type: m[3], alt: m[4] };
+  map[m[1].toLowerCase()] = { url: m[2], type: m[3], alt: m[4] };
 }
 
 // Curated Unsplash & Ehon mappings for the 211 additional words
@@ -21,11 +21,13 @@ const NEW_VISUALS = {
   'am': { url: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Em bé vui tươi tự tin là chính mình' },
   'an': { url: 'https://images.unsplash.com/photo-1557800636-894a64c1696f?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Một quả cam ngọt lành thơm mát' },
   'tent': { url: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Chiếc lều cắm trại ấm cúng giữa thiên nhiên' },
-  'tip': { url: '/assets/visemes/tongue_teeth.jpg', type: 'photo', alt: 'Đầu ngón tay chạm nhẹ' },
+  'tip': { url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Đầu ngón tay nhỏ nhắn chạm nhẹ' },
+  'lip': { url: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Đôi môi hồng xinh xắn của em bé đang cười' },
+  'chin': { url: 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Chiếc cằm xinh xắn đáng yêu của em bé' },
   'toy': { url: 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Những món đồ chơi bằng gỗ rực rỡ' },
   'tiger': { url: 'https://images.unsplash.com/photo-1508817628294-5a453fa0b8fb?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Chú hổ vằn dũng mãnh dạo bước' },
   'if': { url: 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Nụ cười rạng rỡ của bạn nhỏ' },
-  'is': { url: '/assets/ehon/cat_mat.jpg', type: 'ehon', alt: 'Tranh Ehon chú mèo đang nằm trên thảm' },
+  'is': { url: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Bé mèo con đang nằm ngủ thật ngoan' },
   'itch': { url: 'https://images.unsplash.com/photo-1541364983171-a8ba01e95cfc?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Chú cún gãi tai ngộ nghĩnh' },
   'inch': { url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Thước đo từng phân tí hon' },
   'pup': { url: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Chú cún con lông xù đáng yêu chạy nhảy' },
@@ -33,9 +35,9 @@ const NEW_VISUALS = {
   'pet': { url: '/assets/ehon/dog.jpg', type: 'ehon', alt: 'Tranh Ehon chú cún cưng thân thiết' },
   'pond': { url: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Mặt ao trong vắt bóng mây trời' },
   'neck': { url: '/assets/ehon/giraffe.jpg', type: 'ehon', alt: 'Tranh Ehon chú hươu cao cổ với chiếc cổ dài' },
-  'noon': { url: '/assets/ehon/sun.jpg', type: 'ehon', alt: 'Tranh Ehon ánh mặt trời rạng rỡ giữa trưa' },
+  'noon': { url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Mặt trời rực rỡ chiếu sáng đúng giữa trưa hè' },
   'nine': { url: 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Chữ số chín bằng gỗ sắc màu' },
-  'nose': { url: '/assets/visemes/closed_lips.jpg', type: 'photo', alt: 'Chiếc mũi nhỏ xinh của em bé' },
+  'nose': { url: 'https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Chiếc mũi nhỏ xinh của em bé' },
 
   // Group 2 additions
   'can': { url: 'https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Chiếc lon nước quả mát lành' },
@@ -149,7 +151,7 @@ const NEW_VISUALS = {
   'cling': { url: 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Chú gấu con bám chặt thân cây' },
   'vine': { url: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Dây leo xanh tốt bám quanh giàn gỗ' },
   'vase': { url: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Bình hoa gốm sứ cắm những cành hoa tươi' },
-  'voice': { url: '/assets/visemes/wide.jpg', type: 'photo', alt: 'Khuôn miệng phát âm rõ ràng trong trẻo' },
+  'voice': { url: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Giọng hát trong trẻo líu lo của bạn nhỏ' },
   'velvet': { url: 'https://images.unsplash.com/photo-1582966772680-860e372bb558?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Dải vải nhung đỏ mềm mịn như nhung' },
   'village': { url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Ngôi làng nhỏ bình yên nép mình bên thung lũng' },
   'violin': { url: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Cây đàn vĩ cầm cất lên giai điệu du dương' },
@@ -188,7 +190,7 @@ const NEW_VISUALS = {
   'shadow': { url: 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Bóng dáng bé nhỏ in trên mặt đất dưới nắng' },
   'brush': { url: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Cây cọ vẽ lông mềm quét nét màu tươi' },
   'three': { url: 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Ba khối gỗ đồ chơi xếp ngay ngắn' },
-  'teeth': { url: '/assets/visemes/teeth_together.jpg', type: 'photo', alt: 'Hàm răng trắng đều xinh xắn' },
+  'teeth': { url: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Hàm răng trắng đều xinh xắn khi bé cười tươi' },
   'path': { url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Con đường đá uốn lượn giữa vườn hoa' },
   'bath': { url: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Bồn tắm đầy bọt xà phòng trắng muốt' },
   'thick': { url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Cuốn sách tranh bìa cứng dày dặn' },
@@ -211,10 +213,10 @@ const NEW_VISUALS = {
   'mouse': { url: 'https://images.unsplash.com/photo-1541364983171-a8ba01e95cfc?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Chú chuột đồng nhỏ xíu đáng yêu' },
   'house': { url: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Ngôi nhà xinh xắn có vườn hoa trước cửa' },
   'round': { url: 'https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Quả bóng tròn xoe nảy tưng tưng' },
-  'mouth': { url: '/assets/visemes/wide.jpg', type: 'photo', alt: 'Khuôn miệng xinh nở nụ cười tươi' },
+  'mouth': { url: 'https://images.unsplash.com/photo-1485546246426-74dc88dec4d9?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Khuôn miệng cười tươi rạng rỡ của bạn nhỏ' },
   'sound': { url: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Âm thanh tiếng chuông ngân nga' },
   'count': { url: 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Bé đếm các khối số sắc màu' },
-  'point': { url: '/assets/visemes/tongue_teeth.jpg', type: 'photo', alt: 'Ngón tay trỏ chỉ vào điểm đến' },
+  'point': { url: 'https://images.unsplash.com/photo-1476703993599-0035a21b17a9?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Ngón tay bé chỉ vào hình vẽ thú vị' },
   'join': { url: 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Các bạn nhỏ cùng nắm tay tham gia trò chơi' },
   'spoil': { url: 'https://images.unsplash.com/photo-1513885535751-8b9238bd345a?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Món quà ngọt ngào chan chứa yêu thương' },
   'foil': { url: 'https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Tờ giấy bạc ánh kim lấp lánh' },
@@ -239,8 +241,10 @@ const NEW_VISUALS = {
   'garden': { url: 'https://images.unsplash.com/photo-1522748906645-95d8adfd52c7?auto=format&fit=crop&w=800&q=80', type: 'photo', alt: 'Khu vườn cổ tích ngập tràn sắc hoa' }
 };
 
+const { CURATED_FULL_BANK } = require('./curated_full_bank.cjs');
+
 // Merge all visuals
-const combined = { ...map, ...NEW_VISUALS };
+const combined = { ...map, ...NEW_VISUALS, ...CURATED_FULL_BANK };
 
 // Check with vocabulary
 const { VOCABULARY } = require('./data_vocabulary.cjs');

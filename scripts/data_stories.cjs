@@ -222,7 +222,7 @@ const STORIES = [
         { questionText: 'Where does the dog dig?', questionAudioText: 'Where does the dog dig?', options: [{ id: 'opt_mud', text: 'In the mud', emoji: '🪵', isCorrect: true }, { id: 'opt_bed', text: 'On the bed', emoji: '🛏️', isCorrect: false }] }
       ),
       makePage(2, 'Dad gives the puppy a warm hug.', 'Bố trao cho chú cún một cái ôm ấm áp.', 'bg-emerald-100', '🤗',
-        { url: '/assets/ehon/sam_pat_ant.jpg', alt: 'Tranh Ehon vòng tay ôm ấm áp yêu thương' },
+        { url: '/assets/ehon/puppy_hug.jpg', alt: 'Tranh Ehon vòng tay ôm ấm áp yêu thương của bố dành cho chú cún' },
         [
           { id: 'hs_hug', label: 'Hug', xPercent: 50, yPercent: 50, emoji: '🤗', soundName: 'sparkle', speechText: 'A big warm hug!', animationType: 'jump' }
         ],
@@ -303,13 +303,13 @@ const STORIES = [
     stage: 2,
     ageBand: '4 – 5 Tuổi (Mầm non lớn)',
     coverEmoji: '🐸',
-    coverVisual: { url: '/assets/ehon/ant_pan.jpg', alt: 'Tranh Ehon chú ếch xanh ngồi trên khúc gỗ bên ao' },
+    coverVisual: { url: '/assets/ehon/frog_log.jpg', alt: 'Tranh Ehon chú ếch xanh ngồi trên khúc gỗ bên ao' },
     summaryVi: 'Chú ếch xanh ngồi trên khúc gỗ ngắm sương mù rồi nhảy tõm xuống ao.',
     targetPhonics: ['f', 'r', 'o', 'g', 'l'],
     sightWords: ['on', 'the', 'into'],
     pages: [
       makePage(1, 'A green frog sat on a brown log.', 'Chú ếch xanh ngồi trên khúc gỗ nâu.', 'bg-emerald-100', '🪵',
-        { url: '/assets/ehon/ant_pan.jpg', alt: 'Tranh Ehon chú ếch ngồi trên khúc gỗ tròn' },
+        { url: '/assets/ehon/frog_log.jpg', alt: 'Tranh Ehon chú ếch ngồi trên khúc gỗ tròn' },
         [
           { id: 'hs_frog', label: 'Frog', xPercent: 45, yPercent: 50, emoji: '🐸', soundName: 'pop', speechText: 'Ribbit! Green frog!', animationType: 'jump' }
         ],
@@ -317,7 +317,7 @@ const STORIES = [
         { questionText: 'Where did the frog sit?', questionAudioText: 'Where did the frog sit?', options: [{ id: 'opt_log', text: 'On a log', emoji: '🪵', isCorrect: true }, { id: 'opt_bus', text: 'On a bus', emoji: '🚌', isCorrect: false }] }
       ),
       makePage(2, 'The frog hops into the clear pond.', 'Chú ếch nhảy tõm xuống làn nước ao trong vắt.', 'bg-teal-100', '🏞️',
-        { url: '/assets/ehon/three_fish.jpg', alt: 'Tranh Ehon chú ếch bơi lội dưới làn nước' },
+        { url: '/assets/ehon/frog_log.jpg', alt: 'Tranh Ehon chú ếch nhảy tõm xuống ao biếc' },
         [
           { id: 'hs_hop', label: 'Hop', xPercent: 50, yPercent: 60, emoji: '💦', soundName: 'magic', speechText: 'Splash! Hop in!', animationType: 'bounce' }
         ],
@@ -334,13 +334,13 @@ const STORIES = [
     stage: 2,
     ageBand: '4 – 5 Tuổi (Mầm non lớn)',
     coverEmoji: '🪲',
-    coverVisual: { url: '/assets/ehon/cat_mat.jpg', alt: 'Tranh Ehon chú bọ rùa nhỏ nấp trên thảm len' },
+    coverVisual: { url: '/assets/ehon/bug_rug.jpg', alt: 'Tranh Ehon chú bọ rùa nhỏ nấp trên thảm len' },
     summaryVi: 'Chú bọ cánh cam tí hon trốn trong thảm len ấm áp.',
     targetPhonics: ['b', 'u', 'g', 'r', 'u'],
     sightWords: ['see', 'the', 'in'],
     pages: [
       makePage(1, 'I see a big green bug in the rug.', 'Bé nhìn thấy một chú bọ cánh cam trên thảm.', 'bg-amber-100', '🧶',
-        { url: '/assets/ehon/cat_mat.jpg', alt: 'Tranh Ehon chú bọ trên tấm thảm' },
+        { url: '/assets/ehon/bug_rug.jpg', alt: 'Tranh Ehon chú bọ trên tấm thảm' },
         [
           { id: 'hs_bug', label: 'Bug', xPercent: 55, yPercent: 65, emoji: '🪲', soundName: 'pop', speechText: 'Tiny cute bug!', animationType: 'spin' }
         ],
@@ -365,13 +365,13 @@ const STORIES = [
     stage: 2,
     ageBand: '4 – 5 Tuổi (Mầm non lớn)',
     coverEmoji: '🦊',
-    coverVisual: { url: '/assets/ehon/ant_pan.jpg', alt: 'Tranh Ehon chú cáo cam chui vào chiếc hộp gỗ' },
+    coverVisual: { url: '/assets/ehon/fox_box.jpg', alt: 'Tranh Ehon chú cáo cam chui vào chiếc hộp gỗ' },
     summaryVi: 'Chú cáo tinh nghịch trốn trong chiếc hộp quà sắc màu.',
     targetPhonics: ['f', 'o', 'x', 'b', 's'],
     sightWords: ['the', 'is', 'in'],
     pages: [
       makePage(1, 'The clever fox is in the big box.', 'Chú cáo thông minh trốn trong chiếc hộp lớn.', 'bg-orange-100', '📦',
-        { url: '/assets/ehon/ant_pan.jpg', alt: 'Tranh Ehon chú cáo lấp ló trong hộp' },
+        { url: '/assets/ehon/fox_box.jpg', alt: 'Tranh Ehon chú cáo lấp ló trong hộp' },
         [
           { id: 'hs_fox', label: 'Fox', xPercent: 50, yPercent: 50, emoji: '🦊', soundName: 'pop', speechText: 'Peekaboo, friendly fox!', animationType: 'jump' }
         ],
@@ -379,7 +379,7 @@ const STORIES = [
         { questionText: 'Who is in the box?', questionAudioText: 'Who is in the box?', options: [{ id: 'opt_fox', text: 'The clever fox', emoji: '🦊', isCorrect: true }, { id: 'opt_hen', text: 'The red hen', emoji: '🐔', isCorrect: false }] }
       ),
       makePage(2, 'Six little birds look at the fox.', 'Sáu chú chim nhỏ ngắm nhìn chú cáo hiền lành.', 'bg-sky-100', '🐦',
-        { url: '/assets/ehon/archipelago.jpg', alt: 'Tranh Ehon đàn chim bay lượn trên đảo' },
+        { url: '/assets/ehon/fox_box.jpg', alt: 'Tranh Ehon các bạn nhỏ ngắm nhìn chú cáo trong hộp' },
         [
           { id: 'hs_birds', label: 'Birds', xPercent: 55, yPercent: 30, emoji: '🐦', soundName: 'magic', speechText: 'Chirp chirp!', animationType: 'spin' }
         ],
@@ -430,13 +430,13 @@ const STORIES = [
     stage: 2,
     ageBand: '4 – 6 Tuổi',
     coverEmoji: '🚂',
-    coverVisual: { url: '/assets/ehon/archipelago.jpg', alt: 'Tranh Ehon đoàn tàu nhỏ chạy dưới cơn mưa rào' },
+    coverVisual: { url: '/assets/ehon/train_rain.jpg', alt: 'Tranh Ehon đoàn tàu nhỏ chạy dưới cơn mưa rào' },
     summaryVi: 'Đoàn tàu nhỏ bon bon vượt qua cánh đồng hoa dưới màn mưa mát lành.',
     targetPhonics: ['r', 'ai', 'n', 't', 'r'],
     sightWords: ['the', 'goes', 'through'],
     pages: [
       makePage(1, 'Rain falls on the little green train.', 'Cơn mưa rơi tí tách trên đoàn tàu nhỏ màu xanh.', 'bg-sky-100', '🌧️',
-        { url: '/assets/ehon/archipelago.jpg', alt: 'Tranh Ehon đoàn tàu chạy qua thung lũng mưa' },
+        { url: '/assets/ehon/train_rain.jpg', alt: 'Tranh Ehon đoàn tàu chạy qua thung lũng mưa' },
         [
           { id: 'hs_rain', label: 'Rain', xPercent: 50, yPercent: 30, emoji: '🌧️', soundName: 'magic', speechText: 'Pitter patter rain!', animationType: 'bounce' }
         ],
@@ -444,7 +444,7 @@ const STORIES = [
         { questionText: 'What falls on the train?', questionAudioText: 'What falls on the train?', options: [{ id: 'opt_rain', text: 'Rain', emoji: '🌧️', isCorrect: true }, { id: 'opt_snow', text: 'Hot sun', emoji: '☀️', isCorrect: false }] }
       ),
       makePage(2, 'The train waits by the tall oak tree.', 'Đoàn tàu dừng đón bạn bên gốc cây sồi cao vút.', 'bg-emerald-100', '🌳',
-        { url: '/assets/ehon/archipelago.jpg', alt: 'Tranh Ehon cây sồi bên ga tàu' },
+        { url: '/assets/ehon/train_rain.jpg', alt: 'Tranh Ehon cây sồi bên ga tàu' },
         [
           { id: 'hs_tree', label: 'Tree', xPercent: 45, yPercent: 45, emoji: '🌳', soundName: 'sparkle', speechText: 'Mighty tall oak tree!', animationType: 'spin' }
         ],
@@ -461,13 +461,13 @@ const STORIES = [
     stage: 2,
     ageBand: '4 – 6 Tuổi',
     coverEmoji: '🐝',
-    coverVisual: { url: '/assets/ehon/sun.jpg', alt: 'Tranh Ehon chú ong chăm chỉ bay lượn bên cành cây hoa' },
+    coverVisual: { url: '/assets/ehon/bee_tree.jpg', alt: 'Tranh Ehon chú ong chăm chỉ bay lượn bên cành cây hoa' },
     summaryVi: 'Chú ong chăm chỉ bay tìm mật ngọt ngào tặng các bạn nhỏ.',
     targetPhonics: ['b', 'ee', 't', 'r', 'ee'],
     sightWords: ['see', 'the', 'in'],
     pages: [
       makePage(1, 'A busy bee visits a big green tree.', 'Chú ong chăm chỉ bay đến thăm cây xanh rợp bóng.', 'bg-emerald-100', '🐝',
-        { url: '/assets/ehon/sun.jpg', alt: 'Tranh Ehon chú ong và cây xanh' },
+        { url: '/assets/ehon/bee_tree.jpg', alt: 'Tranh Ehon chú ong và cây xanh' },
         [
           { id: 'hs_bee', label: 'Bee', xPercent: 55, yPercent: 45, emoji: '🐝', soundName: 'sparkle', speechText: 'Buzzzz! Busy little bee!', animationType: 'jump' }
         ],
@@ -475,7 +475,7 @@ const STORIES = [
         { questionText: 'Who visits the green tree?', questionAudioText: 'Who visits the green tree?', options: [{ id: 'opt_bee', text: 'A busy bee', emoji: '🐝', isCorrect: true }, { id: 'opt_pig', text: 'A pink pig', emoji: '🐷', isCorrect: false }] }
       ),
       makePage(2, 'The bee finds sweet nectar in seeds.', 'Chú ong tìm thấy mật ngọt lành trong hoa thơm.', 'bg-yellow-100', '🍯',
-        { url: '/assets/ehon/apple.jpg', alt: 'Tranh Ehon hoa trái ngọt ngào' },
+        { url: '/assets/ehon/bee_tree.jpg', alt: 'Tranh Ehon hoa trái ngọt ngào' },
         [
           { id: 'hs_sweet', label: 'Sweet', xPercent: 50, yPercent: 55, emoji: '🍯', soundName: 'magic', speechText: 'Sweet and yummy honey!', animationType: 'spin' }
         ],
@@ -492,13 +492,13 @@ const STORIES = [
     stage: 2,
     ageBand: '4 – 6 Tuổi',
     coverEmoji: '⛵',
-    coverVisual: { url: '/assets/ehon/ship.jpg', alt: 'Tranh Ehon chú dê chèo chiếc thuyền gỗ trên sông' },
+    coverVisual: { url: '/assets/ehon/goat_boat.jpg', alt: 'Tranh Ehon chú dê chèo chiếc thuyền gỗ trên sông' },
     summaryVi: 'Chú dê mặc áo khoác ấm chèo thuyền ngắm phong cảnh bình minh.',
     targetPhonics: ['g', 'oa', 't', 'b', 'c'],
     sightWords: ['in', 'his', 'the'],
     pages: [
       makePage(1, 'The goat wears a coat in the boat.', 'Chú dê mặc áo khoác ấm ngồi trên chiếc thuyền.', 'bg-sky-100', '🛶',
-        { url: '/assets/ehon/ship.jpg', alt: 'Tranh Ehon chú dê trên thuyền gỗ' },
+        { url: '/assets/ehon/goat_boat.jpg', alt: 'Tranh Ehon chú dê trên thuyền gỗ' },
         [
           { id: 'hs_boat', label: 'Boat', xPercent: 50, yPercent: 65, emoji: '🛶', soundName: 'pop', speechText: 'Row row row the boat!', animationType: 'bounce' }
         ],
@@ -506,7 +506,7 @@ const STORIES = [
         { questionText: 'What does the goat wear?', questionAudioText: 'What does the goat wear in the boat?', options: [{ id: 'opt_coat', text: 'A warm coat', emoji: '🧥', isCorrect: true }, { id: 'opt_hat', text: 'A sun hat', emoji: '👒', isCorrect: false }] }
       ),
       makePage(2, 'The boat floats along the quiet road.', 'Thuyền trôi bồng bềnh bên con đường làng êm đềm.', 'bg-teal-100', '🌊',
-        { url: '/assets/ehon/ship.jpg', alt: 'Tranh Ehon dòng nước êm đềm thuyền trôi' },
+        { url: '/assets/ehon/goat_boat.jpg', alt: 'Tranh Ehon dòng nước êm đềm thuyền trôi' },
         [
           { id: 'hs_float', label: 'Float', xPercent: 50, yPercent: 60, emoji: '🛟', soundName: 'magic', speechText: 'Float gently on water!', animationType: 'spin' }
         ],
@@ -556,13 +556,13 @@ const STORIES = [
     stage: 3,
     ageBand: '5 – 6 Tuổi (Tiền tiểu học)',
     coverEmoji: '👑',
-    coverVisual: { url: '/assets/ehon/queen_park.jpg', alt: 'Tranh Ehon đức vua đeo chiếc nhẫn vàng' },
+    coverVisual: { url: '/assets/ehon/king_ring.jpg', alt: 'Tranh Ehon đức vua đeo chiếc nhẫn vàng' },
     summaryVi: 'Vị vua nhân từ tìm thấy chiếc nhẫn vàng lấp lánh trong khu vườn hoàng gia.',
     targetPhonics: ['k', 'i', 'ng', 'r', 's'],
     sightWords: ['the', 'has', 'in'],
     pages: [
       makePage(1, 'The wise king sings a happy song.', 'Vị vua thông thái cất tiếng hát khúc ca vui.', 'bg-amber-100', '👑',
-        { url: '/assets/ehon/queen_park.jpg', alt: 'Tranh Ehon vị vua hiền từ ca hát' },
+        { url: '/assets/ehon/king_ring.jpg', alt: 'Tranh Ehon vị vua hiền từ ca hát' },
         [
           { id: 'hs_king', label: 'King', xPercent: 45, yPercent: 45, emoji: '👑', soundName: 'magic', speechText: 'Long live the kind King!', animationType: 'jump' }
         ],
@@ -570,7 +570,7 @@ const STORIES = [
         { questionText: 'Who sings a song?', questionAudioText: 'Who sings a happy song?', options: [{ id: 'opt_king', text: 'The wise king', emoji: '👑', isCorrect: true }, { id: 'opt_wolf', text: 'A gray wolf', emoji: '🐺', isCorrect: false }] }
       ),
       makePage(2, 'The king wears a shiny gold ring.', 'Vị vua đeo chiếc nhẫn vàng sáng lấp lánh.', 'bg-yellow-100', '💍',
-        { url: '/assets/ehon/queen_coin.jpg', alt: 'Tranh Ehon chiếc nhẫn vàng rực rỡ' },
+        { url: '/assets/ehon/king_ring.jpg', alt: 'Tranh Ehon chiếc nhẫn vàng rực rỡ' },
         [
           { id: 'hs_ring', label: 'Ring', xPercent: 55, yPercent: 60, emoji: '💍', soundName: 'sparkle', speechText: 'Gleaming golden ring!', animationType: 'spin' }
         ],
@@ -587,13 +587,13 @@ const STORIES = [
     stage: 3,
     ageBand: '5 – 6 Tuổi (Tiền tiểu học)',
     coverEmoji: '🌕',
-    coverVisual: { url: '/assets/ehon/star.jpg', alt: 'Tranh Ehon vầng trăng rằm sáng lung linh soi bóng chiếc thìa bạc' },
+    coverVisual: { url: '/assets/ehon/moon_spoon.jpg', alt: 'Tranh Ehon vầng trăng rằm sáng lung linh soi bóng chiếc thìa bạc' },
     summaryVi: 'Dưới ánh trăng rằm lung linh, em bé dùng chiếc thìa bạc ăn bữa tối ấm cúng.',
     targetPhonics: ['m', 'oo', 'n', 's', 'p'],
     sightWords: ['shines', 'in', 'the'],
     pages: [
       makePage(1, 'The round moon glows in the cool room.', 'Vầng trăng tròn tỏa ánh sáng trong căn phòng ấm.', 'bg-indigo-100', '🌕',
-        { url: '/assets/ehon/star.jpg', alt: 'Tranh Ehon ánh trăng soi sáng căn phòng' },
+        { url: '/assets/ehon/moon_spoon.jpg', alt: 'Tranh Ehon ánh trăng soi sáng căn phòng' },
         [
           { id: 'hs_moon', label: 'Moon', xPercent: 50, yPercent: 30, emoji: '🌕', soundName: 'sparkle', speechText: 'Bright silver moon!', animationType: 'spin' }
         ],
@@ -601,7 +601,7 @@ const STORIES = [
         { questionText: 'What glows in the room?', questionAudioText: 'What glows brightly at night?', options: [{ id: 'opt_moon', text: 'The round moon', emoji: '🌕', isCorrect: true }, { id: 'opt_sun', text: 'The morning sun', emoji: '☀️', isCorrect: false }] }
       ),
       makePage(2, 'Eat sweet soup with a shiny spoon.', 'Bé ăn món súp ngon bằng chiếc thìa con sáng bóng.', 'bg-purple-100', '🥄',
-        { url: '/assets/ehon/cup.jpg', alt: 'Tranh Ehon bữa ăn ấm cúng với thìa bạc' },
+        { url: '/assets/ehon/moon_spoon.jpg', alt: 'Tranh Ehon bữa ăn ấm cúng với thìa bạc và bát súp ngọt ngào' },
         [
           { id: 'hs_spoon', label: 'Spoon', xPercent: 50, yPercent: 60, emoji: '🥄', soundName: 'magic', speechText: 'Silver spoon for soup!', animationType: 'bounce' }
         ],
@@ -618,13 +618,13 @@ const STORIES = [
     stage: 3,
     ageBand: '5 – 6 Tuổi (Tiền tiểu học)',
     coverEmoji: '📖',
-    coverVisual: { url: '/assets/ehon/sit.jpg', alt: 'Tranh Ehon em bé say sưa đọc sách bên ngôi nhà gỗ' },
+    coverVisual: { url: '/assets/ehon/good_book.jpg', alt: 'Tranh Ehon em bé say sưa đọc sách bên ngôi nhà gỗ' },
     summaryVi: 'Em bé ngồi đọc cuốn sách tranh Ehon tuyệt đẹp bên bìa rừng thanh bình.',
     targetPhonics: ['b', 'oo', 'k', 'w', 'l'],
     sightWords: ['read', 'look', 'at'],
     pages: [
       makePage(1, 'Look at the good book with bright art.', 'Hãy ngắm nhìn cuốn sách tranh đẹp với màu vẽ rực rỡ.', 'bg-emerald-100', '📖',
-        { url: '/assets/ehon/sit.jpg', alt: 'Tranh Ehon cuốn sách tranh mở ra' },
+        { url: '/assets/ehon/good_book.jpg', alt: 'Tranh Ehon cuốn sách tranh mở ra' },
         [
           { id: 'hs_book', label: 'Book', xPercent: 50, yPercent: 55, emoji: '📖', soundName: 'sparkle', speechText: 'A magical storybook!', animationType: 'jump' }
         ],
@@ -632,7 +632,7 @@ const STORIES = [
         { questionText: 'What are we looking at?', questionAudioText: 'What are we looking at?', options: [{ id: 'opt_book', text: 'A good book', emoji: '📖', isCorrect: true }, { id: 'opt_pan', text: 'A frying pan', emoji: '🍳', isCorrect: false }] }
       ),
       makePage(2, 'We sit on the wood and cook soup.', 'Chúng mình ngồi trên bậc gỗ và cùng nấu món súp ngon.', 'bg-amber-100', '🪵',
-        { url: '/assets/ehon/ant_pan.jpg', alt: 'Tranh Ehon nấu súp ấm cúng bên nhà gỗ' },
+        { url: '/assets/ehon/good_book.jpg', alt: 'Tranh Ehon ngồi đọc sách và nấu súp ấm cúng bên nhà gỗ' },
         [
           { id: 'hs_cook', label: 'Cook', xPercent: 55, yPercent: 60, emoji: '🧑‍🍳', soundName: 'pop', speechText: 'Cook delicious food!', animationType: 'bounce' }
         ],
@@ -714,13 +714,13 @@ const STORIES = [
     stage: 3,
     ageBand: '5 – 6 Tuổi',
     coverEmoji: '🐥',
-    coverVisual: { url: '/assets/ehon/hen.jpg', alt: 'Tranh Ehon chú gà con lông vàng trò chuyện ríu rít' },
+    coverVisual: { url: '/assets/ehon/chick_chip.jpg', alt: 'Tranh Ehon chú gà con lông vàng trò chuyện ríu rít' },
     summaryVi: 'Chú gà con Chip trò chuyện vui vẻ cùng các bạn bên hàng rào hoa.',
     targetPhonics: ['ch', 'i', 'p', 'a', 't'],
     sightWords: ['with', 'his', 'said'],
     pages: [
       makePage(1, 'Chip the little yellow chick can chat.', 'Chú gà con Chip líu lo trò chuyện cả ngày.', 'bg-yellow-100', '🐥',
-        { url: '/assets/ehon/hen.jpg', alt: 'Tranh Ehon chú gà con líu lo' },
+        { url: '/assets/ehon/chick_chip.jpg', alt: 'Tranh Ehon chú gà con líu lo' },
         [
           { id: 'hs_chick', label: 'Chick', xPercent: 50, yPercent: 50, emoji: '🐥', soundName: 'sparkle', speechText: 'Cheep cheep! I am Chip!', animationType: 'jump' }
         ],
@@ -728,7 +728,7 @@ const STORIES = [
         { questionText: 'Who can chat all day?', questionAudioText: 'Who can chat all day?', options: [{ id: 'opt_chick', text: 'Chip the chick', emoji: '🐥', isCorrect: true }, { id: 'opt_ox', text: 'An ox', emoji: '🐂', isCorrect: false }] }
       ),
       makePage(2, 'Touch your chin and chop the sweet carrots.', 'Chạm tay vào cằm và cùng thái củ cà rốt giòn ngọt.', 'bg-orange-100', '🥕',
-        { url: '/assets/ehon/cup.jpg', alt: 'Tranh Ehon củ cà rốt ngon lành' },
+        { url: '/assets/ehon/chick_chip.jpg', alt: 'Tranh Ehon chú gà con bên luống cà rốt giòn ngọt' },
         [
           { id: 'hs_chin', label: 'Chin', xPercent: 50, yPercent: 45, emoji: '😊', soundName: 'pop', speechText: 'Touch your smiling chin!', animationType: 'bounce' }
         ],
@@ -745,13 +745,13 @@ const STORIES = [
     stage: 3,
     ageBand: '5 – 6 Tuổi',
     coverEmoji: '🦋',
-    coverVisual: { url: '/assets/ehon/star.jpg', alt: 'Tranh Ehon ba chú bướm đêm vỗ cánh nhẹ nhàng bên ánh đèn' },
+    coverVisual: { url: '/assets/ehon/three_moths.jpg', alt: 'Tranh Ehon ba chú bướm đêm vỗ cánh nhẹ nhàng bên ánh đèn' },
     summaryVi: 'Ba chú bướm đêm vỗ cánh bay theo lối đi lát đá ngắm trăng sao.',
     targetPhonics: ['th', 'r', 'ee', 'm', 'o'],
     sightWords: ['fly', 'by', 'the'],
     pages: [
       makePage(1, 'Three soft moths fly along the garden path.', 'Ba chú bướm đêm bay lượn dọc theo lối đi trong vườn.', 'bg-indigo-100', '🛤️',
-        { url: '/assets/ehon/star.jpg', alt: 'Tranh Ehon ba chú bướm đêm bên con đường đá' },
+        { url: '/assets/ehon/three_moths.jpg', alt: 'Tranh Ehon ba chú bướm đêm bên con đường đá' },
         [
           { id: 'hs_three', label: 'Three', xPercent: 50, yPercent: 40, emoji: '🦋', soundName: 'magic', speechText: 'One, two, three little moths!', animationType: 'spin' }
         ],
@@ -759,7 +759,7 @@ const STORIES = [
         { questionText: 'How many moths fly in the garden?', questionAudioText: 'How many moths fly in the garden?', options: [{ id: 'opt_three', text: 'Three moths', emoji: '3️⃣', isCorrect: true }, { id: 'opt_ten', text: 'Ten moths', emoji: '🔟', isCorrect: false }] }
       ),
       makePage(2, 'They have thin wings that shine in starlight.', 'Những đôi cánh mỏng manh lấp lánh dưới ánh ngàn sao.', 'bg-purple-100', '✨',
-        { url: '/assets/ehon/star.jpg', alt: 'Tranh Ehon cánh bướm lấp lánh ánh sao' },
+        { url: '/assets/ehon/three_moths.jpg', alt: 'Tranh Ehon cánh bướm lấp lánh ánh sao' },
         [
           { id: 'hs_thin', label: 'Thin Wings', xPercent: 50, yPercent: 55, emoji: '🪽', soundName: 'sparkle', speechText: 'Delicate glowing wings!', animationType: 'jump' }
         ],
@@ -776,13 +776,13 @@ const STORIES = [
     stage: 3,
     ageBand: '5 – 6 Tuổi',
     coverEmoji: '📦',
-    coverVisual: { url: '/assets/ehon/ant_pan.jpg', alt: 'Tranh Ehon chiếc hộp báu vật nhỏ và ngôi sao trên cao' },
+    coverVisual: { url: '/assets/ehon/shells_box.jpg', alt: 'Tranh Ehon chiếc hộp báu vật nhỏ và ngôi sao trên cao' },
     summaryVi: 'Bé phân biệt đồ vật ở gần và ở xa qua chiếc hộp và ngôi sao lung linh.',
     targetPhonics: ['th', 'i', 's', 't', 'a'],
     sightWords: ['this', 'that', 'look'],
     pages: [
       makePage(1, 'This is a small box with six shells.', 'Đây là chiếc hộp nhỏ đựng sáu vỏ ốc xinh.', 'bg-teal-100', '📦',
-        { url: '/assets/ehon/ant_pan.jpg', alt: 'Tranh Ehon chiếc hộp đựng vỏ ốc' },
+        { url: '/assets/ehon/shells_box.jpg', alt: 'Tranh Ehon chiếc hộp đựng sáu vỏ ốc xinh' },
         [
           { id: 'hs_box', label: 'Box', xPercent: 50, yPercent: 60, emoji: '📦', soundName: 'pop', speechText: 'This is my treasure box!', animationType: 'bounce' }
         ],
@@ -840,13 +840,13 @@ const STORIES = [
     stage: 4,
     ageBand: '6 – 8 Tuổi (Tiểu học)',
     coverEmoji: '☁️',
-    coverVisual: { url: '/assets/ehon/archipelago.jpg', alt: 'Tranh Ehon đám mây trắng bồng bềnh như kẹo bông' },
+    coverVisual: { url: '/assets/ehon/clown_cloud.jpg', alt: 'Tranh Ehon chú hề vui tính nhào lộn trên đám mây trắng' },
     summaryVi: 'Chú hề vui tính nhào lộn trên đám mây trắng và cất tiếng reo vui.',
     targetPhonics: ['c', 'l', 'ou', 'd', 's'],
     sightWords: ['shout', 'loud', 'over'],
     pages: [
       makePage(1, 'A fluffy white cloud floats over the town.', 'Đám mây trắng bồng bềnh trôi qua thị trấn nhỏ.', 'bg-sky-100', '☁️',
-        { url: '/assets/ehon/archipelago.jpg', alt: 'Tranh Ehon mây trắng trên nền trời xanh' },
+        { url: '/assets/ehon/clown_cloud.jpg', alt: 'Tranh Ehon chú hề vui vẻ bay trên đám mây trắng' },
         [
           { id: 'hs_cloud', label: 'Cloud', xPercent: 50, yPercent: 35, emoji: '☁️', soundName: 'magic', speechText: 'Fluffy floating cloud!', animationType: 'spin' }
         ],
@@ -871,13 +871,13 @@ const STORIES = [
     stage: 4,
     ageBand: '6 – 8 Tuổi (Tiểu học)',
     coverEmoji: '🔍',
-    coverVisual: { url: '/assets/ehon/archipelago.jpg', alt: 'Tranh Ehon bản đồ thám hiểm với manh mối bí ẩn' },
+    coverVisual: { url: '/assets/ehon/blue_clue.jpg', alt: 'Tranh Ehon chú thỏ tìm manh mối dấu chân màu xanh trong rừng' },
     summaryVi: 'Bé tìm thấy manh mối màu xanh dẫn lối đến kho báu tri thức trên đảo.',
     targetPhonics: ['b', 'l', 'ue', 'c', 'l'],
     sightWords: ['find', 'secret', 'under'],
     pages: [
       makePage(1, 'Follow the blue clue painted on the rock.', 'Lần theo manh mối màu xanh vẽ trên phiến đá.', 'bg-cyan-100', '🔍',
-        { url: '/assets/ehon/archipelago.jpg', alt: 'Tranh Ehon manh mối trên phiến đá' },
+        { url: '/assets/ehon/blue_clue.jpg', alt: 'Tranh Ehon manh mối dấu chân màu xanh' },
         [
           { id: 'hs_clue', label: 'Clue', xPercent: 48, yPercent: 55, emoji: '🔍', soundName: 'magic', speechText: 'A secret blue clue!', animationType: 'jump' }
         ],
@@ -885,7 +885,7 @@ const STORIES = [
         { questionText: 'What color is the secret clue?', questionAudioText: 'What color is the secret clue?', options: [{ id: 'opt_blue', text: 'Bright blue', emoji: '💙', isCorrect: true }, { id: 'opt_black', text: 'Dark black', emoji: '⬛', isCorrect: false }] }
       ),
       makePage(2, 'Use sticky glue to seal the treasure letter.', 'Dùng hồ dán niêm phong lá thư kho báu bí mật.', 'bg-amber-100', '✉️',
-        { url: '/assets/ehon/cup.jpg', alt: 'Tranh Ehon dán phong bì thư báu vật' },
+        { url: '/assets/ehon/blue_clue.jpg', alt: 'Tranh Ehon lá thư và manh mối kho báu kỳ diệu' },
         [
           { id: 'hs_glue', label: 'Glue', xPercent: 55, yPercent: 60, emoji: '🧴', soundName: 'pop', speechText: 'Stick it with craft glue!', animationType: 'bounce' }
         ],
@@ -902,13 +902,13 @@ const STORIES = [
     stage: 4,
     ageBand: '6 – 8 Tuổi (Tiểu học)',
     coverEmoji: '🚜',
-    coverVisual: { url: '/assets/ehon/hen_dog.jpg', alt: 'Tranh Ehon nông trại của bác nông dân với nhà kho đỏ' },
+    coverVisual: { url: '/assets/ehon/farmer_barn.jpg', alt: 'Tranh Ehon nông trại của bác nông dân với nhà kho đỏ' },
     summaryVi: 'Bác nông dân và chị gái lái xe hơi đến nhà kho thóc chăm sóc các bạn thú.',
     targetPhonics: ['f', 'ar', 'm', 'e', 'r', 'b'],
     sightWords: ['drive', 'into', 'with'],
     pages: [
       makePage(1, 'The farmer drives a red car to the barn.', 'Bác nông dân lái chiếc xe hơi đỏ đến nhà kho thóc.', 'bg-amber-100', '🚜',
-        { url: '/assets/ehon/hen_dog.jpg', alt: 'Tranh Ehon bác nông dân bên nhà kho đỏ' },
+        { url: '/assets/ehon/farmer_barn.jpg', alt: 'Tranh Ehon bác nông dân lái xe đến nhà kho đỏ' },
         [
           { id: 'hs_farmer', label: 'Farmer', xPercent: 45, yPercent: 50, emoji: '👨‍🌾', soundName: 'pop', speechText: 'Welcome to the peaceful farm!', animationType: 'jump' }
         ],
@@ -916,7 +916,7 @@ const STORIES = [
         { questionText: 'Where does the farmer drive to?', questionAudioText: 'Where does the farmer drive to?', options: [{ id: 'opt_barn', text: 'To the big barn', emoji: '🛖', isCorrect: true }, { id: 'opt_sea', text: 'To deep sea', emoji: '🌊', isCorrect: false }] }
       ),
       makePage(2, 'My sister drinks fresh water under the stars.', 'Chị gái uống ly nước mát lành dưới bầu trời đầy sao.', 'bg-indigo-100', '💧',
-        { url: '/assets/ehon/star.jpg', alt: 'Tranh Ehon chị gái và em bé ngắm trời sao' },
+        { url: '/assets/ehon/farmer_barn.jpg', alt: 'Tranh Ehon trang trại bình yên lung linh ánh sao' },
         [
           { id: 'hs_water', label: 'Water', xPercent: 50, yPercent: 65, emoji: '💧', soundName: 'sparkle', speechText: 'Cool sweet water!', animationType: 'spin' }
         ],
@@ -924,7 +924,7 @@ const STORIES = [
         { questionText: 'Who drinks fresh water under stars?', questionAudioText: 'Who drinks fresh water under stars?', options: [{ id: 'opt_sister', text: 'My elder sister', emoji: '👧', isCorrect: true }, { id: 'opt_fox', text: 'A sly fox', emoji: '🦊', isCorrect: false }] }
       )
     ]
-  }
+  },
 ];
 
 module.exports = { STORIES };
