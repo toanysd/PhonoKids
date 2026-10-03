@@ -64,6 +64,21 @@ const EHON_MAP: Record<string, WordVisual> = {
     type: 'ehon',
     alt: 'Tranh Ehon ngôi sao vàng khổng lồ tỏa sáng đêm thanh bình'
   },
+  'leo': {
+    url: '/assets/ehon/leo.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon Chú sư tử con Leo thân thiện vẫy tay chào bé'
+  },
+  'giraffe': {
+    url: '/assets/ehon/giraffe.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon Chú hươu cao cổ vươn cổ ngắm những vì sao đêm'
+  },
+  'archipelago': {
+    url: '/assets/ehon/archipelago.jpg',
+    type: 'ehon',
+    alt: 'Tranh toàn cảnh 7 quần đảo Phonics thần tiên nối nhịp cầu vồng'
+  },
 
   // High-definition rich real photographic assets for vocabulary & drills
   'snake': {
@@ -229,6 +244,54 @@ export const getStoryCoverVisual = (storyId: string): WordVisual => {
         url: '/assets/ehon/sun.jpg',
         type: 'ehon',
         alt: 'Tranh bìa Ehon câu chuyện khám phá thế giới'
+      };
+  }
+};
+
+export const getIslandVisual = (islandNumber: number): WordVisual => {
+  switch (islandNumber) {
+    case 1:
+      return {
+        url: '/assets/ehon/sun.jpg',
+        type: 'ehon',
+        alt: 'Đảo Nắng Ấm Rực Rỡ & Quả Táo'
+      };
+    case 2:
+      return {
+        url: '/assets/ehon/cat.jpg',
+        type: 'ehon',
+        alt: 'Đảo Chú Mèo Cam & Cánh Diều'
+      };
+    case 3:
+      return {
+        url: '/assets/ehon/hen.jpg',
+        type: 'ehon',
+        alt: 'Đảo Nông Trại Cô Gà Mái Đỏ & Chú Heo'
+      };
+    case 4:
+      return {
+        url: '/assets/ehon/ship.jpg',
+        type: 'ehon',
+        alt: 'Đảo Hải Trình Con Tàu Đại Dương'
+      };
+    case 5:
+      return {
+        url: '/assets/ehon/ant.jpg',
+        type: 'ehon',
+        alt: 'Đảo Rừng Xanh & Chú Kiến Bé Nhỏ'
+      };
+    case 6:
+      return {
+        url: '/assets/ehon/star.jpg',
+        type: 'ehon',
+        alt: 'Đảo Ngân Hà & Ngôi Sao Lấp Lánh'
+      };
+    case 7:
+    default:
+      return {
+        url: '/assets/ehon/archipelago.jpg',
+        type: 'ehon',
+        alt: 'Đảo Lâu Đài Hoàng Gia Nối Nhịp Cầu Vồng'
       };
   }
 };

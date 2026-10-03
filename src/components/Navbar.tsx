@@ -20,34 +20,38 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenParentGate,
 }) => {
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b-4 border-amber-300 shadow-md px-4 py-2.5">
-      <div className="max-w-6xl mx-auto flex items-center justify-between">
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-4 border-amber-300 shadow-md px-4 py-2.5">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
         
-        {/* Brand Logo */}
+        {/* Brand Logo with Mini Ehon Star Badge */}
         <div 
           onClick={() => onNavigate('island_map')}
-          className="flex items-center space-x-2 cursor-pointer select-none group"
+          className="flex items-center space-x-2.5 cursor-pointer select-none group"
         >
-          <span className="text-3xl md:text-4xl filter drop-shadow group-hover:scale-110 transition-transform">
-            🌟
-          </span>
+          <div className="w-10 h-10 md:w-11 md:h-11 rounded-full overflow-hidden border-2 border-amber-400 shadow-md group-hover:scale-105 transition-transform bg-amber-100 shrink-0">
+            <img
+              src="/assets/ehon/star.jpg"
+              alt="Biểu trưng LittleLingo Ehon"
+              className="w-full h-full object-cover"
+            />
+          </div>
           <div>
-            <h1 className="text-xl md:text-2xl font-black text-amber-950 tracking-tight leading-none">
+            <h1 className="text-xl md:text-2xl font-black text-amber-950 tracking-tight leading-none group-hover:text-amber-700 transition-colors">
               Little<span className="text-amber-500">Lingo</span>
             </h1>
-            <p className="text-[10px] font-extrabold text-amber-700 tracking-wider">
-              PLAYGROUND 3–5 TUỔI
+            <p className="text-[10px] font-black text-amber-700 tracking-wider">
+              EHON PHONICS • 3–8 TUỔI
             </p>
           </div>
         </div>
 
         {/* Center Main Nav Tabs */}
-        <nav className="hidden md:flex items-center space-x-1.5 bg-amber-100 p-1.5 rounded-2xl border border-amber-200">
+        <nav className="hidden md:flex items-center space-x-1.5 bg-amber-100/80 p-1.5 rounded-2xl border border-amber-200">
           <button
             onClick={() => onNavigate('island_map')}
-            className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl font-black text-sm transition-all ${
+            className={`flex items-center space-x-1.5 px-4 py-2 rounded-xl font-black text-sm transition-all cursor-pointer ${
               currentView === 'island_map' || currentView === 'lesson'
-                ? 'bg-amber-400 text-amber-950 shadow'
+                ? 'bg-amber-400 text-amber-950 shadow-sm'
                 : 'text-amber-900 hover:bg-amber-200/60'
             }`}
           >
@@ -57,21 +61,21 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={() => onNavigate('stories')}
-            className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl font-black text-sm transition-all ${
+            className={`flex items-center space-x-1.5 px-4 py-2 rounded-xl font-black text-sm transition-all cursor-pointer ${
               currentView === 'stories'
-                ? 'bg-amber-400 text-amber-950 shadow'
+                ? 'bg-amber-400 text-amber-950 shadow-sm'
                 : 'text-amber-900 hover:bg-amber-200/60'
             }`}
           >
             <BookOpen className="w-4 h-4 text-amber-800" />
-            <span>Truyện Decodable</span>
+            <span>Tranh Truyện Ehon</span>
           </button>
 
           <button
             onClick={() => onNavigate('minimal_pairs')}
-            className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl font-black text-sm transition-all ${
+            className={`flex items-center space-x-1.5 px-4 py-2 rounded-xl font-black text-sm transition-all cursor-pointer ${
               currentView === 'minimal_pairs'
-                ? 'bg-amber-400 text-amber-950 shadow'
+                ? 'bg-amber-400 text-amber-950 shadow-sm'
                 : 'text-amber-900 hover:bg-amber-200/60'
             }`}
           >
@@ -81,21 +85,21 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={() => onNavigate('blending')}
-            className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl font-black text-sm transition-all ${
+            className={`flex items-center space-x-1.5 px-4 py-2 rounded-xl font-black text-sm transition-all cursor-pointer ${
               currentView === 'blending'
-                ? 'bg-amber-400 text-amber-950 shadow'
+                ? 'bg-amber-400 text-amber-950 shadow-sm'
                 : 'text-amber-900 hover:bg-amber-200/60'
             }`}
           >
             <Wand2 className="w-4 h-4 text-amber-800" />
-            <span>Ghép Vần Bong Bóng</span>
+            <span>Ghép Vần Tranh Vẽ</span>
           </button>
         </nav>
 
         {/* Right Status Actions */}
         <div className="flex items-center space-x-2 md:space-x-3">
           {/* Star Counter */}
-          <div className="flex items-center space-x-1 bg-amber-100 border-2 border-amber-300 px-3 py-1 rounded-2xl shadow-xs">
+          <div className="flex items-center space-x-1.5 bg-amber-100 border-2 border-amber-300 px-3.5 py-1 rounded-2xl shadow-xs">
             <Star className="w-5 h-5 fill-amber-400 text-amber-500 animate-bounce" />
             <span className="font-black text-amber-950 text-base">{stars}</span>
           </div>
@@ -106,7 +110,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               audioService.playPopSound(480);
               onToggleSound();
             }}
-            className="p-2 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-2xl border border-amber-300 active:scale-95 transition-transform"
+            className="p-2.5 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-2xl border border-amber-300 active:scale-95 transition-transform cursor-pointer"
             title={soundEnabled ? 'Tắt âm thanh' : 'Bật âm thanh'}
           >
             {soundEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5 text-gray-400" />}
@@ -115,41 +119,49 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Parent Gate Button */}
           <button
             onClick={onOpenParentGate}
-            className="flex items-center space-x-1 bg-white hover:bg-amber-50 text-amber-900 font-extrabold px-3 py-1.5 rounded-2xl border-2 border-amber-300 shadow-xs active:scale-95 transition-transform"
+            className="flex items-center space-x-1.5 bg-white hover:bg-amber-50 text-amber-900 font-extrabold px-3.5 py-2 rounded-2xl border-2 border-amber-300 shadow-xs active:scale-95 transition-transform cursor-pointer"
             title="Khu vực dành cho phụ huynh"
           >
             <Shield className="w-4 h-4 text-amber-600" />
-            <span className="text-xs hidden sm:inline">Phụ Huynh</span>
+            <span className="text-xs hidden sm:inline font-black">Phụ Huynh</span>
           </button>
         </div>
 
       </div>
 
       {/* Mobile Bottom Subnav */}
-      <div className="flex md:hidden items-center justify-around pt-2 mt-1 border-t border-amber-200">
+      <div className="flex md:hidden items-center justify-around pt-2 mt-2 border-t border-amber-200">
         <button
           onClick={() => onNavigate('island_map')}
-          className={`px-2 py-1 text-xs font-black rounded-lg ${currentView === 'island_map' ? 'bg-amber-400 text-amber-950' : 'text-amber-800'}`}
+          className={`px-3 py-1.5 text-xs font-black rounded-xl transition-colors ${
+            currentView === 'island_map' ? 'bg-amber-400 text-amber-950 shadow-xs' : 'text-amber-800'
+          }`}
         >
-          🏝️ Đảo Âm
+          Đảo Âm
         </button>
         <button
           onClick={() => onNavigate('stories')}
-          className={`px-2 py-1 text-xs font-black rounded-lg ${currentView === 'stories' ? 'bg-amber-400 text-amber-950' : 'text-amber-800'}`}
+          className={`px-3 py-1.5 text-xs font-black rounded-xl transition-colors ${
+            currentView === 'stories' ? 'bg-amber-400 text-amber-950 shadow-xs' : 'text-amber-800'
+          }`}
         >
-          📖 Đọc Truyện
+          Truyện Ehon
         </button>
         <button
           onClick={() => onNavigate('minimal_pairs')}
-          className={`px-2 py-1 text-xs font-black rounded-lg ${currentView === 'minimal_pairs' ? 'bg-amber-400 text-amber-950' : 'text-amber-800'}`}
+          className={`px-3 py-1.5 text-xs font-black rounded-xl transition-colors ${
+            currentView === 'minimal_pairs' ? 'bg-amber-400 text-amber-950 shadow-xs' : 'text-amber-800'
+          }`}
         >
-          🎯 Phát Âm
+          Phát Âm
         </button>
         <button
           onClick={() => onNavigate('blending')}
-          className={`px-2 py-1 text-xs font-black rounded-lg ${currentView === 'blending' ? 'bg-amber-400 text-amber-950' : 'text-amber-800'}`}
+          className={`px-3 py-1.5 text-xs font-black rounded-xl transition-colors ${
+            currentView === 'blending' ? 'bg-amber-400 text-amber-950 shadow-xs' : 'text-amber-800'
+          }`}
         >
-          🔮 Ghép Vần
+          Ghép Vần
         </button>
       </div>
     </header>

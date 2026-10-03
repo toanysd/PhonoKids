@@ -5,7 +5,6 @@ import { BubbleBlender } from './BubbleBlender';
 import { KidButton } from './KidButton';
 import { audioService } from '../services/audioService';
 import { getWordVisual } from '../services/imageService';
-import { LeoCartoonMascot } from './illustrations/KidIllustrations';
 import { 
   Volume2, 
   ArrowRight, 
@@ -220,9 +219,16 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
               Phương pháp TPR (Total Physical Response) giúp tạo phản xạ thần kinh tự nhiên thông qua chuyển động cơ thể!
             </p>
 
-            <div className="w-full max-w-xl bg-gradient-to-br from-amber-100 to-orange-100 rounded-3xl p-6 md:p-10 border-4 border-amber-300 shadow-xl mb-4 text-center">
-              <div className="text-8xl md:text-9xl mb-4 animate-bounce">
-                {phoneme.tprAction.icon}
+            <div className="w-full max-w-xl bg-gradient-to-br from-amber-100 to-orange-100 rounded-3xl p-6 md:p-8 border-4 border-amber-300 shadow-xl mb-4 text-center">
+              <div className="relative w-44 h-44 md:w-56 md:h-56 mx-auto rounded-3xl overflow-hidden border-4 border-white shadow-lg mb-4 bg-amber-50">
+                <img
+                  src={primaryVisual.url}
+                  alt={primaryVisual.alt}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-2 right-2 bg-amber-400 text-amber-950 text-[10px] font-black px-2.5 py-0.5 rounded-full shadow">
+                  🎨 {phoneme.tprAction.title}
+                </div>
               </div>
               <div className="bg-white/95 rounded-2xl p-4 border border-amber-200 text-lg md:text-xl font-black text-amber-950 mb-6 shadow-xs">
                 "{phoneme.tprAction.actionPrompt}"
@@ -339,7 +345,9 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
             </p>
 
             <div className="max-w-md mx-auto bg-amber-50 rounded-3xl p-6 border-3 border-amber-200 mb-6 flex items-center space-x-4 shadow-md">
-              <LeoCartoonMascot size={80} mood="wink" />
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-amber-400 shadow-lg bg-amber-100 shrink-0">
+                <img src="/assets/ehon/leo.jpg" alt="Leo Sư Tử" className="w-full h-full object-cover" />
+              </div>
               <p className="text-sm md:text-base font-bold text-amber-950 text-left">
                 "Bé phát âm rất tự tin! Hãy tiếp tục phiêu lưu sang các bức tranh Ehon mới nhé!"
               </p>

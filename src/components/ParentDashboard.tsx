@@ -121,7 +121,9 @@ export const ParentDashboard: React.FC<ParentDashboardProps> = ({ onClose, onPro
         {/* Header */}
         <div className="flex items-center justify-between border-b-2 border-amber-200 pb-4 mb-4">
           <div className="flex items-center space-x-3">
-            <span className="text-4xl">{profile.avatar}</span>
+            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-amber-400 shadow bg-amber-100 shrink-0">
+              <img src="/assets/ehon/leo.jpg" alt="Leo Avatar" className="w-full h-full object-cover" />
+            </div>
             <div>
               <h2 className="text-2xl font-black text-amber-950">
                 Góc Phụ Huynh • {profile.name}
