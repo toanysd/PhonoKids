@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { PhonemeInfo } from '../types/phonics';
+import React, { useState, useEffect } from 'react';
+import { PhonemeInfo, PhonicsGroup } from '../types/phonics';
+import { PHONICS_GROUPS, PHONEMES_DATA } from '../data/phonicsGroups';
 import { SoundVisemeGuide } from './SoundVisemeGuide';
 import { BubbleBlender } from './BubbleBlender';
 import { KidButton } from './KidButton';
@@ -25,12 +26,14 @@ import confetti from 'canvas-confetti';
 interface LessonPlayerProps {
   phoneme: PhonemeInfo;
   onFinishLesson: (phonemeId: string) => void;
+  onNextPhoneme?: (nextPhoneme: PhonemeInfo) => void;
   onBack: () => void;
 }
 
 export const LessonPlayer: React.FC<LessonPlayerProps> = ({
   phoneme,
   onFinishLesson,
+  onNextPhoneme,
   onBack,
 }) => {
   // Steps: 0: Intro -> 1: Viseme Mouth -> 2: TPR Action -> 3: Discrimination -> 4: Blending -> 5: Victory
@@ -41,6 +44,41 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
   const [vocabPage, setVocabPage] = useState<number>(0);
   const [blendingWordIndex, setBlendingWordIndex] = useState<number>(0);
   const [isWordBankModalOpen, setIsWordBankModalOpen] = useState<boolean>(false);
+
+  // Reset lesson progress when switching to next phoneme
+  useEffect(() => {
+    setCurrentStep(0);
+    setSelectedCards([]);
+    setVocabPage(0);
+    setBlendingWordIndex(0);
+    setShowLeoTip(false);
+  }, [phoneme.id]);
+
+  // Determine sequential next phoneme & island conquest status
+  const currentGroup = PHONICS_GROUPS.find((g) => g.groupNumber === phoneme.group);
+  const currentIndex = currentGroup ? currentGroup.phonemes.indexOf(phoneme.id) : -1;
+  let nextPhoneme: PhonemeInfo | null = null;
+  let isConqueringIsland = false;
+  let nextGroupInfo: PhonicsGroup | null = null;
+
+  if (currentGroup && currentIndex !== -1) {
+    if (currentIndex + 1 < currentGroup.phonemes.length) {
+      // Next sound on current island
+      const nextPhId = currentGroup.phonemes[currentIndex + 1];
+      nextPhoneme = PHONEMES_DATA[nextPhId] || null;
+    } else {
+      // Final sound of current island -> unlocks next island!
+      isConqueringIsland = true;
+      const nextGroupNumber = currentGroup.groupNumber + 1;
+      if (nextGroupNumber <= 7) {
+        const nextG = PHONICS_GROUPS.find((g) => g.groupNumber === nextGroupNumber);
+        if (nextG && nextG.phonemes.length > 0) {
+          nextGroupInfo = nextG;
+          nextPhoneme = PHONEMES_DATA[nextG.phonemes[0]] || null;
+        }
+      }
+    }
+  }
 
 
   // Load comprehensive vocabulary items for this phoneme
@@ -80,11 +118,15 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
     } else {
       audioService.playSuccessJingle();
       try {
-        confetti({ particleCount: 70, spread: 80, origin: { y: 0.6 } });
+        confetti({ particleCount: 80, spread: 90, origin: { y: 0.6 } });
       } catch {
         // Ignore
       }
-      onFinishLesson(phoneme.id);
+      if (nextPhoneme && onNextPhoneme) {
+        onNextPhoneme(nextPhoneme);
+      } else {
+        onFinishLesson(phoneme.id);
+      }
     }
   };
 
@@ -490,38 +532,105 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
 
         {/* ================= STEP 5: VICTORY & MASTERY ================= */}
         {currentStep === 5 && (
-          <div className="text-center py-3 animate-fadeIn flex flex-col items-center">
-            <div className="inline-flex p-3 bg-yellow-100 rounded-full mb-2 animate-bounce">
-              <Trophy className="w-12 h-12 text-yellow-500" />
+          <div className="text-center py-2 animate-fadeIn flex flex-col items-center max-w-xl mx-auto">
+            <div className="inline-flex p-3 bg-yellow-100 rounded-full mb-1 animate-bounce">
+              <Trophy className="w-10 sm:w-12 h-10 sm:h-12 text-yellow-500" />
             </div>
-            <h2 className="text-2xl md:text-4xl font-black text-amber-950 mb-1">
+
+            <h2 className="text-2xl sm:text-3xl font-black text-amber-950 mb-1">
               Hoan Hô Bé Yêu! 🎉
             </h2>
-            <p className="text-base md:text-xl font-extrabold text-amber-800 mb-3">
-              Bé đã làm quen âm <span className="font-mono text-amber-600">/{phoneme.id}/</span> và nhận được <span className="text-amber-500 font-black">+3 ⭐</span>!
+
+            <p className="text-sm sm:text-base font-extrabold text-amber-800 mb-2">
+              Bé đã làm quen âm <span className="font-mono text-amber-600 font-black">/{phoneme.id}/</span> và nhận được <span className="text-amber-500 font-black">+3 ⭐</span>!
             </p>
 
-            <div className="max-w-sm mx-auto bg-amber-50 rounded-2xl p-4 border-2 border-amber-200 mb-3 flex items-center space-x-3 shadow-md">
-              <div className="w-16 h-16 rounded-full overflow-hidden border-3 border-amber-400 shadow-md bg-amber-100 shrink-0">
-                <img src="/assets/ehon/leo.jpg" alt="Leo Sư Tử" className="w-full h-full object-cover" />
+            {/* Special Celebration Card when an entire Island is conquered! */}
+            {isConqueringIsland && nextGroupInfo && (
+              <div className="w-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 text-amber-950 p-3 sm:p-4 rounded-2xl border-3 border-amber-300 shadow-lg mb-3">
+                <div className="flex items-center justify-center space-x-2 text-sm sm:text-base font-black">
+                  <span>🏝️ ĐÃ CHINH PHỤC ĐẢO {currentGroup?.groupNumber}: {currentGroup?.islandTheme} 🏆</span>
+                </div>
+                <div className="text-xs sm:text-sm font-bold text-amber-950 mt-1 flex items-center justify-center space-x-1.5">
+                  <Sparkles className="w-4 h-4 text-amber-950" />
+                  <span>Đã mở khóa: <strong>Đảo {nextGroupInfo.groupNumber} - {nextGroupInfo.islandTheme} {nextGroupInfo.islandEmoji}</strong></span>
+                </div>
               </div>
-              <p className="text-xs md:text-sm font-bold text-amber-950 text-left">
-                "Bé phát âm rất tự tin! Hãy tiếp tục phiêu lưu sang các bức tranh Ehon mới nhé!"
-              </p>
+            )}
+
+            {/* Pre-reader Giant Next Sound / Next Island Button */}
+            <div className="w-full px-2 mt-1">
+              {nextPhoneme ? (
+                <button
+                  onClick={() => {
+                    audioService.playPopSound(540);
+                    try {
+                      confetti({ particleCount: 80, spread: 90, origin: { y: 0.5 } });
+                    } catch {}
+                    if (onNextPhoneme) {
+                      onNextPhoneme(nextPhoneme);
+                    } else {
+                      onFinishLesson(phoneme.id);
+                    }
+                  }}
+                  className="w-full py-4 px-6 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black text-lg sm:text-xl rounded-2xl shadow-xl border-4 border-emerald-300 transform active:scale-95 transition-all flex items-center justify-center space-x-3 cursor-pointer animate-pulse"
+                >
+                  <Sparkles className="w-6 h-6 text-yellow-300 animate-spin" />
+                  <span className="truncate">
+                    {isConqueringIsland && nextGroupInfo
+                      ? `Khám Phá Đảo ${nextGroupInfo.groupNumber}: Học Âm /${nextPhoneme.id}/ 🏝️🚀`
+                      : `Học Âm Tiếp Theo: /${nextPhoneme.id}/ 🚀`}
+                  </span>
+                  <ArrowRight className="w-6 h-6 text-white shrink-0" />
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    audioService.playSuccessJingle();
+                    onFinishLesson(phoneme.id);
+                  }}
+                  className="w-full py-4 px-6 bg-gradient-to-r from-amber-400 to-orange-500 text-amber-950 font-black text-lg rounded-2xl shadow-xl border-3 border-amber-300 transform active:scale-95 transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                >
+                  <Trophy className="w-6 h-6 text-amber-950" />
+                  <span>Hoàn Thành Xuất Sắc 42 Âm! Về Bản Đồ 🗺️</span>
+                </button>
+              )}
             </div>
 
-            {/* Victory Word Bank Exploration Trigger */}
-            <div className="flex items-center justify-center space-x-2 mt-2">
+            {/* Secondary Option: Return to Map */}
+            <div className="flex items-center justify-center space-x-3 mt-2.5">
+              <button
+                onClick={() => {
+                  audioService.playPopSound(460);
+                  onFinishLesson(phoneme.id);
+                }}
+                className="text-xs sm:text-sm font-black text-amber-800 hover:text-amber-950 underline px-2 py-1 cursor-pointer flex items-center space-x-1"
+              >
+                <span>Về Bản Đồ Quần Đảo 🗺️</span>
+              </button>
+
+              <span className="text-amber-300">•</span>
+
               <button
                 onClick={() => {
                   audioService.playPopSound(540);
                   setIsWordBankModalOpen(true);
                 }}
-                className="flex items-center space-x-1.5 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-amber-950 font-black px-4 py-2 rounded-2xl shadow-md border-2 border-amber-300 transform active:scale-95 transition-transform cursor-pointer text-xs md:text-sm"
+                className="text-xs sm:text-sm font-black text-amber-800 hover:text-amber-950 underline px-2 py-1 cursor-pointer flex items-center space-x-1"
               >
-                <BookOpen className="w-4 h-4 text-amber-950" />
-                <span>Khám Phá Toàn Bộ {getPhonemeWordCount(phoneme.id)} Từ Của Âm /{phoneme.id}/ 💎</span>
+                <BookOpen className="w-3.5 h-3.5 text-amber-700" />
+                <span>Xem {getPhonemeWordCount(phoneme.id)} Từ Của Âm /{phoneme.id}/ 💎</span>
               </button>
+            </div>
+
+            {/* Leo Companion Encouragement Bubble */}
+            <div className="w-full max-w-md bg-amber-50/90 rounded-xl p-2.5 border border-amber-200 mt-2.5 flex items-center space-x-2.5 shadow-2xs">
+              <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-amber-400 shadow-xs bg-amber-100 shrink-0">
+                <img src="/assets/ehon/leo.jpg" alt="Leo Sư Tử" className="w-full h-full object-cover" />
+              </div>
+              <p className="text-xs font-bold text-amber-950 text-left">
+                "Bé phát âm rất siêu! Bấm nút xanh phía trên để học tiếp ngay nhé!"
+              </p>
             </div>
           </div>
         )}

@@ -83,6 +83,15 @@ export const App: React.FC = () => {
     setCurrentView('island_map');
   };
 
+  const handleNextPhoneme = (nextPhInfo: PhonemeInfo) => {
+    if (activePhoneme) {
+      storageService.recordPhonemeMastery(activePhoneme.id);
+      storageService.addStars(3);
+      handleRefreshProfile();
+    }
+    setActivePhoneme(nextPhInfo);
+  };
+
   const handleSelectStory = (story: DecodableStory) => {
     setActiveStory(story);
     setCurrentView('story_reader');
@@ -133,6 +142,8 @@ export const App: React.FC = () => {
         {currentView === 'island_map' && (
           <PhonicsIslandMap
             unlockedGroups={profile.unlockedGroups}
+            masteredPhonemes={profile.masteredPhonemes}
+            profile={profile}
             onSelectPhoneme={handleSelectPhoneme}
           />
         )}
@@ -141,6 +152,7 @@ export const App: React.FC = () => {
           <LessonPlayer
             phoneme={activePhoneme}
             onFinishLesson={handleFinishLesson}
+            onNextPhoneme={handleNextPhoneme}
             onBack={() => setCurrentView('island_map')}
           />
         )}
