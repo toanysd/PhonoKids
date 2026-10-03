@@ -7,6 +7,7 @@ export interface ChildProfile {
   unlockedGroups: number[]; // e.g. [1, 2]
   masteredPhonemes: string[]; // e.g. ['s', 'a', 't']
   completedStories: string[];
+  unlockedStickers: string[]; // IDs of collected Ehon stickers
   lastPlayedAt: string;
 }
 

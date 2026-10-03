@@ -50,6 +50,33 @@ const SCRIPTED_RESPONSES: Record<string, { en: string; vi: string }> = {
 };
 
 class GeminiService {
+  private cache: Map<string, string> = new Map();
+
+  private getCachedResponse(query: string): string | null {
+    const key = query.trim().toLowerCase();
+    if (this.cache.has(key)) return this.cache.get(key)!;
+    try {
+      const stored = localStorage.getItem(`leo_cache_${key}`);
+      if (stored) {
+        this.cache.set(key, stored);
+        return stored;
+      }
+    } catch {
+      // Ignore storage errors
+    }
+    return null;
+  }
+
+  private setCachedResponse(query: string, responseText: string) {
+    const key = query.trim().toLowerCase();
+    this.cache.set(key, responseText);
+    try {
+      localStorage.setItem(`leo_cache_${key}`, responseText);
+    } catch {
+      // Ignore storage errors
+    }
+  }
+
   private getSettings() {
     return storageService.getSettings();
   }
@@ -112,6 +139,15 @@ class GeminiService {
     // If no API key configured, use friendly offline pedagogical scripted engine
     if (!apiKey) {
       return this.getScriptedResponse(childMessage);
+    }
+
+    // Check fast local cache for repeated kid prompts
+    const cached = this.getCachedResponse(childMessage);
+    if (cached) {
+      return {
+        text: cached,
+        isAiGenerated: true
+      };
     }
 
     try {
@@ -177,8 +213,11 @@ class GeminiService {
         return this.getScriptedResponse(childMessage);
       }
 
+      const cleanText = rawText.trim();
+      this.setCachedResponse(childMessage, cleanText);
+
       return {
-        text: rawText.trim(),
+        text: cleanText,
         isAiGenerated: true
       };
     } catch (err) {

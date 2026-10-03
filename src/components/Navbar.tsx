@@ -9,6 +9,7 @@ interface NavbarProps {
   soundEnabled: boolean;
   onToggleSound: () => void;
   onOpenParentGate: () => void;
+  onOpenStickerAlbum?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -18,6 +19,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   soundEnabled,
   onToggleSound,
   onOpenParentGate,
+  onOpenStickerAlbum,
 }) => {
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-4 border-amber-300 shadow-md px-4 py-2.5">
@@ -110,11 +112,21 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right Status Actions */}
         <div className="flex items-center space-x-2 md:space-x-3">
-          {/* Star Counter */}
-          <div className="flex items-center space-x-1.5 bg-amber-100 border-2 border-amber-300 px-3.5 py-1 rounded-2xl shadow-xs">
-            <Star className="w-5 h-5 fill-amber-400 text-amber-500 animate-bounce" />
+          {/* Star Counter & Sticker Album Trigger */}
+          <button
+            onClick={() => {
+              audioService.playMagicChime();
+              onOpenStickerAlbum?.();
+            }}
+            className="flex items-center space-x-1.5 bg-amber-100 hover:bg-amber-200 border-2 border-amber-300 px-3.5 py-1 rounded-2xl shadow-xs active:scale-95 transition-transform cursor-pointer group"
+            title="Mở Sổ Dán Sticker Thưởng Của Bé"
+          >
+            <Star className="w-5 h-5 fill-amber-400 text-amber-500 animate-bounce group-hover:rotate-12 transition-transform" />
             <span className="font-black text-amber-950 text-base">{stars}</span>
-          </div>
+            <span className="text-[10px] bg-amber-400 text-amber-950 font-black px-1.5 py-0.5 rounded-full hidden sm:inline shadow-xs">
+              Sticker 🎨
+            </span>
+          </button>
 
           {/* Sound Toggle */}
           <button

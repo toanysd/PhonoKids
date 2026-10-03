@@ -6,11 +6,13 @@ import { KidButton } from './KidButton';
 import { audioService } from '../services/audioService';
 import { getWordVisual } from '../services/imageService';
 import { geminiService } from '../services/geminiService';
+import { getVocabularyByPhoneme } from '../data/phonicsVocabulary';
 import { 
   Volume2, 
   ArrowRight, 
   CheckCircle2, 
   ChevronLeft,
+  ChevronRight,
   Trophy,
   Sparkles,
   Palette
@@ -33,6 +35,31 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
   const [selectedCards, setSelectedCards] = useState<string[]>([]);
   const [showLeoTip, setShowLeoTip] = useState<boolean>(false);
   const [leoTipText, setLeoTipText] = useState<string>('');
+  const [vocabPage, setVocabPage] = useState<number>(0);
+  const [blendingWordIndex, setBlendingWordIndex] = useState<number>(0);
+
+  // Load comprehensive vocabulary items for this phoneme
+  const rawVocabItems = getVocabularyByPhoneme(phoneme.id);
+  const vocabList = rawVocabItems.length > 0
+    ? rawVocabItems
+    : phoneme.sampleWords.map((s, idx) => ({
+        id: `fb_${s.word}_${idx}`,
+        word: s.word,
+        phonemeId: phoneme.id,
+        group: phoneme.stage,
+        stage: phoneme.stage,
+        phonemes: s.word.split(''),
+        meaningVi: s.meaningVi,
+        emoji: s.emoji,
+        sampleSentence: undefined,
+        sampleSentenceVi: undefined,
+      }));
+
+  const pageSize = 3;
+  const totalVocabPages = Math.ceil(vocabList.length / pageSize);
+  const currentVocabSlice = vocabList.slice(vocabPage * pageSize, (vocabPage + 1) * pageSize);
+
+  const currentBlendItem = vocabList[blendingWordIndex] || vocabList[0];
 
   const handleAskLeo = () => {
     const tip = geminiService.getPhonicsTip(phoneme.id);
@@ -79,7 +106,7 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
     return 'text-xl md:text-2xl font-bold tracking-tight';
   };
 
-  const primaryWord = phoneme.sampleWords[0]?.word || 'cat';
+  const primaryWord = vocabList[0]?.word || phoneme.sampleWords[0]?.word || 'cat';
   const primaryVisual = getWordVisual(primaryWord);
 
   const stepsTitle = [
@@ -98,9 +125,11 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
     } else if (currentStep === 2) {
       audioService.speakEnglish(primaryWord, 0.85);
     } else if (currentStep === 3) {
-      audioService.speakPhoneme(phoneme.id, phoneme.ipa);
+      const activeWord = currentVocabSlice[0]?.word || primaryWord;
+      audioService.speakEnglish(activeWord, 0.85);
     } else if (currentStep === 4) {
-      audioService.speakEnglish(primaryWord, 0.85);
+      const blendWord = currentBlendItem?.word || primaryWord;
+      audioService.speakEnglish(blendWord, 0.85);
     } else {
       audioService.playSuccessJingle();
     }
@@ -302,33 +331,65 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
         {/* ================= STEP 3: VOCABULARY (BIG EHON GALLERY) ================= */}
         {currentStep === 3 && (
           <div className="py-1 animate-fadeIn text-center flex flex-col items-center w-full">
-            <span className="text-xs font-black text-emerald-800 bg-emerald-100 px-3.5 py-1 rounded-full uppercase tracking-wider">
-              {stepsTitle[3]}
-            </span>
-            <h2 className="text-2xl md:text-3xl font-black text-amber-950 mt-1 mb-0.5">
-              Tranh Truyện Ehon Chứa Âm /{phoneme.id}/ 🎨
+            <div className="flex items-center justify-between w-full max-w-5xl mb-1 px-1">
+              <span className="text-xs font-black text-emerald-800 bg-emerald-100 px-3.5 py-1 rounded-full uppercase tracking-wider">
+                {stepsTitle[3]} • {vocabList.length} Từ Vựng
+              </span>
+              {totalVocabPages > 1 && (
+                <div className="flex items-center space-x-2 bg-white/95 px-3 py-1 rounded-full border border-amber-200 shadow-xs">
+                  <button
+                    onClick={() => {
+                      audioService.playPopSound(440);
+                      setVocabPage(prev => Math.max(0, prev - 1));
+                    }}
+                    disabled={vocabPage === 0}
+                    className="p-1 rounded-full hover:bg-amber-100 disabled:opacity-30 cursor-pointer font-bold"
+                    title="Trang từ vựng trước"
+                  >
+                    <ChevronLeft className="w-4 h-4 text-amber-900" />
+                  </button>
+                  <span className="text-xs font-black text-amber-900">
+                    Trang {vocabPage + 1} / {totalVocabPages}
+                  </span>
+                  <button
+                    onClick={() => {
+                      audioService.playPopSound(440);
+                      setVocabPage(prev => Math.min(totalVocabPages - 1, prev + 1));
+                    }}
+                    disabled={vocabPage === totalVocabPages - 1}
+                    className="p-1 rounded-full hover:bg-amber-100 disabled:opacity-30 cursor-pointer font-bold"
+                    title="Trang từ vựng tiếp theo"
+                  >
+                    <ChevronRight className="w-4 h-4 text-amber-900" />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <h2 className="text-xl md:text-3xl font-black text-amber-950 mb-0.5">
+              Từ Vựng Chứa Âm /{phoneme.id}/ 🎨
             </h2>
-            <p className="text-xs md:text-sm font-bold text-amber-800 mb-2">
-              Chạm vào từng bức tranh lớn để nghe từ vựng và chiêm ngưỡng màu vẽ nghệ thuật!
+            <p className="text-[11px] md:text-xs font-bold text-amber-800 mb-2">
+              Chạm vào từng tranh lớn để nghe từ vựng và chiêm ngưỡng màu vẽ Ehon sinh động!
             </p>
 
             {/* Widescreen 3-Column Large Art Gallery */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-5 w-full max-w-5xl mx-auto my-1">
-              {phoneme.sampleWords.map((item) => {
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 w-full max-w-5xl mx-auto my-1">
+              {currentVocabSlice.map((item) => {
                 const visual = getWordVisual(item.word);
                 const isSelected = selectedCards.includes(item.word);
                 return (
                   <div
                     key={item.word}
                     onClick={() => handleTapSampleWord(item.word)}
-                    className={`rounded-2xl border-4 md:border-5 transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer shadow-lg transform active:scale-95 ${
+                    className={`rounded-2xl border-4 transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer shadow-lg transform active:scale-95 ${
                       isSelected
                         ? 'bg-amber-50 border-amber-400 ring-4 ring-amber-200 scale-102 shadow-xl'
                         : 'bg-white border-amber-200 hover:border-amber-300 hover:shadow-xl'
                     }`}
                   >
                     {/* Big Painting Area */}
-                    <div className="w-full h-36 md:h-44 relative overflow-hidden bg-amber-50 flex items-center justify-center p-1.5 border-b border-amber-100">
+                    <div className="w-full h-32 md:h-40 relative overflow-hidden bg-amber-50 flex items-center justify-center p-1.5 border-b border-amber-100">
                       <img
                         src={visual.url}
                         alt={visual.alt}
@@ -355,6 +416,21 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                       <div className="text-xs md:text-sm font-bold text-amber-700 mt-0.5">
                         {item.meaningVi}
                       </div>
+
+                      {item.sampleSentence && (
+                        <div
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            audioService.speakEnglish(item.sampleSentence!, 0.85);
+                          }}
+                          className="mt-1.5 px-2 py-1 bg-amber-50 hover:bg-amber-100 rounded-lg border border-amber-200 text-[11px] font-bold text-amber-900 flex items-center space-x-1 transition-colors cursor-pointer w-full justify-center"
+                          title="Chạm để nghe đọc câu mẫu decodable"
+                        >
+                          <Volume2 className="w-3 h-3 text-amber-700 shrink-0" />
+                          <span className="truncate italic">"{item.sampleSentence}"</span>
+                        </div>
+                      )}
+
                       {isSelected && (
                         <div className="mt-1 text-[11px] font-black text-emerald-600 flex items-center space-x-1 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                           <CheckCircle2 className="w-3.5 h-3.5" />
@@ -371,13 +447,19 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
 
         {/* ================= STEP 4: BLENDING CHALLENGE ================= */}
         {currentStep === 4 && (
-          <div className="py-2 animate-fadeIn w-full">
+          <div className="py-1 animate-fadeIn w-full">
             <BubbleBlender
               activity={{
-                word: phoneme.sampleWords[0]?.word || 'sun',
-                emoji: phoneme.sampleWords[0]?.emoji || '☀️',
-                meaningVi: phoneme.sampleWords[0]?.meaningVi || 'mặt trời',
-                phonemes: phoneme.sampleWords[0]?.word.split('') || ['s', 'u', 'n']
+                word: currentBlendItem.word,
+                emoji: currentBlendItem.emoji,
+                meaningVi: currentBlendItem.meaningVi,
+                phonemes: currentBlendItem.phonemes
+              }}
+              onNextWord={() => {
+                setBlendingWordIndex((prev) => (prev + 1) % vocabList.length);
+              }}
+              onPrevWord={() => {
+                setBlendingWordIndex((prev) => (prev - 1 + vocabList.length) % vocabList.length);
               }}
               onCompleted={() => {
                 audioService.playMagicChime();

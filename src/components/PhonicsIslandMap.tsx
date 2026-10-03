@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { PHONICS_GROUPS, PHONEMES_DATA } from '../data/phonicsGroups';
 import { PhonicsGroup, PhonemeInfo } from '../types/phonics';
-import { Lock, Star, Sparkles, Compass, Filter } from 'lucide-react';
+import { Lock, Star, Sparkles, Compass, Filter, BookOpen } from 'lucide-react';
 import { audioService } from '../services/audioService';
 import { getIslandVisual } from '../services/imageService';
+import { getVocabularyByGroup } from '../data/phonicsVocabulary';
 
 interface PhonicsIslandMapProps {
   unlockedGroups: number[];
@@ -144,6 +145,7 @@ export const PhonicsIslandMap: React.FC<PhonicsIslandMapProps> = ({
         {filteredGroups.map((group) => {
           const isUnlocked = unlockedGroups.includes(group.groupNumber);
           const islandVisual = getIslandVisual(group.groupNumber);
+          const islandVocab = getVocabularyByGroup(group.groupNumber);
 
           return (
             <div
@@ -158,7 +160,7 @@ export const PhonicsIslandMap: React.FC<PhonicsIslandMapProps> = ({
               <div>
                 {/* Header Badge */}
                 <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center space-x-1.5">
+                  <div className="flex items-center space-x-1.5 flex-wrap gap-y-1">
                     <span className={`text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider ${
                       isUnlocked ? 'bg-amber-100 text-amber-950 border border-amber-200' : 'bg-gray-200 text-gray-600'
                     }`}>
@@ -167,15 +169,19 @@ export const PhonicsIslandMap: React.FC<PhonicsIslandMapProps> = ({
                     <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">
                       {group.ageBand}
                     </span>
+                    <span className="text-[11px] font-black px-2 py-0.5 rounded-full bg-amber-50 text-amber-900 border border-amber-200 flex items-center space-x-1">
+                      <BookOpen className="w-3 h-3 text-amber-700" />
+                      <span>{islandVocab.length} từ</span>
+                    </span>
                   </div>
 
                   {isUnlocked ? (
-                    <div className="flex items-center space-x-1 bg-amber-100 px-2.5 py-0.5 rounded-full text-amber-900 border border-amber-200">
+                    <div className="flex items-center space-x-1 bg-amber-100 px-2.5 py-0.5 rounded-full text-amber-900 border border-amber-200 shrink-0">
                       <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
                       <span className="text-[11px] font-black">Sẵn sàng</span>
                     </div>
                   ) : (
-                    <div className="p-1 bg-gray-200 rounded-full text-gray-600">
+                    <div className="p-1 bg-gray-200 rounded-full text-gray-600 shrink-0">
                       <Lock className="w-4 h-4" />
                     </div>
                   )}

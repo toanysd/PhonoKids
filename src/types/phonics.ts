@@ -59,3 +59,16 @@ export interface BlendActivity {
   phonemes: string[];
   audioTiming?: number[];
 }
+
+export interface VocabularyItem {
+  id: string;
+  word: string;
+  phonemeId: string;
+  group: number;
+  stage: 1 | 2 | 3 | 4;
+  phonemes: string[];
+  meaningVi: string;
+  emoji: string;
+  sampleSentence: string;
+  sampleSentenceVi: string;
+}

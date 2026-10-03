@@ -9,10 +9,11 @@ const DEFAULT_PROFILE: ChildProfile = {
   name: 'Bé Mầm Nhỏ',
   age: 4,
   avatar: '🦁',
-  stars: 12,
+  stars: 25,
   unlockedGroups: [1, 2],
   masteredPhonemes: ['s', 'a', 't'],
   completedStories: ['story_cat_sat'],
+  unlockedStickers: ['leo', 'sam'],
   lastPlayedAt: new Date().toISOString(),
 };
 
@@ -36,7 +37,13 @@ class StorageService {
   public getProfile(): ChildProfile {
     try {
       const data = localStorage.getItem(PROFILE_KEY);
-      if (data) return JSON.parse(data);
+      if (data) {
+        const parsed = JSON.parse(data);
+        if (!parsed.unlockedStickers) {
+          parsed.unlockedStickers = ['leo', 'sam'];
+        }
+        return parsed;
+      }
     } catch {
       // Ignore
     }
@@ -55,6 +62,23 @@ class StorageService {
     const profile = this.getProfile();
     profile.stars += amount;
     this.saveProfile(profile);
+  }
+
+  public unlockSticker(stickerId: string, starCost: number): boolean {
+    const profile = this.getProfile();
+    if (!profile.unlockedStickers) {
+      profile.unlockedStickers = ['leo', 'sam'];
+    }
+    if (profile.unlockedStickers.includes(stickerId)) {
+      return true; // Already unlocked
+    }
+    if (profile.stars >= starCost) {
+      profile.stars -= starCost;
+      profile.unlockedStickers.push(stickerId);
+      this.saveProfile(profile);
+      return true;
+    }
+    return false;
   }
 
   public recordPhonemeMastery(phonemeId: string) {

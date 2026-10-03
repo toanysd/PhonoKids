@@ -10,6 +10,7 @@ import { ParentDashboard } from './components/ParentDashboard';
 import { CharacterCompanion } from './components/CharacterCompanion';
 import { RestBreakModal } from './components/RestBreakModal';
 import { AiBuddyChat } from './components/AiBuddyChat';
+import { StickerAlbumModal } from './components/StickerAlbumModal';
 
 import { PhonemeInfo } from './types/phonics';
 import { DecodableStory } from './types/story';
@@ -30,6 +31,7 @@ export const App: React.FC = () => {
   const [activePhoneme, setActivePhoneme] = useState<PhonemeInfo | null>(null);
   const [activeStory, setActiveStory] = useState<DecodableStory | null>(null);
   const [isParentGateOpen, setIsParentGateOpen] = useState<boolean>(false);
+  const [isStickerAlbumOpen, setIsStickerAlbumOpen] = useState<boolean>(false);
 
   // Health: Session Rest Break Countdown
   const [sessionSecondsElapsed, setSessionSecondsElapsed] = useState<number>(0);
@@ -120,6 +122,7 @@ export const App: React.FC = () => {
           soundEnabled={soundEnabled}
           onToggleSound={handleToggleSound}
           onOpenParentGate={() => setIsParentGateOpen(true)}
+          onOpenStickerAlbum={() => setIsStickerAlbumOpen(true)}
         />
       </div>
 
@@ -193,6 +196,14 @@ export const App: React.FC = () => {
         <ParentDashboard
           onClose={() => setIsParentGateOpen(false)}
           onProfileUpdated={handleRefreshProfile}
+        />
+      )}
+
+      {/* Child Sticker Reward Album Modal */}
+      {isStickerAlbumOpen && (
+        <StickerAlbumModal
+          onClose={() => setIsStickerAlbumOpen(false)}
+          onStarsUpdated={handleRefreshProfile}
         />
       )}
     </div>
