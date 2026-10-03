@@ -7,6 +7,8 @@ import { audioService } from '../services/audioService';
 import { getWordVisual } from '../services/imageService';
 import { geminiService } from '../services/geminiService';
 import { getVocabularyByPhoneme } from '../data/phonicsVocabulary';
+import { PhonicsWordBankModal } from './PhonicsWordBankModal';
+import { getPhonemeWordCount } from '../data/phonicsWordBank';
 import { 
   Volume2, 
   ArrowRight, 
@@ -15,7 +17,8 @@ import {
   ChevronRight,
   Trophy,
   Sparkles,
-  Palette
+  Palette,
+  BookOpen
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -37,6 +40,8 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
   const [leoTipText, setLeoTipText] = useState<string>('');
   const [vocabPage, setVocabPage] = useState<number>(0);
   const [blendingWordIndex, setBlendingWordIndex] = useState<number>(0);
+  const [isWordBankModalOpen, setIsWordBankModalOpen] = useState<boolean>(false);
+
 
   // Load comprehensive vocabulary items for this phoneme
   const rawVocabItems = getVocabularyByPhoneme(phoneme.id);
@@ -331,10 +336,24 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
         {/* ================= STEP 3: VOCABULARY (BIG EHON GALLERY) ================= */}
         {currentStep === 3 && (
           <div className="py-1 animate-fadeIn text-center flex flex-col items-center w-full">
-            <div className="flex items-center justify-between w-full max-w-5xl mb-1 px-1">
-              <span className="text-xs font-black text-emerald-800 bg-emerald-100 px-3.5 py-1 rounded-full uppercase tracking-wider">
-                {stepsTitle[3]} • {vocabList.length} Từ Vựng
-              </span>
+            <div className="flex items-center justify-between w-full max-w-5xl mb-1 px-1 flex-wrap gap-1.5">
+              <div className="flex items-center space-x-2">
+                <span className="text-xs font-black text-emerald-800 bg-emerald-100 px-3.5 py-1 rounded-full uppercase tracking-wider">
+                  {stepsTitle[3]} • {vocabList.length} Từ Cốt Lõi
+                </span>
+                <button
+                  onClick={() => {
+                    audioService.playPopSound(540);
+                    setIsWordBankModalOpen(true);
+                  }}
+                  className="flex items-center space-x-1.5 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-amber-950 font-black px-3 py-1 rounded-full shadow-xs border border-amber-300 transform active:scale-95 transition-all cursor-pointer text-xs"
+                  title={`Mở kho báu khám phá ${getPhonemeWordCount(phoneme.id)} từ vựng của âm /${phoneme.id}/`}
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-950" />
+                  <span>Kho Báu Mở Rộng ({getPhonemeWordCount(phoneme.id)} Từ) 💎</span>
+                </button>
+              </div>
+
               {totalVocabPages > 1 && (
                 <div className="flex items-center space-x-2 bg-white/95 px-3 py-1 rounded-full border border-amber-200 shadow-xs">
                   <button
@@ -365,6 +384,7 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                 </div>
               )}
             </div>
+
 
             <h2 className="text-xl md:text-3xl font-black text-amber-950 mb-0.5">
               Từ Vựng Chứa Âm /{phoneme.id}/ 🎨
@@ -489,6 +509,20 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                 "Bé phát âm rất tự tin! Hãy tiếp tục phiêu lưu sang các bức tranh Ehon mới nhé!"
               </p>
             </div>
+
+            {/* Victory Word Bank Exploration Trigger */}
+            <div className="flex items-center justify-center space-x-2 mt-2">
+              <button
+                onClick={() => {
+                  audioService.playPopSound(540);
+                  setIsWordBankModalOpen(true);
+                }}
+                className="flex items-center space-x-1.5 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-amber-950 font-black px-4 py-2 rounded-2xl shadow-md border-2 border-amber-300 transform active:scale-95 transition-transform cursor-pointer text-xs md:text-sm"
+              >
+                <BookOpen className="w-4 h-4 text-amber-950" />
+                <span>Khám Phá Toàn Bộ {getPhonemeWordCount(phoneme.id)} Từ Của Âm /{phoneme.id}/ 💎</span>
+              </button>
+            </div>
           </div>
         )}
 
@@ -534,6 +568,15 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
         </div>
 
       </div>
+
+      {/* Phonics Sound Word Bank Modal for this phoneme */}
+      <PhonicsWordBankModal
+        isOpen={isWordBankModalOpen}
+        onClose={() => setIsWordBankModalOpen(false)}
+        initialPhonemeId={phoneme.id}
+        initialGroupNumber={phoneme.group}
+      />
     </div>
   );
 };
+

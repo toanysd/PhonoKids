@@ -72,3 +72,25 @@ export interface VocabularyItem {
   sampleSentence: string;
   sampleSentenceVi: string;
 }
+
+export type WordBankTheme = 'animals' | 'nature' | 'objects_food' | 'actions';
+
+export interface PhonicsWordBankItem {
+  id: string;
+  word: string;
+  phonemeId: string;
+  group: number;
+  stage: 1 | 2 | 3 | 4;
+  phonemes: string[];
+  theme: WordBankTheme;
+  meaningVi: string;
+  emoji: string;
+  sampleSentence: string;
+  sampleSentenceVi: string;
+  visual: {
+    url: string;
+    type: 'ehon' | 'photo';
+    alt: string;
+  };
+}
+

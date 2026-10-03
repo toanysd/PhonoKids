@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { PHONICS_GROUPS, PHONEMES_DATA } from '../data/phonicsGroups';
 import { PhonicsGroup, PhonemeInfo } from '../types/phonics';
-import { Lock, Star, Sparkles, Compass, Filter, BookOpen } from 'lucide-react';
+import { Lock, Star, Sparkles, Compass, Filter, BookOpen, Layers } from 'lucide-react';
 import { audioService } from '../services/audioService';
 import { getIslandVisual } from '../services/imageService';
 import { getVocabularyByGroup } from '../data/phonicsVocabulary';
+import { PhonicsWordBankModal } from './PhonicsWordBankModal';
+import { getGroupWordCount, PHONICS_WORD_BANK } from '../data/phonicsWordBank';
 
 interface PhonicsIslandMapProps {
   unlockedGroups: number[];
@@ -16,6 +18,10 @@ export const PhonicsIslandMap: React.FC<PhonicsIslandMapProps> = ({
   onSelectPhoneme,
 }) => {
   const [selectedStage, setSelectedStage] = useState<number | 'all'>('all');
+  const [isWordBankOpen, setIsWordBankOpen] = useState(false);
+  const [wordBankTargetGroup, setWordBankTargetGroup] = useState<number | undefined>(undefined);
+  const [wordBankTargetPhoneme, setWordBankTargetPhoneme] = useState<string | undefined>(undefined);
+
 
   const filteredGroups = selectedStage === 'all'
     ? PHONICS_GROUPS
@@ -76,7 +82,24 @@ export const PhonicsIslandMap: React.FC<PhonicsIslandMapProps> = ({
           </div>
         </div>
 
+        {/* Master Word Bank Glow Trigger */}
+        <div className="flex items-center justify-center mt-2.5">
+          <button
+            onClick={() => {
+              audioService.playPopSound(540);
+              setWordBankTargetGroup(undefined);
+              setWordBankTargetPhoneme(undefined);
+              setIsWordBankOpen(true);
+            }}
+            className="flex items-center space-x-2 bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 hover:from-amber-500 hover:to-orange-600 text-amber-950 font-black px-5 py-2.5 rounded-2xl shadow-md border-2 border-amber-300 transform active:scale-95 transition-all cursor-pointer text-xs md:text-sm"
+          >
+            <Sparkles className="w-4 h-4 text-amber-950 animate-spin" />
+            <span>Kho Báu Từ Vựng Âm Vị ({PHONICS_WORD_BANK.length} Từ Chuẩn Ehon) 💎</span>
+          </button>
+        </div>
+
         {/* 4 Developmental Stages Filter Bar */}
+
         <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3 bg-white/95 p-1.5 rounded-xl border border-amber-200 shadow-xs max-w-3xl mx-auto">
           <span className="text-xs font-black text-amber-900 flex items-center space-x-1 px-1.5">
             <Filter className="w-3.5 h-3.5 text-amber-600" />
@@ -235,6 +258,24 @@ export const PhonicsIslandMap: React.FC<PhonicsIslandMapProps> = ({
                     );
                   })}
                 </div>
+
+                {/* Island Specific Word Bank Button */}
+                {isUnlocked && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      audioService.playPopSound(520);
+                      setWordBankTargetGroup(group.groupNumber);
+                      setWordBankTargetPhoneme(undefined);
+                      setIsWordBankOpen(true);
+                    }}
+                    className="mt-3 w-full py-1.5 px-3 bg-amber-100 hover:bg-amber-200 text-amber-950 font-black text-xs rounded-xl border border-amber-300 shadow-2xs flex items-center justify-center space-x-1.5 transition-transform transform active:scale-95 cursor-pointer"
+                    title={`Mở kho báu từ vựng của Đảo ${group.groupNumber}`}
+                  >
+                    <BookOpen className="w-3.5 h-3.5 text-amber-800" />
+                    <span>Kho Báu Đảo {group.groupNumber} ({getGroupWordCount(group.groupNumber)} từ) 💎</span>
+                  </button>
+                )}
               </div>
 
               {/* Floating Sparkle for Unlocked */}
@@ -247,6 +288,15 @@ export const PhonicsIslandMap: React.FC<PhonicsIslandMapProps> = ({
           );
         })}
       </div>
+
+      {/* Phonics Sound Word Bank Modal */}
+      <PhonicsWordBankModal
+        isOpen={isWordBankOpen}
+        onClose={() => setIsWordBankOpen(false)}
+        initialGroupNumber={wordBankTargetGroup}
+        initialPhonemeId={wordBankTargetPhoneme}
+      />
     </div>
   );
 };
+
