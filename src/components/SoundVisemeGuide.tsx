@@ -10,7 +10,7 @@ interface SoundVisemeGuideProps {
 
 export const SoundVisemeGuide: React.FC<SoundVisemeGuideProps> = ({ phoneme }) => {
   const { mouthGuide, tprAction } = phoneme;
-  const visemePhoto = getVisemePhoto(mouthGuide.mouthShape);
+  const visemePhoto = getVisemePhoto(mouthGuide.mouthShape, phoneme.id, mouthGuide.tonguePosition);
 
   const handleHearPhoneme = () => {
     audioService.speakPhoneme(phoneme.id, phoneme.ipa);

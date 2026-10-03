@@ -174,8 +174,10 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      {/* Interactive Mascot Companion */}
-      <CharacterCompanion />
+      {/* Interactive Mascot Companion - Only shown on exploration map and story bookshelf to keep lesson action buttons unobstructed */}
+      {(currentView === 'island_map' || currentView === 'stories') && (
+        <CharacterCompanion />
+      )}
 
       {/* Eye Strain & Screen Time Rest Break Modal */}
       {showRestBreak && (

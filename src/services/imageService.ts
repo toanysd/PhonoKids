@@ -1,5 +1,6 @@
 // Service providing rich Ehon painted artwork and high-res educational photography
 // Eliminating flat icons/vectors in favor of rich oil/gouache/acrylic painted textures
+import { WORD_VISUALS_MAP } from '../data/wordVisuals';
 
 export interface WordVisual {
   url: string;
@@ -240,15 +241,18 @@ const EHON_MAP: Record<string, WordVisual> = {
 
 export const getWordVisual = (word: string): WordVisual => {
   const clean = word.toLowerCase().trim();
+  if (WORD_VISUALS_MAP[clean]) {
+    return WORD_VISUALS_MAP[clean];
+  }
   if (EHON_MAP[clean]) {
     return EHON_MAP[clean];
   }
 
-  // Fallback to high-quality educational photo if not in custom map
+  // Graceful fallback to warm Ehon landscape canvas instead of generic colored pencils
   return {
-    url: `https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&w=800&q=80`,
-    type: 'photo',
-    alt: `Hình ảnh minh họa cho ${word}`
+    url: '/assets/ehon/archipelago.jpg',
+    type: 'ehon',
+    alt: `Tranh Ehon thế giới âm thanh kỳ diệu cho từ ${word}`
   };
 };
 
@@ -453,39 +457,116 @@ export const getIslandVisual = (islandNumber: number): WordVisual => {
   }
 };
 
-export const getVisemePhoto = (mouthShape: string): { url: string; alt: string; labelVi: string } => {
-  switch (mouthShape) {
-    case 'teeth_together':
+export const getVisemePhoto = (
+  mouthShape: string,
+  phonemeId?: string,
+  tonguePosition?: string
+): { url: string; alt: string; labelVi: string } => {
+  // 1. Interdental / Dental sounds: th_unvoiced (/θ/), th_voiced (/ð/)
+  if (phonemeId === 'th_unvoiced' || phonemeId === 'th_voiced' || mouthShape === 'tongue_teeth') {
+    return {
+      url: '/assets/visemes/tongue_teeth.jpg',
+      alt: 'Ảnh thật cận cảnh đầu lưỡi đặt nhẹ giữa hai hàm răng (/θ/, /ð/)',
+      labelVi: 'Đầu lưỡi khẽ đặt giữa hai hàm răng rồi đẩy luồng hơi'
+    };
+  }
+
+  // 2. Labiodental sounds: f (/f/), v (/v/)
+  if (phonemeId === 'f' || phonemeId === 'v' || mouthShape === 'lip_bite') {
+    return {
+      url: '/assets/visemes/lip_bite.jpg',
+      alt: 'Ảnh thật cận cảnh răng cửa trên chạm nhẹ mép môi dưới (/f/, /v/)',
+      labelVi: 'Răng cửa trên chạm nhẹ mép môi dưới'
+    };
+  }
+
+  // 3. Velar plosives & nasals: c/k (/k/), g (/ɡ/), ng (/ŋ/)
+  if (
+    phonemeId === 'c' || 
+    phonemeId === 'c_k' || 
+    phonemeId === 'k' || 
+    phonemeId === 'g' || 
+    phonemeId === 'ng' || 
+    mouthShape === 'velar' || 
+    tonguePosition === 'up_back'
+  ) {
+    return {
+      url: '/assets/visemes/open.jpg',
+      alt: 'Ảnh thật khoang miệng mở, cuống lưỡi chạm vòm miệng trong (/k/, /g/, /ng/)',
+      labelVi: 'Cuống lưỡi nâng chạm vòm họng trong, bật luồng hơi giòn'
+    };
+  }
+
+  // 4. Alveolar plosives & nasals & liquids: t (/t/), d (/d/), n (/n/), l (/l/)
+  if (
+    phonemeId === 't' || 
+    phonemeId === 'd' || 
+    phonemeId === 'n' || 
+    phonemeId === 'l' || 
+    mouthShape === 'alveolar' || 
+    tonguePosition === 'behind_top_teeth'
+  ) {
+    if (mouthShape === 'teeth_together') {
       return {
         url: '/assets/visemes/teeth_together.jpg',
-        alt: 'Ảnh thật cận cảnh khẩu hình răng khép nhẹ, môi mỉm cười (/s/, /z/)',
+        alt: 'Ảnh thật cận cảnh răng khép nhẹ, luồng hơi xì qua kẽ răng (/s/, /z/, /x/)',
         labelVi: 'Răng khép nhẹ xì luồng hơi mát qua kẽ răng'
       };
-    case 'wide':
-      return {
-        url: '/assets/visemes/wide.jpg',
-        alt: 'Ảnh thật cận cảnh khẩu hình miệng hé rộng mỉm cười (/a/, /æ/, /e/)',
-        labelVi: 'Mỉm cười hé khóe miệng, thấy rõ răng'
-      };
-    case 'closed':
-      return {
-        url: '/assets/visemes/closed.jpg',
-        alt: 'Ảnh thật cận cảnh hai cánh môi mím chặt (/p/, /b/, /m/)',
-        labelVi: 'Hai môi mím chặt rồi bật luồng hơi'
-      };
-    case 'round':
-      return {
-        url: '/assets/visemes/round.jpg',
-        alt: 'Ảnh thật cận cảnh môi chu tròn hình chữ O (/u/, /o/, /w/)',
-        labelVi: 'Môi chu tròn hướng ra phía trước'
-      };
-    case 'open':
-    default:
-      return {
-        url: '/assets/visemes/open.jpg',
-        alt: 'Ảnh thật cận cảnh cằm hạ tự nhiên, khoang miệng mở (/ɑ/, /t/, /d/)',
-        labelVi: 'Há rộng cằm, đầu lưỡi chạm nướu trên'
-      };
+    }
+    return {
+      url: '/assets/visemes/open.jpg',
+      alt: 'Ảnh thật đầu lưỡi chạm nướu hàm trên (/t/, /d/, /n/, /l/)',
+      labelVi: 'Đầu lưỡi chạm nướu trên rồi bật hơi dứt khoát'
+    };
   }
+
+  // 5. Sibilant fricatives: s (/s/), z (/z/), x (/ks/)
+  if (mouthShape === 'teeth_together' || phonemeId === 's' || phonemeId === 'z' || phonemeId === 'x') {
+    return {
+      url: '/assets/visemes/teeth_together.jpg',
+      alt: 'Ảnh thật cận cảnh răng khép nhẹ, luồng hơi xì qua kẽ răng (/s/, /z/, /x/)',
+      labelVi: 'Răng khép nhẹ xì luồng hơi mát qua kẽ răng'
+    };
+  }
+
+  // 6. Bilabial plosives & nasals: p (/p/), b (/b/), m (/m/)
+  if (mouthShape === 'closed' || phonemeId === 'p' || phonemeId === 'b' || phonemeId === 'm') {
+    return {
+      url: '/assets/visemes/closed.jpg',
+      alt: 'Ảnh thật cận cảnh hai cánh môi mím chặt (/p/, /b/, /m/)',
+      labelVi: 'Hai môi mím chặt rồi bật luồng hơi'
+    };
+  }
+
+  // 7. Rounded lips vowels & glides: w, oo, oa, r, ch, sh, qu, oi, ue, or, o
+  if (
+    mouthShape === 'round' || 
+    ['w', 'oo_short', 'oo_long', 'oa', 'r', 'ch', 'sh', 'qu', 'oi', 'ue', 'or', 'o'].includes(phonemeId || '')
+  ) {
+    return {
+      url: '/assets/visemes/round.jpg',
+      alt: 'Ảnh thật cận cảnh môi chu tròn hình chữ O (/w/, /oo/, /r/, /sh/)',
+      labelVi: 'Môi chu tròn hướng ra phía trước'
+    };
+  }
+
+  // 8. Spread lips vowels: i, e, ee, ai, ie, y
+  if (
+    mouthShape === 'wide' || 
+    ['i', 'e', 'ee', 'ai', 'ie', 'y'].includes(phonemeId || '')
+  ) {
+    return {
+      url: '/assets/visemes/wide.jpg',
+      alt: 'Ảnh thật khóe môi hé mở mỉm cười (/i/, /e/, /ee/, /ai/)',
+      labelVi: 'Khóe môi mở rộng như nụ cười'
+    };
+  }
+
+  // 9. Open vowels & glottal: a, u, ar, er, h
+  return {
+    url: '/assets/visemes/open.jpg',
+    alt: 'Ảnh thật hạ cằm tự nhiên, khoang miệng mở thư giãn (/a/, /u/, /ar/, /h/)',
+    labelVi: 'Hạ cằm tự nhiên, khoang miệng mở thư giãn'
+  };
 };
 
