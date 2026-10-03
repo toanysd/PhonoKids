@@ -1,7 +1,7 @@
 import React from 'react';
 import { DECODABLE_STORIES } from '../data/stories';
 import { DecodableStory } from '../types/story';
-import { BookOpen, Star, Sparkles, CheckCircle2 } from 'lucide-react';
+import { BookOpen, Sparkles, CheckCircle2 } from 'lucide-react';
 import { audioService } from '../services/audioService';
 
 interface StoryLibraryProps {
@@ -29,7 +29,7 @@ export const StoryLibrary: React.FC<StoryLibraryProps> = ({
           Cùng Đọc Truyện Thôi Nào! 📚
         </h2>
         <p className="text-base font-bold text-amber-800 mt-1 max-w-xl mx-auto">
-          Truyện tranh tương tác chuẩn Raz-Kids & PalFish: Chạm chữ phát âm, chạm nhân vật chuyển động, karaoke theo nhịp!
+          Truyện tranh tương tác đa tầng: Trẻ nghe kể chuyện, chạm nhân vật chuyển động, theo dõi chữ theo nhịp và trả lời câu hỏi bằng hình ảnh!
         </p>
       </div>
 

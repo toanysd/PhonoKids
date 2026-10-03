@@ -16,6 +16,14 @@ export interface SessionSettings {
   voiceSpeed: number; // 0.85 for toddlers, 1.0 for normal
   soundEffectsEnabled: boolean;
   parentPin: string; // Default: '1234'
+  
+  // COPPA & Privacy Compliance
+  isMicrophoneConsentGranted: boolean; // Strictly false by default
+  allowDataAnalytics: boolean; // false
+  
+  // Child Health & Accessibility
+  reducedMotion: boolean; // false
+  showWordHighlights: boolean; // true
 }
 
 export interface PhonemeRecord {

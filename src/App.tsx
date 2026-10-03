@@ -8,6 +8,7 @@ import { MinimalPairsView } from './components/MinimalPairsView';
 import { BlendingPlayground } from './components/BlendingPlayground';
 import { ParentDashboard } from './components/ParentDashboard';
 import { CharacterCompanion } from './components/CharacterCompanion';
+import { RestBreakModal } from './components/RestBreakModal';
 
 import { PhonicsGroup, PhonemeInfo } from './types/phonics';
 import { DecodableStory } from './types/story';
@@ -30,12 +31,31 @@ export const App: React.FC = () => {
   const [activeStory, setActiveStory] = useState<DecodableStory | null>(null);
   const [isParentGateOpen, setIsParentGateOpen] = useState<boolean>(false);
 
+  // Health: Session Rest Break Countdown
+  const [sessionSecondsElapsed, setSessionSecondsElapsed] = useState<number>(0);
+  const [showRestBreak, setShowRestBreak] = useState<boolean>(false);
+
   useEffect(() => {
     // Configure initial audio settings
     audioService.setVoiceSpeed(settings.voiceSpeed);
     audioService.setAccent(settings.accent);
     audioService.setSoundEnabled(soundEnabled);
   }, [settings, soundEnabled]);
+
+  // Session timer ticker for eye strain prevention
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSessionSecondsElapsed((prev) => {
+        const next = prev + 1;
+        if (next >= settings.sessionMinutes * 60 && !showRestBreak) {
+          setShowRestBreak(true);
+        }
+        return next;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [settings.sessionMinutes, showRestBreak]);
 
   const handleRefreshProfile = () => {
     setProfile(storageService.getProfile());
@@ -49,7 +69,6 @@ export const App: React.FC = () => {
   };
 
   const handleSelectGroup = (group: PhonicsGroup) => {
-    // Pick first phoneme of the group to start micro-lesson
     const firstPhonemeId = group.phonemes[0];
     const phInfo = PHONEMES_DATA[firstPhonemeId];
     if (phInfo) {
@@ -85,7 +104,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50 via-yellow-50 to-orange-50 text-amber-950 flex flex-col font-child select-none">
+    <div className={`min-h-screen bg-gradient-to-b from-amber-50 via-yellow-50 to-orange-50 text-amber-950 flex flex-col font-child select-none ${settings.reducedMotion ? 'motion-reduce' : ''}`}>
       {/* Sticky Top Navigation */}
       <Navbar
         currentView={currentView as any}
@@ -142,6 +161,20 @@ export const App: React.FC = () => {
 
       {/* Interactive Mascot Companion */}
       <CharacterCompanion />
+
+      {/* Eye Strain & Screen Time Rest Break Modal */}
+      {showRestBreak && (
+        <RestBreakModal
+          onContinue={() => {
+            setShowRestBreak(false);
+            setSessionSecondsElapsed(0); // Reset timer for next cycle
+          }}
+          onFinishSession={() => {
+            setShowRestBreak(false);
+            setCurrentView('island_map');
+          }}
+        />
+      )}
 
       {/* Parent Dashboard Modal */}
       {isParentGateOpen && (

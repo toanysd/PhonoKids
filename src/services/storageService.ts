@@ -22,6 +22,10 @@ const DEFAULT_SETTINGS: SessionSettings = {
   voiceSpeed: 0.85,
   soundEffectsEnabled: true,
   parentPin: '1234',
+  isMicrophoneConsentGranted: false, // COPPA compliant: strictly OFF by default
+  allowDataAnalytics: false,
+  reducedMotion: false,
+  showWordHighlights: true,
 };
 
 class StorageService {
@@ -68,7 +72,9 @@ class StorageService {
   public getSettings(): SessionSettings {
     try {
       const data = localStorage.getItem(SETTINGS_KEY);
-      if (data) return JSON.parse(data);
+      if (data) {
+        return { ...DEFAULT_SETTINGS, ...JSON.parse(data) };
+      }
     } catch {
       // Ignore
     }
@@ -111,6 +117,17 @@ class StorageService {
     records[phonemeId] = existing;
     try {
       localStorage.setItem(RECORDS_KEY, JSON.stringify(records));
+    } catch {
+      // Ignore
+    }
+  }
+
+  // COPPA Data Erasure: complete wipe of all local child data
+  public eraseAllData() {
+    try {
+      localStorage.removeItem(PROFILE_KEY);
+      localStorage.removeItem(SETTINGS_KEY);
+      localStorage.removeItem(RECORDS_KEY);
     } catch {
       // Ignore
     }

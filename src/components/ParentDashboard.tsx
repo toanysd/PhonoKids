@@ -12,7 +12,11 @@ import {
   Volume2, 
   X,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Mic,
+  Trash2,
+  Eye,
+  Lock
 } from 'lucide-react';
 
 interface ParentDashboardProps {
@@ -24,7 +28,7 @@ export const ParentDashboard: React.FC<ParentDashboardProps> = ({ onClose, onPro
   const [profile, setProfile] = useState<ChildProfile>(() => storageService.getProfile());
   const [settings, setSettings] = useState<SessionSettings>(() => storageService.getSettings());
   const [records] = useState<Record<string, PhonemeRecord>>(() => storageService.getPhonemeRecords());
-  const [activeTab, setActiveTab] = useState<'progress' | 'settings' | 'coplay'>('progress');
+  const [activeTab, setActiveTab] = useState<'progress' | 'settings' | 'privacy' | 'coplay'>('progress');
 
   // Adult Math Gate Lock
   const [isUnlocked, setIsUnlocked] = useState<boolean>(false);
@@ -32,6 +36,7 @@ export const ParentDashboard: React.FC<ParentDashboardProps> = ({ onClose, onPro
   const [mathNum2] = useState<number>(() => Math.floor(Math.random() * 5) + 3);
   const [userAnswer, setUserAnswer] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string>('');
+  const [eraseConfirm, setEraseConfirm] = useState<boolean>(false);
 
   const handleVerifyMath = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,6 +60,14 @@ export const ParentDashboard: React.FC<ParentDashboardProps> = ({ onClose, onPro
     setProfile(updated);
     storageService.saveProfile(updated);
     onProfileUpdated();
+  };
+
+  const handleEraseAllData = () => {
+    storageService.eraseAllData();
+    setProfile(storageService.getProfile());
+    setSettings(storageService.getSettings());
+    onProfileUpdated();
+    setEraseConfirm(false);
   };
 
   if (!isUnlocked) {
@@ -114,7 +127,7 @@ export const ParentDashboard: React.FC<ParentDashboardProps> = ({ onClose, onPro
                 Góc Phụ Huynh • {profile.name}
               </h2>
               <p className="text-xs font-bold text-amber-800">
-                Theo dõi tiến độ phát âm chuẩn xác & quản lý thời gian sử dụng
+                Tuân thủ COPPA • Bảo vệ sức khỏe mắt bé • Tiến độ chuẩn sư phạm
               </p>
             </div>
           </div>
@@ -128,13 +141,11 @@ export const ParentDashboard: React.FC<ParentDashboardProps> = ({ onClose, onPro
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex space-x-2 mb-6">
+        <div className="flex space-x-2 mb-6 overflow-x-auto pb-1">
           <button
             onClick={() => setActiveTab('progress')}
-            className={`flex-1 py-2.5 px-4 rounded-2xl font-black text-sm flex items-center justify-center space-x-1.5 transition-all ${
-              activeTab === 'progress'
-                ? 'bg-amber-400 text-amber-950 shadow-md'
-                : 'bg-white text-gray-600 hover:bg-amber-100'
+            className={`py-2 px-3 rounded-2xl font-black text-xs sm:text-sm flex items-center space-x-1.5 whitespace-nowrap transition-all ${
+              activeTab === 'progress' ? 'bg-amber-400 text-amber-950 shadow-md' : 'bg-white text-gray-600 hover:bg-amber-100'
             }`}
           >
             <Award className="w-4 h-4" />
@@ -143,22 +154,28 @@ export const ParentDashboard: React.FC<ParentDashboardProps> = ({ onClose, onPro
 
           <button
             onClick={() => setActiveTab('settings')}
-            className={`flex-1 py-2.5 px-4 rounded-2xl font-black text-sm flex items-center justify-center space-x-1.5 transition-all ${
-              activeTab === 'settings'
-                ? 'bg-amber-400 text-amber-950 shadow-md'
-                : 'bg-white text-gray-600 hover:bg-amber-100'
+            className={`py-2 px-3 rounded-2xl font-black text-xs sm:text-sm flex items-center space-x-1.5 whitespace-nowrap transition-all ${
+              activeTab === 'settings' ? 'bg-amber-400 text-amber-950 shadow-md' : 'bg-white text-gray-600 hover:bg-amber-100'
             }`}
           >
             <Settings2 className="w-4 h-4" />
-            <span>Cài Đặt & Thời Gian</span>
+            <span>Thời Gian & Sức Khỏe</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('privacy')}
+            className={`py-2 px-3 rounded-2xl font-black text-xs sm:text-sm flex items-center space-x-1.5 whitespace-nowrap transition-all ${
+              activeTab === 'privacy' ? 'bg-amber-400 text-amber-950 shadow-md' : 'bg-white text-gray-600 hover:bg-amber-100'
+            }`}
+          >
+            <Lock className="w-4 h-4 text-emerald-600" />
+            <span>Bảo Mật & COPPA</span>
           </button>
 
           <button
             onClick={() => setActiveTab('coplay')}
-            className={`flex-1 py-2.5 px-4 rounded-2xl font-black text-sm flex items-center justify-center space-x-1.5 transition-all ${
-              activeTab === 'coplay'
-                ? 'bg-amber-400 text-amber-950 shadow-md'
-                : 'bg-white text-gray-600 hover:bg-amber-100'
+            className={`py-2 px-3 rounded-2xl font-black text-xs sm:text-sm flex items-center space-x-1.5 whitespace-nowrap transition-all ${
+              activeTab === 'coplay' ? 'bg-amber-400 text-amber-950 shadow-md' : 'bg-white text-gray-600 hover:bg-amber-100'
             }`}
           >
             <HeartHandshake className="w-4 h-4" />
@@ -171,40 +188,35 @@ export const ParentDashboard: React.FC<ParentDashboardProps> = ({ onClose, onPro
           {/* TAB 1: PROGRESS */}
           {activeTab === 'progress' && (
             <div className="space-y-4">
-              {/* Quick Summary Cards */}
               <div className="grid grid-cols-3 gap-3 text-center">
                 <div className="bg-white p-3 rounded-2xl border-2 border-amber-200">
                   <div className="text-2xl font-black text-amber-600">{profile.stars} ⭐</div>
-                  <div className="text-xs font-bold text-gray-500">Ngôi sao thưởng</div>
+                  <div className="text-xs font-bold text-gray-500">Ngôi sao động viên</div>
                 </div>
                 <div className="bg-white p-3 rounded-2xl border-2 border-amber-200">
                   <div className="text-2xl font-black text-emerald-600">{profile.masteredPhonemes.length}</div>
-                  <div className="text-xs font-bold text-gray-500">Âm đã làm chủ</div>
+                  <div className="text-xs font-bold text-gray-500">Âm đã làm quen</div>
                 </div>
                 <div className="bg-white p-3 rounded-2xl border-2 border-amber-200">
                   <div className="text-2xl font-black text-sky-600">{profile.completedStories.length}</div>
-                  <div className="text-xs font-bold text-gray-500">Truyện đã đọc</div>
+                  <div className="text-xs font-bold text-gray-500">Truyện đã khám phá</div>
                 </div>
               </div>
 
-              {/* Mastered Phonemes List */}
               <div className="bg-white rounded-2xl p-4 border-2 border-amber-200">
                 <h4 className="text-sm font-black text-amber-950 mb-3 flex items-center space-x-1.5">
                   <CheckCircle className="w-4 h-4 text-emerald-500" />
-                  <span>Chi tiết độ chuẩn xác các âm vị (Jolly Phonics Group 1 & 2):</span>
+                  <span>Theo dõi nhận thức âm vị (Jolly Phonics 7 nhóm):</span>
                 </h4>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {Object.values(PHONEMES_DATA).map((ph) => {
                     const isMastered = profile.masteredPhonemes.includes(ph.id);
-                    const record = records[ph.id];
                     return (
                       <div
                         key={ph.id}
                         className={`p-3 rounded-xl border flex items-center justify-between ${
-                          isMastered
-                            ? 'bg-emerald-50 border-emerald-300'
-                            : 'bg-gray-50 border-gray-200'
+                          isMastered ? 'bg-emerald-50 border-emerald-300' : 'bg-gray-50 border-gray-200'
                         }`}
                       >
                         <div>
@@ -212,7 +224,7 @@ export const ParentDashboard: React.FC<ParentDashboardProps> = ({ onClose, onPro
                             /{ph.id}/ ({ph.grapheme})
                           </div>
                           <div className="text-[11px] font-bold text-gray-500">
-                            {record ? `Độ chuẩn: ${record.accuracyRate}%` : 'Chưa luyện tập'}
+                            {isMastered ? 'Đã làm quen' : 'Chưa mở'}
                           </div>
                         </div>
                         {isMastered ? (
@@ -228,14 +240,14 @@ export const ParentDashboard: React.FC<ParentDashboardProps> = ({ onClose, onPro
             </div>
           )}
 
-          {/* TAB 2: SETTINGS & TIME LIMITS */}
+          {/* TAB 2: SETTINGS & HEALTH */}
           {activeTab === 'settings' && (
             <div className="bg-white rounded-2xl p-5 border-2 border-amber-200 space-y-6">
               {/* Daily Session Limit */}
               <div>
                 <label className="text-sm font-black text-amber-950 flex items-center space-x-2 mb-2">
                   <Clock className="w-4 h-4 text-amber-600" />
-                  <span>Giới hạn thời lượng một phiên chơi:</span>
+                  <span>Thời lượng tự động nhắc nghỉ ngơi (Bảo vệ mắt):</span>
                 </label>
                 <div className="grid grid-cols-4 gap-2">
                   {[5, 8, 10, 15].map((mins) => (
@@ -253,25 +265,56 @@ export const ParentDashboard: React.FC<ParentDashboardProps> = ({ onClose, onPro
                   ))}
                 </div>
                 <p className="text-xs font-bold text-gray-500 mt-1.5">
-                  Khuyến nghị: 5-8 phút cho trẻ 3-4 tuổi để chống mỏi mắt và duy trì hứng thú tối đa.
+                  Khuyến nghị y khoa: 5-8 phút/phiên cho trẻ 3-4 tuổi để chống mỏi mắt và tránh thụ động.
                 </p>
               </div>
 
-              {/* Accent Preference */}
-              <div>
+              {/* Reduced Motion & Visual comfort */}
+              <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
+                <div>
+                  <div className="text-sm font-black text-amber-950 flex items-center space-x-1.5">
+                    <Eye className="w-4 h-4 text-amber-600" />
+                    <span>Chế độ giảm chuyển động (Reduced Motion)</span>
+                  </div>
+                  <p className="text-xs font-bold text-gray-500">Giảm bớt hoạt ảnh nhấp nháy, giúp mắt bé êm dịu hơn.</p>
+                </div>
+                <button
+                  onClick={() => handleSaveSettings({ ...settings, reducedMotion: !settings.reducedMotion })}
+                  className={`w-12 h-7 rounded-full p-1 transition-colors ${settings.reducedMotion ? 'bg-emerald-500' : 'bg-gray-300'}`}
+                >
+                  <div className={`w-5 h-5 bg-white rounded-full transition-transform ${settings.reducedMotion ? 'translate-x-5' : ''}`} />
+                </button>
+              </div>
+
+              {/* Word Highlighting toggle */}
+              <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
+                <div>
+                  <div className="text-sm font-black text-amber-950">Tô màu chữ khi đọc (Karaoke Highlight)</div>
+                  <p className="text-xs font-bold text-gray-500">Tắt nếu chỉ muốn bé tập trung nghe âm thanh và xem hình ảnh.</p>
+                </div>
+                <button
+                  onClick={() => handleSaveSettings({ ...settings, showWordHighlights: !settings.showWordHighlights })}
+                  className={`w-12 h-7 rounded-full p-1 transition-colors ${settings.showWordHighlights ? 'bg-emerald-500' : 'bg-gray-300'}`}
+                >
+                  <div className={`w-5 h-5 bg-white rounded-full transition-transform ${settings.showWordHighlights ? 'translate-x-5' : ''}`} />
+                </button>
+              </div>
+
+              {/* Voice Accent */}
+              <div className="pt-3 border-t border-gray-100">
                 <label className="text-sm font-black text-amber-950 flex items-center space-x-2 mb-2">
                   <Volume2 className="w-4 h-4 text-amber-600" />
-                  <span>Giọng phát âm chuẩn:</span>
+                  <span>Giọng phát âm chuẩn người bản xứ:</span>
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   {(['US', 'UK'] as const).map((acc) => (
                     <button
                       key={acc}
                       onClick={() => handleSaveSettings({ ...settings, accent: acc })}
-                      className={`py-2.5 px-4 rounded-xl font-black text-sm border-2 transition-all ${
+                      className={`py-2 px-4 rounded-xl font-black text-sm border-2 transition-all ${
                         settings.accent === acc
                           ? 'bg-amber-400 border-amber-500 text-amber-950'
-                          : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-amber-50'
+                          : 'bg-gray-50 border-gray-200 text-gray-700'
                       }`}
                     >
                       Tiếng Anh {acc === 'US' ? 'Mỹ (US Standard)' : 'Anh (UK Received)'}
@@ -279,32 +322,77 @@ export const ParentDashboard: React.FC<ParentDashboardProps> = ({ onClose, onPro
                   ))}
                 </div>
               </div>
+            </div>
+          )}
 
-              {/* Child Age Band */}
-              <div>
-                <label className="text-sm font-black text-amber-950 mb-2 block">
-                  Độ tuổi của bé hiện tại:
-                </label>
-                <div className="grid grid-cols-3 gap-2">
-                  {([3, 4, 5] as const).map((a) => (
-                    <button
-                      key={a}
-                      onClick={() => handleUpdateAge(a)}
-                      className={`py-2 px-3 rounded-xl font-black text-sm border-2 transition-all ${
-                        profile.age === a
-                          ? 'bg-amber-400 border-amber-500 text-amber-950'
-                          : 'bg-gray-50 border-gray-200 text-gray-700'
-                      }`}
-                    >
-                      {a} Tuổi
-                    </button>
-                  ))}
+          {/* TAB 3: PRIVACY & COPPA COMPLIANCE */}
+          {activeTab === 'privacy' && (
+            <div className="bg-white rounded-2xl p-5 border-2 border-emerald-200 space-y-5">
+              <div className="bg-emerald-50 border border-emerald-300 rounded-2xl p-4">
+                <div className="flex items-center space-x-2 text-emerald-900 font-black text-sm mb-1">
+                  <ShieldCheck className="w-5 h-5 text-emerald-600" />
+                  <span>Cam kết Bảo vệ Quyền Riêng Tư Trẻ Em (COPPA & GDPR-K)</span>
                 </div>
+                <p className="text-xs font-bold text-emerald-800 leading-relaxed">
+                  Ứng dụng không thu thập thông tin nhận dạng cá nhân, không có quảng cáo, không theo dõi hành vi, và hoạt động hoàn toàn cục bộ trên thiết bị của gia đình.
+                </p>
+              </div>
+
+              {/* Microphone Explicit Opt-In Toggle */}
+              <div className="p-4 bg-gray-50 rounded-2xl border border-gray-200 flex items-start justify-between space-x-4">
+                <div>
+                  <div className="flex items-center space-x-2 text-sm font-black text-gray-900">
+                    <Mic className="w-4 h-4 text-amber-600" />
+                    <span>Cho phép sử dụng Microphone (Mặc định: TẮT)</span>
+                  </div>
+                  <p className="text-xs font-bold text-gray-600 mt-1 leading-relaxed">
+                    Khi bật, giọng nói của bé chỉ được xử lý tạm thời trong bộ nhớ RAM để đưa ra phản hồi khích lệ. <strong>Tuyệt đối không lưu file âm thanh, không gửi lên bất kỳ máy chủ nào.</strong>
+                  </p>
+                </div>
+                <button
+                  onClick={() => handleSaveSettings({ ...settings, isMicrophoneConsentGranted: !settings.isMicrophoneConsentGranted })}
+                  className={`w-14 h-8 rounded-full p-1 transition-colors shrink-0 ${settings.isMicrophoneConsentGranted ? 'bg-emerald-500' : 'bg-gray-300'}`}
+                >
+                  <div className={`w-6 h-6 bg-white rounded-full transition-transform ${settings.isMicrophoneConsentGranted ? 'translate-x-6' : ''}`} />
+                </button>
+              </div>
+
+              {/* Erase all data button */}
+              <div className="pt-3 border-t border-gray-200">
+                <div className="text-sm font-black text-gray-900 mb-1">Quyền xóa dữ liệu (Right to Deletion):</div>
+                <p className="text-xs font-bold text-gray-500 mb-3">
+                  Bạn có thể xóa toàn bộ lịch sử học tập, số sao và cài đặt cục bộ bất cứ lúc nào.
+                </p>
+
+                {!eraseConfirm ? (
+                  <button
+                    onClick={() => setEraseConfirm(true)}
+                    className="flex items-center space-x-2 text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 font-extrabold px-4 py-2 rounded-xl border border-rose-200 text-xs"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    <span>Xóa Toàn Bộ Dữ Liệu Thiết Bị</span>
+                  </button>
+                ) : (
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={handleEraseAllData}
+                      className="bg-rose-600 text-white font-black px-4 py-2 rounded-xl text-xs shadow hover:bg-rose-700"
+                    >
+                      Xác Nhận Xóa Hết
+                    </button>
+                    <button
+                      onClick={() => setEraseConfirm(false)}
+                      className="bg-gray-200 text-gray-800 font-bold px-3 py-2 rounded-xl text-xs"
+                    >
+                      Hủy Bỏ
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           )}
 
-          {/* TAB 3: PARENT CO-PLAY */}
+          {/* TAB 4: CO-PLAY */}
           {activeTab === 'coplay' && (
             <div className="space-y-3">
               <div className="bg-amber-100 rounded-2xl p-4 border border-amber-300">
@@ -312,7 +400,7 @@ export const ParentDashboard: React.FC<ParentDashboardProps> = ({ onClose, onPro
                   🌟 Triết lý Đồng Hành: Không Cần Ba Mẹ Giỏi Tiếng Anh!
                 </h4>
                 <p className="text-xs font-bold text-amber-800 leading-relaxed">
-                  Trẻ 3-5 tuổi tiếp thu ngôn ngữ qua cảm xúc gắn kết gia đình. Dưới đây là 3 trò chơi 1 phút ba mẹ có thể chơi cùng con mọi lúc mọi nơi:
+                  Trẻ 3-5 tuổi tiếp thu ngôn ngữ qua cảm xúc gắn kết gia đình. Dưới đây là 3 trò chơi 1 phút ba mẹ có thể chơi cùng con ngoài màn hình:
                 </p>
               </div>
 
