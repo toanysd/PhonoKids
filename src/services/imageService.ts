@@ -1,6 +1,7 @@
 // Service providing rich Ehon painted artwork and high-res educational photography
 // Eliminating flat icons/vectors in favor of rich oil/gouache/acrylic painted textures
 import { WORD_VISUALS_MAP } from '../data/wordVisuals';
+import { DecodableStory, StoryPage } from '../types/story';
 
 export interface WordVisual {
   url: string;
@@ -256,7 +257,15 @@ export const getWordVisual = (word: string): WordVisual => {
   };
 };
 
-export const getStoryCoverVisual = (storyId: string): WordVisual => {
+export const getStoryCoverVisual = (storyId: string, story?: DecodableStory): WordVisual => {
+  if (story?.coverVisual) {
+    return {
+      url: story.coverVisual.url,
+      type: 'ehon',
+      alt: story.coverVisual.alt
+    };
+  }
+
   switch (storyId) {
     case 'story_cat_sat':
       return {
@@ -297,7 +306,15 @@ export const getStoryCoverVisual = (storyId: string): WordVisual => {
   }
 };
 
-export const getStoryPageVisual = (storyId: string, pageNumber: number): WordVisual => {
+export const getStoryPageVisual = (storyId: string, pageNumber: number, page?: StoryPage): WordVisual => {
+  if (page?.visual) {
+    return {
+      url: page.visual.url,
+      type: 'ehon',
+      alt: page.visual.alt
+    };
+  }
+
   if (storyId === 'story_cat_sat') {
     switch (pageNumber) {
       case 1:
@@ -406,7 +423,7 @@ export const getStoryPageVisual = (storyId: string, pageNumber: number): WordVis
     }
   }
 
-  return getStoryCoverVisual(storyId);
+  return getStoryCoverVisual(storyId, { id: storyId } as DecodableStory);
 };
 
 export const getIslandVisual = (islandNumber: number): WordVisual => {

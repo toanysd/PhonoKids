@@ -43,7 +43,7 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
   const isLastPage = currentPageIndex === story.pages.length - 1;
 
   // Dedicated illustration for THIS SPECIFIC SENTENCE / PAGE
-  const pageVisual = getStoryPageVisual(story.id, currentPage.pageNumber);
+  const pageVisual = getStoryPageVisual(story.id, currentPage.pageNumber, currentPage);
 
   useEffect(() => {
     setActiveWordIndex(null);

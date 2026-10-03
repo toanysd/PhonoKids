@@ -13,7 +13,7 @@ export interface Hotspot {
   emoji: string;
   soundName: string;
   speechText?: string;
-  animationType: 'jump' | 'spin' | 'shake' | 'heart';
+  animationType: 'jump' | 'spin' | 'shake' | 'heart' | 'bounce';
 }
 
 export interface ComprehensionQuestion {
@@ -33,6 +33,7 @@ export interface StoryPage {
   vietnameseMeaning: string;
   backgroundTheme: string;
   sceneryEmoji: string;
+  visual?: { url: string; alt: string };
   wordsTiming: WordTiming[];
   hotspots: Hotspot[];
   speakingTargetWord?: string;
@@ -47,6 +48,7 @@ export interface DecodableStory {
   stage: 1 | 2 | 3 | 4;
   ageBand: string;
   coverEmoji: string;
+  coverVisual?: { url: string; alt: string };
   summaryVi: string;
   targetPhonics: string[];
   sightWords: string[];

@@ -106,7 +106,7 @@ export const StoryLibrary: React.FC<StoryLibraryProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredStories.map((story) => {
           const isCompleted = completedStories.includes(story.id);
-          const visual = getStoryCoverVisual(story.id);
+          const visual = getStoryCoverVisual(story.id, story);
 
           return (
             <div
