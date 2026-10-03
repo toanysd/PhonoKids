@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MinimalPairItem } from '../types/phonics';
 import { audioService } from '../services/audioService';
 import { getWordVisual } from '../services/imageService';
 import { KidButton } from './KidButton';
-import { Volume2, HelpCircle, CheckCircle2, Award } from 'lucide-react';
+import { Volume2, HelpCircle, CheckCircle2, Award, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface MinimalPairDrillProps {
@@ -15,9 +15,29 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
   const [isAnswered, setIsAnswered] = useState<boolean>(false);
   const [showHint, setShowHint] = useState<boolean>(false);
+  const [options, setOptions] = useState<string[]>([]);
+  const [isPlayingTarget, setIsPlayingTarget] = useState<boolean>(false);
 
-  const handleHearTargetWord = () => {
-    audioService.speakEnglish(drill.targetWord, 0.85);
+  // Shuffle options on drill change to prevent positional bias
+  useEffect(() => {
+    const shuffled = Math.random() > 0.5
+      ? [drill.targetWord, drill.distractorWord]
+      : [drill.distractorWord, drill.targetWord];
+    setOptions(shuffled);
+    setSelectedWord(null);
+    setIsAnswered(false);
+    setShowHint(false);
+  }, [drill.id, drill.targetWord, drill.distractorWord]);
+
+  const handleHearTargetWord = async () => {
+    setIsPlayingTarget(true);
+    await audioService.speakEnglish(drill.targetWord, 0.85);
+    setTimeout(() => setIsPlayingTarget(false), 800);
+  };
+
+  const handleHearOption = (e: React.MouseEvent, word: string) => {
+    e.stopPropagation();
+    audioService.speakEnglish(word, 0.85);
   };
 
   const handleSelectOption = (word: string) => {
@@ -98,55 +118,67 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
         </h3>
         <button
           onClick={handleHearTargetWord}
-          className="inline-flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white font-extrabold px-6 py-3 rounded-2xl shadow-lg active:scale-95 transition-transform cursor-pointer text-base"
+          className={`inline-flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white font-extrabold px-6 py-3 rounded-2xl shadow-lg active:scale-95 transition-all cursor-pointer text-base ${
+            isPlayingTarget ? 'ring-4 ring-purple-300 scale-105' : ''
+          }`}
         >
-          <Volume2 className="w-6 h-6 animate-pulse" />
-          <span>Nghe Mẫu Âm Cần Tìm</span>
+          <Volume2 className={`w-6 h-6 ${isPlayingTarget ? 'animate-bounce' : 'animate-pulse'}`} />
+          <span>{isPlayingTarget ? 'Đang đọc mẫu...' : 'Nghe Mẫu Âm Cần Tìm'}</span>
         </button>
       </div>
 
-      {/* Option Cards */}
+      {/* Option Cards (Position randomized) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-        {/* Option 1: Target */}
-        <button
-          onClick={() => handleSelectOption(drill.targetWord)}
-          className={`p-5 rounded-3xl border-4 transition-all duration-200 flex flex-col items-center justify-center cursor-pointer shadow-xl transform active:scale-95 ${
-            isAnswered && isCorrect
-              ? 'bg-emerald-100 border-emerald-500 ring-6 ring-emerald-300 scale-102'
-              : 'bg-white border-purple-200 hover:border-purple-400'
-          }`}
-        >
-          {renderVisualCard(drill.targetWord)}
-          <span className="text-3xl md:text-4xl font-black text-purple-950 uppercase tracking-wide">
-            {drill.targetWord}
-          </span>
-          {isAnswered && isCorrect && (
-            <span className="mt-2 text-sm font-black text-emerald-700 flex items-center space-x-1.5">
-              <CheckCircle2 className="w-5 h-5" />
-              <span>Chính xác tuyệt đối!</span>
-            </span>
-          )}
-        </button>
+        {options.map((word) => {
+          const isTarget = word === drill.targetWord;
+          const isSelected = selectedWord === word;
 
-        {/* Option 2: Distractor */}
-        <button
-          onClick={() => handleSelectOption(drill.distractorWord)}
-          className={`p-5 rounded-3xl border-4 transition-all duration-200 flex flex-col items-center justify-center cursor-pointer shadow-xl transform active:scale-95 ${
-            isAnswered && selectedWord === drill.distractorWord
-              ? 'bg-amber-100 border-amber-400 scale-98'
-              : 'bg-white border-purple-200 hover:border-purple-400'
-          }`}
-        >
-          {renderVisualCard(drill.distractorWord)}
-          <span className="text-3xl md:text-4xl font-black text-purple-950 uppercase tracking-wide">
-            {drill.distractorWord}
-          </span>
-          {isAnswered && selectedWord === drill.distractorWord && (
-            <span className="mt-2 text-sm font-bold text-amber-800">
-              Gần đúng rồi! Bé thử nghe lại xem âm bật khác nhau thế nào nhé.
-            </span>
-          )}
-        </button>
+          return (
+            <div
+              key={word}
+              onClick={() => handleSelectOption(word)}
+              className={`p-5 rounded-3xl border-4 transition-all duration-200 flex flex-col items-center justify-between cursor-pointer shadow-xl transform active:scale-95 ${
+                isAnswered && isSelected && isTarget
+                  ? 'bg-emerald-100 border-emerald-500 ring-6 ring-emerald-300 scale-102'
+                  : isAnswered && isSelected && !isTarget
+                  ? 'bg-amber-100 border-amber-400 scale-98'
+                  : 'bg-white border-purple-200 hover:border-purple-400'
+              }`}
+            >
+              <div className="w-full">
+                {renderVisualCard(word)}
+                <span className="text-3xl md:text-4xl font-black text-purple-950 uppercase tracking-wide block mb-2">
+                  {word}
+                </span>
+              </div>
+
+              {/* Direct individual listen button */}
+              <div className="w-full flex items-center justify-between pt-2 border-t border-purple-100">
+                <button
+                  onClick={(e) => handleHearOption(e, word)}
+                  className="px-3 py-1.5 bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold rounded-xl text-xs flex items-center space-x-1.5 transition-colors cursor-pointer"
+                  title={`Nghe phát âm ${word}`}
+                >
+                  <Volume2 className="w-4 h-4 text-purple-700" />
+                  <span>Nghe thử thẻ này</span>
+                </button>
+
+                {isAnswered && isSelected && isTarget && (
+                  <span className="text-sm font-black text-emerald-700 flex items-center space-x-1">
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>Chính xác!</span>
+                  </span>
+                )}
+
+                {isAnswered && isSelected && !isTarget && (
+                  <span className="text-xs font-bold text-amber-700">
+                    Bé nghe lại nhé!
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Feedback banner */}
@@ -154,21 +186,27 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
         <div className="py-2">
           {isCorrect ? (
             <div className="space-y-4">
-              <div className="text-emerald-800 font-black text-xl flex items-center justify-center space-x-2">
-                <Award className="w-7 h-7 text-emerald-600 animate-bounce" />
-                <span>Tuyệt vời! Bé phân biệt âm chuẩn 100%! +2 ⭐</span>
+              <div className="p-4 bg-emerald-100/90 border-2 border-emerald-400 rounded-2xl max-w-xl mx-auto text-emerald-950">
+                <div className="font-black text-lg md:text-xl flex items-center justify-center space-x-2">
+                  <Award className="w-6 h-6 text-emerald-600 animate-bounce" />
+                  <span>Bé phân biệt âm siêu đỉnh! +2 ⭐</span>
+                </div>
+                <p className="text-xs md:text-sm font-bold mt-1 text-emerald-800">
+                  {drill.hintVi}
+                </p>
               </div>
               <KidButton variant="success" size="lg" onClick={handleNext}>
-                Chơi Thử Thách Tiếp Theo 🚀
+                <Sparkles className="w-5 h-5 mr-2" />
+                <span>Chơi Thử Thách Tiếp Theo 🚀</span>
               </KidButton>
             </div>
           ) : (
             <div className="space-y-4">
               <p className="text-base font-bold text-purple-900">
-                Hãy nghe lại xem âm phân biệt luồng gió khác nhau ra sao nhé!
+                Bé ấn nút "Nghe thử thẻ này" trên từng hình để cảm nhận luồng hơi gió khác nhau nhé!
               </p>
               <KidButton variant="secondary" size="lg" onClick={handleHearTargetWord}>
-                🔊 Nghe Lại Mẫu Âm
+                🔊 Nghe Lại Mẫu Âm Mục Tiêu
               </KidButton>
             </div>
           )}
