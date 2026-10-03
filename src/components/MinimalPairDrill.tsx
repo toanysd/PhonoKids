@@ -116,20 +116,23 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
         </div>
       )}
 
-      {/* Main Prompt Bar */}
-      <div className="flex items-center justify-center flex-wrap gap-2.5 my-1 shrink-0">
-        <h3 className="text-sm sm:text-lg md:text-xl font-black text-purple-950">
+      {/* Prominent Target Sound Audio Button */}
+      <div className="flex flex-col items-center justify-center my-1 shrink-0">
+        <p className="text-xs sm:text-sm font-bold text-purple-900 mb-1">
           {drill.questionPrompt}
-        </h3>
-        <button
+        </p>
+        <KidButton
+          variant="purple"
+          size="md"
           onClick={handleHearTargetWord}
-          className={`inline-flex items-center space-x-1.5 bg-purple-600 hover:bg-purple-700 text-white font-black px-3.5 py-1.5 rounded-xl shadow-md active:scale-95 transition-all cursor-pointer text-xs sm:text-sm ${
-            isPlayingTarget ? 'ring-3 ring-purple-300 scale-105' : ''
+          className={`py-2 px-6 shadow-xl text-sm sm:text-base font-black ${
+            isPlayingTarget ? 'ring-4 ring-purple-300 scale-105 animate-pulse' : ''
           }`}
+          title="Chạm để nghe âm mẫu cần tìm"
         >
-          <Volume2 className={`w-4 h-4 ${isPlayingTarget ? 'animate-bounce' : 'animate-pulse'}`} />
-          <span>{isPlayingTarget ? 'Đang đọc...' : 'Nghe Âm Cần Tìm 🔊'}</span>
-        </button>
+          <Volume2 className={`w-6 h-6 mr-2 ${isPlayingTarget ? 'animate-bounce' : 'animate-pulse'}`} />
+          <span>{isPlayingTarget ? 'Đang đọc mẫu...' : 'Chạm Nghe Âm Mẫu 🔊'}</span>
+        </KidButton>
       </div>
 
       {/* Option Cards (Grid 2 cols) */}
@@ -161,16 +164,16 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
               <div className="w-full flex items-center justify-between pt-1.5 border-t border-purple-100">
                 <button
                   onClick={(e) => handleHearOption(e, word)}
-                  className="px-2 py-1 bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold rounded-lg text-[11px] flex items-center space-x-1 transition-colors cursor-pointer"
+                  className="px-3 py-1 bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold rounded-lg text-xs flex items-center space-x-1.5 transition-colors cursor-pointer border border-purple-300 shadow-xs"
                   title={`Nghe phát âm ${word}`}
                 >
-                  <Volume2 className="w-3.5 h-3.5 text-purple-700" />
-                  <span>Nghe thử thẻ này</span>
+                  <Volume2 className="w-4 h-4 text-purple-700 animate-pulse" />
+                  <span>Nghe Thẻ Này 🔊</span>
                 </button>
 
                 {isAnswered && isSelected && isTarget && (
                   <span className="text-xs font-black text-emerald-700 flex items-center space-x-0.5">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                     <span>Đúng!</span>
                   </span>
                 )}
@@ -192,21 +195,33 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
           {isCorrect ? (
             <div className="flex items-center justify-center space-x-3">
               <div className="p-2 bg-emerald-100/90 border border-emerald-400 rounded-xl text-emerald-950 text-xs sm:text-sm font-black flex items-center space-x-1.5">
-                <Award className="w-4 h-4 text-emerald-600 animate-bounce" />
-                <span>Bé phân biệt siêu đỉnh! +2 ⭐</span>
+                <Award className="w-5 h-5 text-emerald-600 animate-bounce" />
+                <span>Bé chọn chuẩn xác! +2 ⭐</span>
               </div>
-              <KidButton variant="success" size="sm" onClick={handleNext} className="py-1.5 px-3 text-xs sm:text-sm">
-                <Sparkles className="w-4 h-4 mr-1" />
-                <span>Bài Tiếp Theo 🚀</span>
+              <KidButton 
+                variant="success" 
+                size="md" 
+                onClick={handleNext} 
+                className="py-2 px-5 text-xs sm:text-sm font-black shadow-lg"
+                title="Sang bài luyện tiếp theo"
+              >
+                <span>Bài Tiếp Theo ➔</span>
+                <Sparkles className="w-4 h-4 ml-1" />
               </KidButton>
             </div>
           ) : (
             <div className="flex items-center justify-center space-x-3">
               <p className="text-xs font-bold text-purple-900">
-                Bé ấn "Nghe thử thẻ này" trên từng hình để cảm nhận sự khác biệt nhé!
+                Bé ấn "Nghe Thẻ Này 🔊" để cảm nhận luồng hơi nhé!
               </p>
-              <KidButton variant="secondary" size="sm" onClick={handleHearTargetWord} className="py-1.5 px-3 text-xs">
-                🔊 Nghe Lại Mẫu
+              <KidButton 
+                variant="secondary" 
+                size="sm" 
+                onClick={handleHearTargetWord} 
+                className="py-1.5 px-3 text-xs font-bold"
+              >
+                <Volume2 className="w-4 h-4 mr-1" />
+                <span>Nghe Lại Mẫu</span>
               </KidButton>
             </div>
           )}

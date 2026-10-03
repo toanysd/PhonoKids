@@ -91,6 +91,21 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
     'Chiến Thắng!'
   ];
 
+  const handleReplayCurrentStepAudio = () => {
+    audioService.playPopSound(520);
+    if (currentStep === 0 || currentStep === 1) {
+      audioService.speakPhoneme(phoneme.id, phoneme.ipa);
+    } else if (currentStep === 2) {
+      audioService.speakEnglish(primaryWord, 0.85);
+    } else if (currentStep === 3) {
+      audioService.speakPhoneme(phoneme.id, phoneme.ipa);
+    } else if (currentStep === 4) {
+      audioService.speakEnglish(primaryWord, 0.85);
+    } else {
+      audioService.playSuccessJingle();
+    }
+  };
+
   return (
     <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 md:px-6 py-2 h-full flex flex-col justify-between overflow-hidden">
       {/* Top Breadcrumb & Navigation Bar */}
@@ -404,16 +419,34 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
             size="md"
             onClick={handlePrevStep}
             disabled={currentStep === 0}
+            className="py-2.5 px-4 sm:px-6 text-xs sm:text-sm md:text-base font-black shadow-md"
+            title="Quay lại bước trước"
           >
-            Quay Lại
+            <ChevronLeft className="w-5 h-5 mr-1" />
+            <span>Quay Lại</span>
           </KidButton>
 
+          {/* Central Repeat / Hear Sound Button */}
           <KidButton
-            variant="primary"
-            size="lg"
-            onClick={handleNextStep}
+            variant="warning"
+            size="md"
+            onClick={handleReplayCurrentStepAudio}
+            className="py-2.5 px-4 sm:px-6 text-xs sm:text-sm md:text-base font-black shadow-lg"
+            title="Nghe lại âm thanh bước này"
           >
-            <span>{currentStep === 5 ? 'Lưu Tiến Độ & Khám Phá Tiếp' : 'Bước Kế Tiếp'}</span>
+            <Volume2 className="w-5 h-5 mr-1.5 animate-pulse" />
+            <span>Nghe Lại 🔊</span>
+          </KidButton>
+
+          {/* Forward Next Step Button */}
+          <KidButton
+            variant="success"
+            size="md"
+            onClick={handleNextStep}
+            className="py-2.5 px-5 sm:px-8 text-xs sm:text-sm md:text-base font-black shadow-xl"
+            title="Sang bước tiếp theo"
+          >
+            <span>{currentStep === 5 ? 'Lưu & Khám Phá Tiếp 🏆' : 'Bước Tiếp Theo'}</span>
             <ArrowRight className="w-5 h-5 ml-1.5" />
           </KidButton>
         </div>

@@ -36,27 +36,25 @@ export const MinimalPairsView: React.FC<MinimalPairsViewProps> = ({ onAddStars }
         </div>
 
         {/* Drill Carousel Controls */}
-        <div className="flex items-center space-x-1.5 sm:space-x-2 bg-white/95 px-2 py-1 rounded-2xl border border-purple-200 shadow-xs">
+        <div className="flex items-center space-x-2 bg-white/95 px-2.5 py-1 rounded-2xl border-2 border-purple-200 shadow-xs">
           <button
             onClick={handlePrev}
-            className="flex items-center space-x-1 text-purple-800 hover:text-purple-950 bg-purple-100 hover:bg-purple-200 px-2.5 py-1 rounded-xl font-bold text-xs cursor-pointer active:scale-95 transition-transform"
+            className="w-8 h-8 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 flex items-center justify-center font-black active:scale-90 transition-transform cursor-pointer border border-purple-300"
             title="Bài trước"
           >
-            <ChevronLeft className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Bài Trước</span>
+            <ChevronLeft className="w-5 h-5" />
           </button>
 
-          <span className="text-xs font-black text-purple-900 bg-purple-200/80 px-2.5 py-0.5 rounded-full">
+          <span className="text-xs font-black text-purple-900 bg-purple-200/90 px-3 py-1 rounded-full">
             {currentIndex + 1} / {MINIMAL_PAIRS_DRILLS.length}
           </span>
 
           <button
             onClick={handleNext}
-            className="flex items-center space-x-1 text-purple-800 hover:text-purple-950 bg-purple-100 hover:bg-purple-200 px-2.5 py-1 rounded-xl font-bold text-xs cursor-pointer active:scale-95 transition-transform"
+            className="w-8 h-8 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 flex items-center justify-center font-black active:scale-90 transition-transform cursor-pointer border border-purple-300"
             title="Bài tiếp theo"
           >
-            <span className="hidden sm:inline">Bài Kế</span>
-            <ChevronRight className="w-3.5 h-3.5" />
+            <ChevronRight className="w-5 h-5" />
           </button>
         </div>
       </div>

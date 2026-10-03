@@ -310,25 +310,27 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
             {/* Audio & Speech Action Buttons */}
             <div className="flex items-center justify-center gap-2 my-2">
               <KidButton
-                variant="warning"
+                variant="secondary"
                 size="md"
                 onClick={handleReadFullPage}
                 disabled={isPlayingNarration}
-                className="flex-1 text-xs md:text-sm py-2.5"
+                className="flex-1 text-xs sm:text-sm md:text-base font-black py-2.5 shadow-md"
+                title="Đọc toàn bộ trang sách"
               >
-                <Volume2 className="w-4 h-4 mr-1.5" />
-                <span>{isPlayingNarration ? 'Đang Đọc...' : 'Đọc Cả Trang'}</span>
+                <Volume2 className="w-5 h-5 mr-1.5 animate-pulse" />
+                <span>{isPlayingNarration ? 'Đang Đọc...' : 'Đọc Cả Trang 🔊'}</span>
               </KidButton>
 
               {currentPage.speakingTargetWord && (
                 <KidButton
-                  variant={isRecording ? 'accent' : 'secondary'}
+                  variant={isRecording ? 'accent' : 'warning'}
                   size="md"
                   onClick={handleRecordOrSpeak}
-                  className="flex-1 text-xs md:text-sm py-2.5"
+                  className="flex-1 text-xs sm:text-sm md:text-base font-black py-2.5 shadow-md"
+                  title={`Bé đọc từ ${currentPage.speakingTargetWord}`}
                 >
-                  <Mic className={`w-4 h-4 mr-1.5 ${isRecording ? 'animate-ping' : ''}`} />
-                  <span>{isRecording ? 'Lắng nghe...' : `Nói: "${currentPage.speakingTargetWord}"`}</span>
+                  <Mic className={`w-5 h-5 mr-1.5 ${isRecording ? 'animate-ping' : ''}`} />
+                  <span>{isRecording ? 'Lắng nghe...' : `Bé Nói: "${currentPage.speakingTargetWord}" 🎤`}</span>
                 </KidButton>
               )}
             </div>
@@ -379,20 +381,22 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
                 size="md"
                 onClick={handlePrevPage}
                 disabled={currentPageIndex === 0}
-                className="px-4 py-2 text-xs md:text-sm"
+                className="px-4 py-2 text-xs sm:text-sm font-black shadow-md"
+                title="Quay về trang trước"
               >
-                <ChevronLeft className="w-4 h-4 mr-1" />
+                <ChevronLeft className="w-5 h-5 mr-1" />
                 <span>Trang Trước</span>
               </KidButton>
 
               <KidButton
-                variant={isLastPage ? 'success' : 'primary'}
+                variant="success"
                 size="md"
                 onClick={handleNextPage}
-                className="px-5 py-2 text-xs md:text-sm font-black"
+                className="px-5 py-2 text-xs sm:text-sm md:text-base font-black shadow-xl"
+                title="Sang trang tiếp theo"
               >
                 <span>{isLastPage ? 'Hoàn Thành! 🏆' : 'Trang Kế Tiếp'}</span>
-                {!isLastPage && <ChevronRight className="w-4 h-4 ml-1" />}
+                {!isLastPage && <ChevronRight className="w-5 h-5 ml-1" />}
               </KidButton>
             </div>
 

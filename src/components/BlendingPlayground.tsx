@@ -43,27 +43,25 @@ export const BlendingPlayground: React.FC<BlendingPlaygroundProps> = ({ onAddSta
         </div>
 
         {/* Word Switcher & Pagination Controls */}
-        <div className="flex items-center space-x-1.5 sm:space-x-2 bg-white/95 px-2 py-1 rounded-2xl border border-sky-200 shadow-xs">
+        <div className="flex items-center space-x-2 bg-white/95 px-2.5 py-1 rounded-2xl border-2 border-sky-200 shadow-xs">
           <button
             onClick={handlePrev}
-            className="flex items-center space-x-1 text-sky-800 hover:text-sky-950 bg-sky-100 hover:bg-sky-200 px-2.5 py-1 rounded-xl font-bold text-xs cursor-pointer active:scale-95 transition-transform"
+            className="w-8 h-8 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-900 flex items-center justify-center font-black active:scale-90 transition-transform cursor-pointer border border-sky-300"
             title="Từ trước"
           >
-            <ChevronLeft className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Từ Trước</span>
+            <ChevronLeft className="w-5 h-5" />
           </button>
 
-          <span className="text-xs font-black text-sky-900 bg-sky-200/80 px-2.5 py-0.5 rounded-full">
+          <span className="text-xs font-black text-sky-900 bg-sky-200/90 px-3 py-1 rounded-full">
             Từ {currentIndex + 1} / {SAMPLE_BLENDS.length}
           </span>
 
           <button
             onClick={handleNext}
-            className="flex items-center space-x-1 text-sky-800 hover:text-sky-950 bg-sky-100 hover:bg-sky-200 px-2.5 py-1 rounded-xl font-bold text-xs cursor-pointer active:scale-95 transition-transform"
+            className="w-8 h-8 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-900 flex items-center justify-center font-black active:scale-90 transition-transform cursor-pointer border border-sky-300"
             title="Từ tiếp theo"
           >
-            <span className="hidden sm:inline">Từ Sau</span>
-            <ChevronRight className="w-3.5 h-3.5" />
+            <ChevronRight className="w-5 h-5" />
           </button>
         </div>
       </div>
@@ -71,6 +69,8 @@ export const BlendingPlayground: React.FC<BlendingPlaygroundProps> = ({ onAddSta
       {/* Bubble Blender Component */}
       <BubbleBlender
         activity={currentActivity}
+        onNextWord={handleNext}
+        onPrevWord={handlePrev}
         onCompleted={() => {
           onAddStars(2);
         }}

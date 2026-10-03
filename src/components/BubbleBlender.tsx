@@ -1,19 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BlendActivity } from '../types/phonics';
 import { audioService } from '../services/audioService';
 import { getWordVisual } from '../services/imageService';
 import { KidButton } from './KidButton';
-import { Sparkles, Wand2, RefreshCw, Volume2 } from 'lucide-react';
+import { Sparkles, Wand2, RefreshCw, Volume2, ArrowRight, RotateCcw } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface BubbleBlenderProps {
   activity: BlendActivity;
   onCompleted?: () => void;
+  onNextWord?: () => void;
+  onPrevWord?: () => void;
 }
 
-export const BubbleBlender: React.FC<BubbleBlenderProps> = ({ activity, onCompleted }) => {
+export const BubbleBlender: React.FC<BubbleBlenderProps> = ({
+  activity,
+  onCompleted,
+  onNextWord,
+  onPrevWord,
+}) => {
   const [activeBubbles, setActiveBubbles] = useState<number[]>([]);
   const [isBlended, setIsBlended] = useState<boolean>(false);
+
+  // Auto-reset when word changes
+  useEffect(() => {
+    setIsBlended(false);
+    setActiveBubbles([]);
+  }, [activity.word]);
 
   const visual = getWordVisual(activity.word);
 
@@ -53,8 +66,17 @@ export const BubbleBlender: React.FC<BubbleBlenderProps> = ({ activity, onComple
   };
 
   const handleReset = () => {
+    audioService.playPopSound(460);
     setIsBlended(false);
     setActiveBubbles([]);
+  };
+
+  const handleNextWordClick = () => {
+    if (onNextWord) {
+      audioService.playPopSound(520);
+      handleReset();
+      onNextWord();
+    }
   };
 
   return (
@@ -70,9 +92,9 @@ export const BubbleBlender: React.FC<BubbleBlenderProps> = ({ activity, onComple
           <button
             onClick={handleReset}
             className="p-1.5 text-sky-700 hover:text-sky-900 bg-white rounded-full shadow-xs active:rotate-180 transition-transform cursor-pointer border border-sky-200"
-            title="Thử lại từ này"
+            title="Làm lại từ này"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RotateCcw className="w-4 h-4" />
           </button>
         )}
       </div>
@@ -98,7 +120,10 @@ export const BubbleBlender: React.FC<BubbleBlenderProps> = ({ activity, onComple
                   }`}
                 >
                   <span>{phoneme}</span>
-                  <span className="text-[10px] font-black text-sky-600">Chạm nghe</span>
+                  <span className="text-[10px] font-black text-sky-600 flex items-center space-x-0.5">
+                    <Volume2 className="w-3 h-3" />
+                    <span>Nghe</span>
+                  </span>
                 </button>
               );
             })}
@@ -109,10 +134,10 @@ export const BubbleBlender: React.FC<BubbleBlenderProps> = ({ activity, onComple
               variant="warning"
               size="md"
               onClick={handleBlendTogether}
-              className="w-full max-w-sm text-sm sm:text-base py-2.5 shadow-lg"
+              className="w-full max-w-sm text-sm sm:text-base py-3 shadow-xl"
             >
-              <Sparkles className="w-5 h-5 mr-2 animate-spin" />
-              <span>Ghép Lại Thành Bức Tranh!</span>
+              <Wand2 className="w-5 h-5 mr-2 animate-pulse" />
+              <span>Ghép Lại Thành Bức Tranh! 🪄</span>
             </KidButton>
           </div>
         </div>
@@ -120,8 +145,12 @@ export const BubbleBlender: React.FC<BubbleBlenderProps> = ({ activity, onComple
         /* Blended Result Stage with Compact Hero Ehon Artwork Plate */
         <div className="flex-1 min-h-0 flex flex-col items-center justify-around py-1 animate-pulse-glow">
           
-          {/* Hero Ehon Artwork Plate */}
-          <div className="relative w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 rounded-2xl overflow-hidden border-4 border-amber-400 shadow-xl bg-white group shrink-0">
+          {/* Hero Ehon Artwork Plate - Clickable to Speak */}
+          <div 
+            onClick={() => audioService.speakEnglish(activity.word, 0.85)}
+            className="relative w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 rounded-2xl overflow-hidden border-4 border-amber-400 shadow-xl bg-white group shrink-0 cursor-pointer hover:border-amber-500 transition-all"
+            title="Chạm vào tranh để nghe đọc"
+          >
             <img
               src={visual.url}
               alt={visual.alt}
@@ -130,41 +159,65 @@ export const BubbleBlender: React.FC<BubbleBlenderProps> = ({ activity, onComple
             <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-xs text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow">
               {visual.type === 'ehon' ? '🎨 Tranh Ehon' : '📷 Ảnh Thật'}
             </div>
-            <div className="absolute bottom-2 left-2 bg-white/95 backdrop-blur-xs text-amber-950 text-[10px] font-black px-2 py-0.5 rounded-lg border border-amber-300 shadow">
-              {visual.alt}
+            <div className="absolute bottom-2 left-2 bg-white/95 backdrop-blur-xs text-amber-950 text-[10px] font-black px-2 py-0.5 rounded-lg border border-amber-300 shadow flex items-center space-x-1">
+              <Volume2 className="w-3 h-3 text-amber-600" />
+              <span>Chạm để nghe</span>
             </div>
           </div>
 
           {/* Big Word Badge */}
-          <div className="inline-block bg-white border-3 border-amber-400 rounded-2xl px-6 py-1.5 sm:px-8 sm:py-2 shadow-md shrink-0">
+          <div 
+            onClick={() => audioService.speakEnglish(activity.word, 0.85)}
+            className="inline-block bg-white border-3 border-amber-400 rounded-2xl px-6 py-1 sm:px-8 sm:py-1.5 shadow-md shrink-0 cursor-pointer hover:bg-amber-50 transition-colors"
+          >
             <span className="text-3xl sm:text-4xl md:text-5xl font-black text-amber-950 tracking-wider">
               {activity.word.toUpperCase()}
             </span>
           </div>
 
-          <p className="text-sm sm:text-base font-extrabold text-amber-900 shrink-0">
+          <p className="text-xs sm:text-sm font-extrabold text-amber-900 shrink-0">
             Ý nghĩa: <span className="text-amber-700 underline decoration-amber-400">{activity.meaningVi}</span> 🌟
           </p>
 
-          <div className="flex flex-wrap justify-center gap-3 shrink-0">
+          {/* Three Prominent Action Buttons: Hear Again, Repeat Blend, Next Word */}
+          <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 shrink-0 mt-1">
+            {/* Audio Replay Button */}
             <KidButton
               variant="secondary"
-              size="md"
+              size="sm"
               onClick={() => audioService.speakEnglish(activity.word, 0.85)}
-              className="py-2 text-xs sm:text-sm"
+              className="py-2 px-3 sm:px-4 text-xs sm:text-sm font-black shadow-md"
+              title="Nghe lại phát âm"
             >
-              <Volume2 className="w-4 h-4 mr-1.5" />
-              <span>Nghe Lại Phát Âm</span>
+              <Volume2 className="w-4 h-4 mr-1.5 animate-pulse" />
+              <span>Nghe Lại 🔊</span>
             </KidButton>
+
+            {/* Repeat Blending Button (Correctly labeled Repeat / Re-blend) */}
             <KidButton
-              variant="success"
-              size="md"
+              variant="purple"
+              size="sm"
               onClick={handleReset}
-              className="py-2 text-xs sm:text-sm"
+              className="py-2 px-3 sm:px-4 text-xs sm:text-sm font-black shadow-md"
+              title="Tách bóng bóng ghép lại"
             >
-              <RefreshCw className="w-4 h-4 mr-1.5" />
-              <span>Chơi Từ Khác Nào!</span>
+              <RotateCcw className="w-4 h-4 mr-1.5" />
+              <span>Ghép Lại 🔄</span>
             </KidButton>
+
+            {/* Next Word Button - Prominent Green Forward Action */}
+            {onNextWord && (
+              <KidButton
+                variant="success"
+                size="sm"
+                onClick={handleNextWordClick}
+                className="py-2 px-4 sm:px-5 text-xs sm:text-sm font-black shadow-lg"
+                title="Chuyển sang từ tiếp theo"
+              >
+                <span>Từ Tiếp Theo ➔</span>
+                <ArrowRight className="w-4 h-4 ml-1" />
+              </KidButton>
+            )}
           </div>
         </div>
       )}
