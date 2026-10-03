@@ -27,39 +27,39 @@ export const StoryLibrary: React.FC<StoryLibraryProps> = ({
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-4">
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center space-x-2 bg-amber-200/90 px-5 py-2 rounded-full border border-amber-300 text-amber-950 font-black text-sm mb-3 shadow-xs">
-          <BookOpen className="w-5 h-5 text-amber-700" />
+      <div className="text-center mb-4">
+        <div className="inline-flex items-center space-x-1.5 bg-amber-200/90 px-3.5 py-1 rounded-full border border-amber-300 text-amber-950 font-black text-xs mb-1.5 shadow-xs">
+          <BookOpen className="w-4 h-4 text-amber-700" />
           <span>Thư Viện Tranh Truyện Ehon Đọc Giải Mã (Decodable Picture Books)</span>
         </div>
-        <h2 className="text-3xl md:text-5xl font-black text-amber-950 tracking-tight">
-          Cùng Khám Phá Thư Viện Tranh Truyện Ehon! 📚
+        <h2 className="text-2xl md:text-3xl font-black text-amber-950 tracking-tight">
+          Cùng Khám Phá Tranh Truyện Ehon! 📚
         </h2>
-        <p className="text-sm md:text-base font-bold text-amber-800 mt-2 max-w-2xl mx-auto">
-          Tranh vẽ cắt dán nghệ thuật nhiều màu sắc rực rỡ, tích hợp đọc giải mã âm tự nhiên từng từ theo 4 cấp độ từ mầm non đến tiểu học.
+        <p className="text-xs md:text-sm font-bold text-amber-800 mt-1 max-w-xl mx-auto">
+          Tranh vẽ cắt dán nghệ thuật rực rỡ, tích hợp đọc giải mã từng từ theo 4 cấp độ từ mầm non đến tiểu học.
         </p>
 
         {/* Stage Filter */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mt-5 bg-white/90 p-2.5 rounded-2xl border-2 border-amber-200 shadow-md max-w-3xl mx-auto">
-          <span className="text-xs font-black text-amber-900 flex items-center space-x-1 px-2">
-            <Filter className="w-4 h-4 text-amber-600" />
+        <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3 bg-white/95 p-1.5 rounded-xl border border-amber-200 shadow-xs max-w-2xl mx-auto">
+          <span className="text-xs font-black text-amber-900 flex items-center space-x-1 px-1.5">
+            <Filter className="w-3.5 h-3.5 text-amber-600" />
             <span>Cấp độ:</span>
           </span>
 
           <button
             onClick={() => setSelectedStage('all')}
-            className={`px-3.5 py-1.5 rounded-xl font-black text-xs md:text-sm transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-lg font-black text-xs transition-all cursor-pointer ${
               selectedStage === 'all'
                 ? 'bg-amber-400 text-amber-950 shadow-xs'
                 : 'text-gray-600 hover:bg-amber-100'
             }`}
           >
-            Tất Cả Cấp Độ
+            Tất Cả
           </button>
 
           <button
             onClick={() => setSelectedStage(1)}
-            className={`px-3.5 py-1.5 rounded-xl font-black text-xs md:text-sm transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-lg font-black text-xs transition-all cursor-pointer ${
               selectedStage === 1
                 ? 'bg-amber-400 text-amber-950 shadow-xs'
                 : 'text-gray-600 hover:bg-amber-100'
@@ -70,7 +70,7 @@ export const StoryLibrary: React.FC<StoryLibraryProps> = ({
 
           <button
             onClick={() => setSelectedStage(2)}
-            className={`px-3.5 py-1.5 rounded-xl font-black text-xs md:text-sm transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-lg font-black text-xs transition-all cursor-pointer ${
               selectedStage === 2
                 ? 'bg-amber-400 text-amber-950 shadow-xs'
                 : 'text-gray-600 hover:bg-amber-100'
@@ -81,7 +81,7 @@ export const StoryLibrary: React.FC<StoryLibraryProps> = ({
 
           <button
             onClick={() => setSelectedStage(3)}
-            className={`px-3.5 py-1.5 rounded-xl font-black text-xs md:text-sm transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-lg font-black text-xs transition-all cursor-pointer ${
               selectedStage === 3
                 ? 'bg-amber-400 text-amber-950 shadow-xs'
                 : 'text-gray-600 hover:bg-amber-100'
@@ -92,7 +92,7 @@ export const StoryLibrary: React.FC<StoryLibraryProps> = ({
 
           <button
             onClick={() => setSelectedStage(4)}
-            className={`px-3.5 py-1.5 rounded-xl font-black text-xs md:text-sm transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-lg font-black text-xs transition-all cursor-pointer ${
               selectedStage === 4
                 ? 'bg-amber-400 text-amber-950 shadow-xs'
                 : 'text-gray-600 hover:bg-amber-100'

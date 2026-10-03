@@ -58,108 +58,111 @@ export const BubbleBlender: React.FC<BubbleBlenderProps> = ({ activity, onComple
   };
 
   return (
-    <div className="bg-gradient-to-b from-sky-100 to-indigo-50 rounded-3xl p-6 md:p-8 border-4 border-sky-300 shadow-xl max-w-4xl mx-auto text-center">
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-sm md:text-base font-black text-sky-900 bg-sky-200 px-4 py-1.5 rounded-full uppercase tracking-wider flex items-center space-x-2 shadow-xs">
-          <Wand2 className="w-5 h-5 text-sky-700" />
+    <div className="bg-gradient-to-b from-sky-100 to-indigo-50 rounded-3xl p-3 sm:p-5 border-4 border-sky-300 shadow-xl flex-1 min-h-0 flex flex-col justify-between overflow-hidden text-center">
+      {/* Top Status Bar */}
+      <div className="flex items-center justify-between shrink-0 mb-1">
+        <span className="text-xs sm:text-sm font-black text-sky-900 bg-sky-200/90 px-3 py-1 rounded-full uppercase tracking-wider flex items-center space-x-1.5 shadow-xs">
+          <Wand2 className="w-4 h-4 text-sky-700" />
           <span>Ghép âm thần kỳ (Sound Blending)</span>
         </span>
 
         {isBlended && (
           <button
             onClick={handleReset}
-            className="p-2.5 text-sky-700 hover:text-sky-900 bg-white rounded-full shadow-md active:rotate-180 transition-transform cursor-pointer border border-sky-200"
-            title="Thử lại"
+            className="p-1.5 text-sky-700 hover:text-sky-900 bg-white rounded-full shadow-xs active:rotate-180 transition-transform cursor-pointer border border-sky-200"
+            title="Thử lại từ này"
           >
-            <RefreshCw className="w-5 h-5" />
+            <RefreshCw className="w-4 h-4" />
           </button>
         )}
       </div>
 
-      <p className="text-base md:text-lg font-bold text-sky-950 mb-8">
-        Chạm từng bong bóng âm thanh rồi ấn nút để ghép thành bức tranh hoàn chỉnh nhé!
-      </p>
-
       {/* Bubble Stage */}
       {!isBlended ? (
-        <div className="py-8">
-          <div className="flex items-center justify-center flex-wrap gap-4 md:gap-8 mb-10">
+        <div className="flex-1 min-h-0 flex flex-col justify-around py-2">
+          <p className="text-xs sm:text-sm md:text-base font-bold text-sky-950 shrink-0">
+            Chạm từng bong bóng âm thanh rồi ấn nút để ghép thành bức tranh hoàn chỉnh nhé!
+          </p>
+
+          <div className="flex items-center justify-center flex-wrap gap-3 sm:gap-6 my-auto">
             {activity.phonemes.map((phoneme, idx) => {
               const isTapped = activeBubbles.includes(idx);
               return (
                 <button
                   key={idx}
                   onClick={() => handleTapBubble(idx, phoneme)}
-                  className={`relative w-24 h-24 md:w-32 md:h-32 rounded-full flex flex-col items-center justify-center font-black text-4xl md:text-6xl transition-all duration-300 transform active:scale-95 cursor-pointer shadow-xl border-4 ${
+                  className={`relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full flex flex-col items-center justify-center font-black text-3xl sm:text-4xl md:text-5xl transition-all duration-300 transform active:scale-95 cursor-pointer shadow-lg border-4 ${
                     isTapped
-                      ? 'bg-amber-300 border-amber-400 text-amber-950 scale-110 ring-6 ring-amber-200 bubble-glow animate-bounce'
+                      ? 'bg-amber-300 border-amber-400 text-amber-950 scale-105 ring-4 ring-amber-200 bubble-glow animate-bounce'
                       : 'bg-white border-sky-300 text-sky-800 hover:scale-105'
                   }`}
                 >
                   <span>{phoneme}</span>
-                  <span className="text-[11px] font-black text-sky-600 mt-1">Chạm để nghe</span>
+                  <span className="text-[10px] font-black text-sky-600">Chạm nghe</span>
                 </button>
               );
             })}
           </div>
 
-          <div className="flex justify-center">
+          <div className="flex justify-center shrink-0">
             <KidButton
               variant="warning"
-              size="lg"
+              size="md"
               onClick={handleBlendTogether}
-              className="w-full max-w-md text-lg md:text-xl py-4 shadow-xl"
+              className="w-full max-w-sm text-sm sm:text-base py-2.5 shadow-lg"
             >
-              <Sparkles className="w-6 h-6 mr-2 animate-spin" />
+              <Sparkles className="w-5 h-5 mr-2 animate-spin" />
               <span>Ghép Lại Thành Bức Tranh!</span>
             </KidButton>
           </div>
         </div>
       ) : (
-        /* Blended Result Stage with Large Ehon Picture Plate */
-        <div className="py-6 animate-pulse-glow flex flex-col items-center">
+        /* Blended Result Stage with Compact Hero Ehon Artwork Plate */
+        <div className="flex-1 min-h-0 flex flex-col items-center justify-around py-1 animate-pulse-glow">
           
-          {/* Large Hero Ehon Artwork Plate */}
-          <div className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-3xl overflow-hidden border-6 border-amber-400 shadow-2xl mb-6 bg-white group">
+          {/* Hero Ehon Artwork Plate */}
+          <div className="relative w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 rounded-2xl overflow-hidden border-4 border-amber-400 shadow-xl bg-white group shrink-0">
             <img
               src={visual.url}
               alt={visual.alt}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
-            <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-xs text-white text-xs font-black px-3 py-1 rounded-full shadow">
-              {visual.type === 'ehon' ? '🎨 Tranh Ehon Sơn Dầu Cắt Dán' : '📷 Ảnh Thật Sắc Nét'}
+            <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-xs text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow">
+              {visual.type === 'ehon' ? '🎨 Tranh Ehon' : '📷 Ảnh Thật'}
             </div>
-            <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-xs text-amber-950 text-xs font-black px-3 py-1 rounded-xl border border-amber-300 shadow">
+            <div className="absolute bottom-2 left-2 bg-white/95 backdrop-blur-xs text-amber-950 text-[10px] font-black px-2 py-0.5 rounded-lg border border-amber-300 shadow">
               {visual.alt}
             </div>
           </div>
 
           {/* Big Word Badge */}
-          <div className="inline-block bg-white border-4 border-amber-400 rounded-3xl px-10 py-4 shadow-xl mb-3">
-            <span className="text-5xl md:text-7xl font-black text-amber-950 tracking-wider">
+          <div className="inline-block bg-white border-3 border-amber-400 rounded-2xl px-6 py-1.5 sm:px-8 sm:py-2 shadow-md shrink-0">
+            <span className="text-3xl sm:text-4xl md:text-5xl font-black text-amber-950 tracking-wider">
               {activity.word.toUpperCase()}
             </span>
           </div>
 
-          <p className="text-xl md:text-2xl font-extrabold text-amber-900 mb-8">
+          <p className="text-sm sm:text-base font-extrabold text-amber-900 shrink-0">
             Ý nghĩa: <span className="text-amber-700 underline decoration-amber-400">{activity.meaningVi}</span> 🌟
           </p>
 
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-3 shrink-0">
             <KidButton
               variant="secondary"
-              size="lg"
+              size="md"
               onClick={() => audioService.speakEnglish(activity.word, 0.85)}
+              className="py-2 text-xs sm:text-sm"
             >
-              <Volume2 className="w-6 h-6 mr-2" />
+              <Volume2 className="w-4 h-4 mr-1.5" />
               <span>Nghe Lại Phát Âm</span>
             </KidButton>
             <KidButton
               variant="success"
-              size="lg"
+              size="md"
               onClick={handleReset}
+              className="py-2 text-xs sm:text-sm"
             >
-              <RefreshCw className="w-6 h-6 mr-2" />
+              <RefreshCw className="w-4 h-4 mr-1.5" />
               <span>Chơi Từ Khác Nào!</span>
             </KidButton>
           </div>

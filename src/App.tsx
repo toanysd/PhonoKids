@@ -99,7 +99,12 @@ export const App: React.FC = () => {
     handleRefreshProfile();
   };
 
-  const isViewportLockedView = currentView === 'story_reader' || currentView === 'lesson' || currentView === 'ai_chat';
+  const isViewportLockedView = 
+    currentView === 'story_reader' || 
+    currentView === 'lesson' || 
+    currentView === 'ai_chat' ||
+    currentView === 'blending' ||
+    currentView === 'minimal_pairs';
 
   return (
     <div className={`h-screen w-screen overflow-hidden bg-gradient-to-b from-amber-50 via-yellow-50 to-orange-50 text-amber-950 flex flex-col font-child select-none ${settings.reducedMotion ? 'motion-reduce' : ''}`}>

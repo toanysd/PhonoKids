@@ -48,93 +48,93 @@ export const PhonicsIslandMap: React.FC<PhonicsIslandMapProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-4 py-4">
       {/* Title Header */}
-      <div className="text-center mb-6">
-        <div className="inline-flex items-center space-x-2 bg-amber-200/90 px-5 py-2 rounded-full border border-amber-300 text-amber-950 font-black text-xs md:text-sm mb-3 shadow-xs">
-          <Compass className="w-5 h-5 text-amber-700 animate-spin" />
+      <div className="text-center mb-4">
+        <div className="inline-flex items-center space-x-1.5 bg-amber-200/90 px-3.5 py-1 rounded-full border border-amber-300 text-amber-950 font-black text-xs mb-1.5 shadow-xs">
+          <Compass className="w-4 h-4 text-amber-700 animate-spin" />
           <span>Lộ Trình Toàn Diện 42 Âm Vị • Mầm Non Đến Tiểu Học Lớp 1-2</span>
         </div>
-        <h2 className="text-3xl md:text-5xl font-black text-amber-950 tracking-tight">
+        <h2 className="text-2xl md:text-3xl font-black text-amber-950 tracking-tight">
           Bản Đồ Thám Hiểm 7 Quần Đảo Phonics 🎨
         </h2>
-        <p className="text-sm md:text-base font-bold text-amber-800 mt-2 max-w-2xl mx-auto">
-          Phương pháp Synthetic Phonics chuẩn Anh/Mỹ: Học từ âm đơn giản đến vần phức qua những bức tranh Ehon nghệ thuật cắt dán đầy cuốn hút!
+        <p className="text-xs md:text-sm font-bold text-amber-800 mt-1 max-w-xl mx-auto">
+          Phương pháp Synthetic Phonics chuẩn Anh/Mỹ: Học từ âm đơn giản đến vần phức qua tranh Ehon cắt dán cuốn hút!
         </p>
 
         {/* Hero Panoramic Ehon Archipelago Painting */}
-        <div className="relative w-full h-44 sm:h-64 md:h-80 mt-6 rounded-3xl overflow-hidden border-4 border-amber-300 shadow-xl bg-amber-100 group">
+        <div className="relative w-full h-32 sm:h-44 md:h-52 mt-3 rounded-2xl overflow-hidden border-3 border-amber-300 shadow-lg bg-amber-100 group">
           <img
             src="/assets/ehon/archipelago.jpg"
             alt="Toàn cảnh 7 quần đảo Phonics tranh Ehon nối nhịp cầu vồng"
             className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-700"
           />
-          <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-xs text-white text-xs font-black px-3 py-1 rounded-full flex items-center space-x-1.5 shadow">
+          <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-xs text-white text-[11px] font-black px-2.5 py-0.5 rounded-full flex items-center space-x-1 shadow">
             <span>🎨 Tranh Ehon Toàn Cảnh 7 Quần Đảo</span>
           </div>
-          <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-xs text-amber-950 text-xs font-black px-3 py-1 rounded-xl shadow border border-amber-300 hidden sm:block">
+          <div className="absolute bottom-2 right-2 bg-white/95 backdrop-blur-xs text-amber-950 text-[11px] font-black px-2.5 py-0.5 rounded-lg shadow border border-amber-300 hidden sm:block">
             Cầu vồng kết nối 7 vùng đất âm thanh kỳ diệu 🌈
           </div>
         </div>
 
         {/* 4 Developmental Stages Filter Bar */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mt-6 bg-white/90 p-2.5 rounded-2xl border-2 border-amber-200 shadow-md max-w-4xl mx-auto">
-          <span className="text-xs font-black text-amber-900 flex items-center space-x-1 px-2">
-            <Filter className="w-4 h-4 text-amber-600" />
+        <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3 bg-white/95 p-1.5 rounded-xl border border-amber-200 shadow-xs max-w-3xl mx-auto">
+          <span className="text-xs font-black text-amber-900 flex items-center space-x-1 px-1.5">
+            <Filter className="w-3.5 h-3.5 text-amber-600" />
             <span>Độ tuổi:</span>
           </span>
 
           <button
             onClick={() => setSelectedStage('all')}
-            className={`px-3.5 py-1.5 rounded-xl font-black text-xs md:text-sm transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-lg font-black text-xs transition-all cursor-pointer ${
               selectedStage === 'all'
                 ? 'bg-amber-400 text-amber-950 shadow-xs'
                 : 'text-gray-600 hover:bg-amber-100'
             }`}
           >
-            Tất Cả 7 Đảo (42 Âm)
+            Tất Cả 7 Đảo
           </button>
 
           <button
             onClick={() => setSelectedStage(1)}
-            className={`px-3.5 py-1.5 rounded-xl font-black text-xs md:text-sm transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-lg font-black text-xs transition-all cursor-pointer ${
               selectedStage === 1
                 ? 'bg-amber-400 text-amber-950 shadow-xs'
                 : 'text-gray-600 hover:bg-amber-100'
             }`}
           >
-            Stage 1: 3–4t (Mầm non bé)
+            Stage 1: 3–4t
           </button>
 
           <button
             onClick={() => setSelectedStage(2)}
-            className={`px-3.5 py-1.5 rounded-xl font-black text-xs md:text-sm transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-lg font-black text-xs transition-all cursor-pointer ${
               selectedStage === 2
                 ? 'bg-amber-400 text-amber-950 shadow-xs'
                 : 'text-gray-600 hover:bg-amber-100'
             }`}
           >
-            Stage 2: 4–5t (Mầm non lớn)
+            Stage 2: 4–5t
           </button>
 
           <button
             onClick={() => setSelectedStage(3)}
-            className={`px-3.5 py-1.5 rounded-xl font-black text-xs md:text-sm transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-lg font-black text-xs transition-all cursor-pointer ${
               selectedStage === 3
                 ? 'bg-amber-400 text-amber-950 shadow-xs'
                 : 'text-gray-600 hover:bg-amber-100'
             }`}
           >
-            Stage 3: 5–6t (Tiền tiểu học)
+            Stage 3: 5–6t
           </button>
 
           <button
             onClick={() => setSelectedStage(4)}
-            className={`px-3.5 py-1.5 rounded-xl font-black text-xs md:text-sm transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-lg font-black text-xs transition-all cursor-pointer ${
               selectedStage === 4
                 ? 'bg-amber-400 text-amber-950 shadow-xs'
                 : 'text-gray-600 hover:bg-amber-100'
             }`}
           >
-            Stage 4: 6–8t (Tiểu học Lớp 1-2)
+            Stage 4: 6–8t
           </button>
         </div>
       </div>

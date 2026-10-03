@@ -27,62 +27,51 @@ export const MinimalPairsView: React.FC<MinimalPairsViewProps> = ({ onAddStars }
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-4">
-      {/* Title */}
-      <div className="text-center mb-6">
-        <div className="inline-flex items-center space-x-2 bg-purple-200/80 px-4 py-1.5 rounded-full border border-purple-300 text-purple-950 font-black text-sm mb-2">
-          <Headphones className="w-5 h-5 text-purple-700" />
-          <span>Trò Chơi Lắng Nghe Phân Biệt Âm (Listening Games)</span>
+    <div className="max-w-5xl mx-auto px-3 sm:px-4 py-2 h-[calc(100vh-4.6rem)] flex flex-col justify-between overflow-hidden">
+      {/* Sleek Single-Line Header Bar */}
+      <div className="flex items-center justify-between mb-2 shrink-0">
+        <div className="flex items-center space-x-2 bg-purple-200/90 px-3.5 py-1.5 rounded-full border border-purple-300 text-purple-950 font-black text-xs md:text-sm shadow-xs">
+          <Headphones className="w-4 h-4 text-purple-700" />
+          <span>Tai Tinh Mắt Sáng • Phân Biệt Âm (Minimal Pairs)</span>
         </div>
-        <h2 className="text-3xl md:text-5xl font-black text-amber-950 tracking-tight">
-          Tai Tinh Mắt Sáng 🎧
-        </h2>
-        <p className="text-base font-bold text-amber-800 mt-1 max-w-xl mx-auto">
-          Trò chơi phân biệt âm thanh tinh tế (/p/ & /b/, /s/ & /sh/) — Giúp não bộ nhận diện âm chuẩn trước khi học nói!
-        </p>
-      </div>
 
-      {/* Drill Carousel Controls */}
-      <div className="flex items-center justify-between max-w-xl mx-auto mb-4">
-        <button
-          onClick={handlePrev}
-          className="flex items-center space-x-1 text-purple-800 hover:text-purple-950 bg-white/90 px-3 py-1.5 rounded-xl border border-purple-200 font-bold text-sm shadow-xs active:scale-95"
-        >
-          <ChevronLeft className="w-4 h-4" />
-          <span>Bài Trước</span>
-        </button>
+        {/* Drill Carousel Controls */}
+        <div className="flex items-center space-x-1.5 sm:space-x-2 bg-white/95 px-2 py-1 rounded-2xl border border-purple-200 shadow-xs">
+          <button
+            onClick={handlePrev}
+            className="flex items-center space-x-1 text-purple-800 hover:text-purple-950 bg-purple-100 hover:bg-purple-200 px-2.5 py-1 rounded-xl font-bold text-xs cursor-pointer active:scale-95 transition-transform"
+            title="Bài trước"
+          >
+            <ChevronLeft className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Bài Trước</span>
+          </button>
 
-        <span className="text-xs font-black text-purple-900 bg-purple-200 px-3 py-1 rounded-full">
-          Bài {currentIndex + 1} / {MINIMAL_PAIRS_DRILLS.length}
-        </span>
+          <span className="text-xs font-black text-purple-900 bg-purple-200/80 px-2.5 py-0.5 rounded-full">
+            {currentIndex + 1} / {MINIMAL_PAIRS_DRILLS.length}
+          </span>
 
-        <button
-          onClick={handleNext}
-          className="flex items-center space-x-1 text-purple-800 hover:text-purple-950 bg-white/90 px-3 py-1.5 rounded-xl border border-purple-200 font-bold text-sm shadow-xs active:scale-95"
-        >
-          <span>Bài Kế Tiếp</span>
-          <ChevronRight className="w-4 h-4" />
-        </button>
+          <button
+            onClick={handleNext}
+            className="flex items-center space-x-1 text-purple-800 hover:text-purple-950 bg-purple-100 hover:bg-purple-200 px-2.5 py-1 rounded-xl font-bold text-xs cursor-pointer active:scale-95 transition-transform"
+            title="Bài tiếp theo"
+          >
+            <span className="hidden sm:inline">Bài Kế</span>
+            <ChevronRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
       </div>
 
       {/* Interactive Drill Component */}
-      <MinimalPairDrill drill={currentDrill} onSuccess={handleSuccess} />
+      <MinimalPairDrill 
+        drill={currentDrill} 
+        onSuccess={handleSuccess} 
+        onNextDrill={handleNext} 
+      />
 
-      {/* Skip button for gentle no-pressure flow */}
-      <div className="text-center mt-4">
-        <button
-          onClick={handleNext}
-          className="inline-flex items-center space-x-1 text-xs font-bold text-purple-700 hover:text-purple-900 bg-purple-100/60 hover:bg-purple-200/80 px-4 py-1.5 rounded-full border border-purple-200"
-        >
-          <SkipForward className="w-3.5 h-3.5" />
-          <span>Bỏ qua bài này và thử bài khác</span>
-        </button>
-      </div>
-
-      {/* Pedagogical Note for parents */}
-      <div className="mt-6 max-w-xl mx-auto bg-amber-100/80 rounded-2xl p-4 border border-amber-200 text-center">
-        <p className="text-xs font-bold text-amber-900 leading-relaxed">
-          💡 <span className="font-black">Lưu ý sư phạm:</span> Đây là trò chơi rèn luyện sự nhạy bén của đôi tai trẻ, không dùng làm bài kiểm tra hay chẩn đoán ngôn ngữ. Trẻ 3 tuổi có thể chỉ nghe mà không cần chọn đúng ngay lập tức.
+      {/* Subtle Pedagogical Footer */}
+      <div className="text-center py-0.5 shrink-0">
+        <p className="text-[11px] font-bold text-purple-900/80">
+          💡 Rèn luyện độ nhạy đôi tai để nhận diện âm chuẩn trước khi học nói — Không áp lực điểm số cho trẻ.
         </p>
       </div>
     </div>
