@@ -3,7 +3,7 @@ import { DecodableStory, StoryPage, Hotspot } from '../types/story';
 import { audioService } from '../services/audioService';
 import { childSpeechService, SpeechEvaluationResult } from '../services/speechRecognition';
 import { storageService } from '../services/storageService';
-import { getStoryCoverVisual } from '../services/imageService';
+import { getStoryPageVisual } from '../services/imageService';
 import { KidButton } from './KidButton';
 import { 
   ChevronLeft, 
@@ -39,7 +39,9 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
   const settings = storageService.getSettings();
   const currentPage: StoryPage = story.pages[currentPageIndex];
   const isLastPage = currentPageIndex === story.pages.length - 1;
-  const storyVisual = getStoryCoverVisual(story.id);
+
+  // Dedicated illustration for THIS SPECIFIC SENTENCE / PAGE
+  const pageVisual = getStoryPageVisual(story.id, currentPage.pageNumber);
 
   useEffect(() => {
     setActiveWordIndex(null);
@@ -163,185 +165,202 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-3">
+    <div className="max-w-7xl mx-auto px-4 py-2 h-[calc(100vh-4.6rem)] flex flex-col justify-between overflow-hidden">
       {/* Top Bar Navigation */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-2 shrink-0">
         <button
           onClick={onBackToHome}
-          className="flex items-center space-x-2 bg-white/95 hover:bg-white text-amber-900 font-black px-4 py-2.5 rounded-2xl shadow-md border-2 border-amber-300 active:scale-95 transition-transform cursor-pointer"
+          className="flex items-center space-x-1.5 bg-white/95 hover:bg-white text-amber-900 font-black px-3.5 py-1.5 rounded-2xl shadow-xs border-2 border-amber-300 active:scale-95 transition-transform cursor-pointer text-xs md:text-sm"
         >
-          <Home className="w-5 h-5 text-amber-600" />
+          <Home className="w-4 h-4 text-amber-600" />
           <span>Thư Viện Tranh Truyện</span>
         </button>
 
-        <div className="flex items-center space-x-3 bg-white/90 px-4 py-2 rounded-2xl border-2 border-amber-200 shadow-xs">
-          <BookOpen className="w-5 h-5 text-amber-600" />
-          <span className="font-black text-amber-950 text-base md:text-xl">{story.title}</span>
-          <span className="text-xs bg-amber-300 text-amber-950 font-black px-3 py-1 rounded-full shadow-xs">
+        <div className="flex items-center space-x-2.5 bg-white/90 px-3.5 py-1.5 rounded-2xl border-2 border-amber-200 shadow-xs">
+          <BookOpen className="w-4 h-4 text-amber-600" />
+          <span className="font-black text-amber-950 text-sm md:text-base">{story.title}</span>
+          <span className="text-xs bg-amber-300 text-amber-950 font-black px-2.5 py-0.5 rounded-full shadow-xs">
             Trang {currentPageIndex + 1} / {story.pages.length}
           </span>
         </div>
       </div>
 
-      {/* Main Interactive Book Canvas */}
-      <div className="relative rounded-3xl border-8 border-amber-300 shadow-2xl p-6 md:p-8 bg-amber-50/90 transition-colors duration-500 overflow-hidden min-h-[500px] flex flex-col justify-between">
+      {/* Main Picture Book Two-Page Spread Canvas (Fills Viewport Without Scrolling) */}
+      <div className="bg-[#FFFDF9] rounded-3xl border-6 md:border-8 border-amber-300 shadow-2xl p-3 md:p-4 flex-1 min-h-0 overflow-hidden flex flex-col justify-between">
         
-        {/* Full-bleed Ehon Picture Book Illustration Scene Layer */}
-        <div className="relative w-full h-64 sm:h-80 md:h-96 rounded-2xl border-4 border-amber-300 shadow-lg overflow-hidden bg-amber-100 group">
-          <img
-            src={storyVisual.url}
-            alt={storyVisual.alt}
-            className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-700"
-          />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-full min-h-0">
+          
+          {/* ================= LEFT PAGE: Dedicated Sentence Ehon Artwork (7 Cols) ================= */}
+          <div className="lg:col-span-7 h-full min-h-0 relative rounded-2xl overflow-hidden border-3 border-amber-300 shadow-md bg-amber-50 group flex items-center justify-center">
+            <img
+              src={pageVisual.url}
+              alt={pageVisual.alt}
+              className="w-full h-full object-cover transition-transform duration-700"
+            />
 
-          {/* Artistic watermark label */}
-          <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-xs text-white text-xs font-black px-3 py-1 rounded-full flex items-center space-x-1.5 shadow z-10">
-            <span>🎨 Tranh Ehon Sơn Dầu Cắt Dán</span>
-          </div>
+            {/* Picture-book caption badge */}
+            <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-xs text-white text-[11px] font-black px-2.5 py-1 rounded-full flex items-center space-x-1 shadow z-10">
+              <span>🎨 Tranh Ehon câu {currentPage.pageNumber}</span>
+            </div>
 
-          <div className="absolute top-3 right-3 bg-amber-300/90 backdrop-blur-xs text-amber-950 text-xs font-black px-3 py-1 rounded-full shadow z-10 flex items-center space-x-1">
-            <Sparkles className="w-3.5 h-3.5 text-amber-800" />
-            <span>Chạm các điểm sáng để tương tác</span>
-          </div>
+            <div className="absolute bottom-2.5 left-2.5 bg-white/95 backdrop-blur-xs text-amber-950 text-[10px] md:text-xs font-black px-3 py-1 rounded-xl shadow border border-amber-300 z-10 line-clamp-1 max-w-[85%]">
+              {pageVisual.alt}
+            </div>
 
-          {/* Interactive Hotspots Layer overlaid on Ehon Canvas */}
-          {currentPage.hotspots.map((hs) => {
-            const isTapped = activeHotspot === hs.id;
-            return (
-              <div
-                key={hs.id}
-                style={{ left: `${hs.xPercent}%`, top: `${hs.yPercent}%` }}
-                onClick={() => handleTapHotspot(hs)}
-                className={`absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-300 ${
-                  isTapped ? 'scale-130 z-30' : 'hover:scale-115 z-20'
-                }`}
-              >
-                {/* Glowing target button */}
-                <div className={`p-2.5 rounded-full shadow-2xl border-4 flex items-center space-x-1.5 transition-all ${
-                  isTapped
-                    ? 'bg-amber-400 border-white ring-4 ring-amber-300 animate-bounce'
-                    : 'bg-white/90 border-amber-400 hover:bg-amber-100 backdrop-blur-xs'
-                }`}>
-                  <span className="text-2xl">{hs.emoji}</span>
-                  <span className="text-xs font-black text-amber-950 pr-1">{hs.label}</span>
-                </div>
-
-                {isTapped && hs.speechText && (
-                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-amber-400 text-amber-950 font-black text-sm px-3.5 py-1.5 rounded-2xl shadow-xl whitespace-nowrap animate-bounce z-40 border-2 border-white">
-                    {hs.speechText}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Highlighting Sentence with Large Decodable Typography */}
-        <div className="my-5 bg-white rounded-3xl p-6 md:p-8 border-4 border-amber-300 shadow-lg text-center">
-          <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
-            {currentPage.wordsTiming.map((w, idx) => {
-              const isHighlighted = settings.showWordHighlights && activeWordIndex === idx;
+            {/* Interactive Hotspots Layer overlaid on Ehon Canvas */}
+            {currentPage.hotspots.map((hs) => {
+              const isTapped = activeHotspot === hs.id;
               return (
-                <button
-                  key={idx}
-                  onClick={() => handleTapWord(w.cleanWord, idx)}
-                  className={`text-3xl md:text-5xl font-black px-4 py-2 rounded-2xl transition-all duration-200 cursor-pointer ${
-                    isHighlighted
-                      ? 'bg-amber-400 text-amber-950 scale-110 shadow-xl ring-4 ring-amber-300'
-                      : 'text-amber-950 hover:bg-amber-100 hover:text-amber-900 border-2 border-amber-200/60'
+                <div
+                  key={hs.id}
+                  style={{ left: `${hs.xPercent}%`, top: `${hs.yPercent}%` }}
+                  onClick={() => handleTapHotspot(hs)}
+                  className={`absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-300 ${
+                    isTapped ? 'scale-125 z-30' : 'hover:scale-110 z-20'
                   }`}
                 >
-                  {w.word}
-                </button>
+                  <div className={`p-2 rounded-full shadow-xl border-3 flex items-center space-x-1 transition-all ${
+                    isTapped
+                      ? 'bg-amber-400 border-white ring-4 ring-amber-300 animate-bounce'
+                      : 'bg-white/95 border-amber-400 hover:bg-amber-100 backdrop-blur-xs'
+                  }`}>
+                    <span className="text-xl md:text-2xl">{hs.emoji}</span>
+                    <span className="text-[11px] font-black text-amber-950 pr-1">{hs.label}</span>
+                  </div>
+
+                  {isTapped && hs.speechText && (
+                    <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-amber-400 text-amber-950 font-black text-xs px-3 py-1 rounded-xl shadow-xl whitespace-nowrap animate-bounce z-40 border-2 border-white">
+                      {hs.speechText}
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
 
-          <p className="mt-3 text-base md:text-lg font-bold text-amber-800">
-            {currentPage.vietnameseMeaning}
-          </p>
+          {/* ================= RIGHT PAGE: Decodable Reading, Interaction & Navigation (5 Cols) ================= */}
+          <div className="lg:col-span-5 h-full min-h-0 flex flex-col justify-between overflow-y-auto pr-1">
+            
+            {/* Decodable Sentence Text Box */}
+            <div className="bg-amber-50/80 rounded-2xl p-4 border-2 border-amber-200 text-center shadow-xs">
+              <div className="text-[10px] uppercase font-black tracking-wider text-amber-800 mb-2">
+                Chạm vào từng từ để nghe đọc:
+              </div>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                {currentPage.wordsTiming.map((w, idx) => {
+                  const isHighlighted = settings.showWordHighlights && activeWordIndex === idx;
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => handleTapWord(w.cleanWord, idx)}
+                      className={`text-2xl sm:text-3xl md:text-4xl font-black px-3 py-1.5 rounded-xl transition-all duration-200 cursor-pointer ${
+                        isHighlighted
+                          ? 'bg-amber-400 text-amber-950 scale-105 shadow-md ring-3 ring-amber-300'
+                          : 'text-amber-950 bg-white hover:bg-amber-100 border border-amber-200 shadow-xs'
+                      }`}
+                    >
+                      {w.word}
+                    </button>
+                  );
+                })}
+              </div>
 
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-4">
-            <KidButton
-              variant="warning"
-              size="lg"
-              onClick={handleReadFullPage}
-              disabled={isPlayingNarration}
-            >
-              <Volume2 className="w-6 h-6 mr-2" />
-              <span>{isPlayingNarration ? 'Đang Đọc...' : 'Đọc Cả Trang'}</span>
-            </KidButton>
+              <p className="mt-3 text-xs md:text-sm font-bold text-amber-800 leading-snug">
+                {currentPage.vietnameseMeaning}
+              </p>
+            </div>
 
-            {currentPage.speakingTargetWord && (
+            {/* Audio & Speech Action Buttons */}
+            <div className="flex items-center justify-center gap-2 my-2">
               <KidButton
-                variant={isRecording ? 'accent' : 'secondary'}
-                size="lg"
-                onClick={handleRecordOrSpeak}
+                variant="warning"
+                size="md"
+                onClick={handleReadFullPage}
+                disabled={isPlayingNarration}
+                className="flex-1 text-xs md:text-sm py-2.5"
               >
-                <Mic className={`w-6 h-6 mr-2 ${isRecording ? 'animate-ping' : ''}`} />
-                <span>{isRecording ? 'Đang Lắng Nghe...' : `Nghe / Nói: "${currentPage.speakingTargetWord}"`}</span>
+                <Volume2 className="w-4 h-4 mr-1.5" />
+                <span>{isPlayingNarration ? 'Đang Đọc...' : 'Đọc Cả Trang'}</span>
               </KidButton>
-            )}
-          </div>
 
-          {micNotice && (
-            <div className="mt-3 p-3 bg-sky-100 border border-sky-300 text-sky-950 rounded-xl text-xs md:text-sm font-bold flex items-center justify-center space-x-2 animate-fadeIn">
-              <Info className="w-5 h-5 text-sky-700 shrink-0" />
-              <span>{micNotice}</span>
-            </div>
-          )}
-
-          {speechResult && (
-            <div className="mt-3 p-3.5 rounded-2xl border-2 text-center bg-emerald-100 border-emerald-400 text-emerald-950 animate-fadeIn">
-              <div className="font-black text-base">{speechResult.encouragement}</div>
-              <div className="text-xs md:text-sm font-bold mt-0.5">{speechResult.feedbackVi}</div>
-            </div>
-          )}
-        </div>
-
-        {/* Touch-to-Answer Comprehension Check */}
-        {currentPage.comprehension && (
-          <div className="bg-amber-200/90 rounded-2xl p-4 md:p-5 border-2 border-amber-300 mb-4">
-            <div className="flex items-center space-x-2 text-amber-950 font-black text-sm md:text-base mb-3">
-              <Sparkles className="w-5 h-5 text-amber-700" />
-              <span>Câu hỏi tương tác vui: {currentPage.comprehension.questionText}</span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              {currentPage.comprehension.options.map((opt) => (
-                <button
-                  key={opt.id}
-                  onClick={() => handleAnswerComprehension(opt.isCorrect)}
-                  className="bg-white hover:bg-amber-50 border-4 border-amber-400 rounded-2xl p-3 md:p-4 flex items-center justify-center space-x-3 active:scale-95 transition-all shadow-md cursor-pointer"
+              {currentPage.speakingTargetWord && (
+                <KidButton
+                  variant={isRecording ? 'accent' : 'secondary'}
+                  size="md"
+                  onClick={handleRecordOrSpeak}
+                  className="flex-1 text-xs md:text-sm py-2.5"
                 >
-                  <span className="text-3xl">{opt.emoji}</span>
-                  <span className="font-extrabold text-amber-950 text-base md:text-lg">{opt.text}</span>
-                </button>
-              ))}
+                  <Mic className={`w-4 h-4 mr-1.5 ${isRecording ? 'animate-ping' : ''}`} />
+                  <span>{isRecording ? 'Lắng nghe...' : `Nói: "${currentPage.speakingTargetWord}"`}</span>
+                </KidButton>
+              )}
             </div>
+
+            {/* Mic Notice if OFF */}
+            {micNotice && (
+              <div className="p-2 bg-sky-100 border border-sky-300 text-sky-950 rounded-xl text-[11px] font-bold flex items-center justify-center space-x-1 animate-fadeIn">
+                <Info className="w-3.5 h-3.5 text-sky-700 shrink-0" />
+                <span>{micNotice}</span>
+              </div>
+            )}
+
+            {/* Speech Result */}
+            {speechResult && (
+              <div className="p-2 rounded-xl border-2 text-center bg-emerald-100 border-emerald-400 text-emerald-950 animate-fadeIn">
+                <div className="font-black text-xs">{speechResult.encouragement}</div>
+                <div className="text-[10px] font-bold">{speechResult.feedbackVi}</div>
+              </div>
+            )}
+
+            {/* Interactive Comprehension Touch Check */}
+            {currentPage.comprehension && (
+              <div className="bg-amber-100/90 rounded-2xl p-3 border border-amber-300 my-1 shadow-xs">
+                <div className="flex items-center space-x-1.5 text-amber-950 font-black text-xs mb-2">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-700" />
+                  <span>Tương tác vui: {currentPage.comprehension.questionText}</span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  {currentPage.comprehension.options.map((opt) => (
+                    <button
+                      key={opt.id}
+                      onClick={() => handleAnswerComprehension(opt.isCorrect)}
+                      className="bg-white hover:bg-amber-50 border-2 border-amber-400 rounded-xl p-2 flex items-center justify-center space-x-2 active:scale-95 transition-all shadow-xs cursor-pointer"
+                    >
+                      <span className="text-xl">{opt.emoji}</span>
+                      <span className="font-black text-amber-950 text-xs md:text-sm">{opt.text}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Pinned Bottom Navigation Controls (Always 100% visible on viewport!) */}
+            <div className="flex items-center justify-between pt-2 border-t-2 border-amber-200 mt-auto">
+              <KidButton
+                variant="secondary"
+                size="md"
+                onClick={handlePrevPage}
+                disabled={currentPageIndex === 0}
+                className="px-4 py-2 text-xs md:text-sm"
+              >
+                <ChevronLeft className="w-4 h-4 mr-1" />
+                <span>Trang Trước</span>
+              </KidButton>
+
+              <KidButton
+                variant={isLastPage ? 'success' : 'primary'}
+                size="md"
+                onClick={handleNextPage}
+                className="px-5 py-2 text-xs md:text-sm font-black"
+              >
+                <span>{isLastPage ? 'Hoàn Thành! 🏆' : 'Trang Kế Tiếp'}</span>
+                {!isLastPage && <ChevronRight className="w-4 h-4 ml-1" />}
+              </KidButton>
+            </div>
+
           </div>
-        )}
 
-        {/* Page Navigation Controls */}
-        <div className="flex items-center justify-between pt-2">
-          <KidButton
-            variant="secondary"
-            size="lg"
-            onClick={handlePrevPage}
-            disabled={currentPageIndex === 0}
-          >
-            <ChevronLeft className="w-6 h-6 mr-1.5" />
-            <span>Trang Trước</span>
-          </KidButton>
-
-          <KidButton
-            variant={isLastPage ? 'success' : 'primary'}
-            size="lg"
-            onClick={handleNextPage}
-          >
-            <span>{isLastPage ? 'Hoàn Thành Truyện! 🏆' : 'Trang Tiếp Theo'}</span>
-            {!isLastPage && <ChevronRight className="w-6 h-6 ml-1.5" />}
-          </KidButton>
         </div>
 
       </div>

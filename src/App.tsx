@@ -98,23 +98,27 @@ export const App: React.FC = () => {
     handleRefreshProfile();
   };
 
+  const isViewportLockedView = currentView === 'story_reader' || currentView === 'lesson';
+
   return (
-    <div className={`min-h-screen bg-gradient-to-b from-amber-50 via-yellow-50 to-orange-50 text-amber-950 flex flex-col font-child select-none ${settings.reducedMotion ? 'motion-reduce' : ''}`}>
+    <div className={`h-screen w-screen overflow-hidden bg-gradient-to-b from-amber-50 via-yellow-50 to-orange-50 text-amber-950 flex flex-col font-child select-none ${settings.reducedMotion ? 'motion-reduce' : ''}`}>
       {/* Sticky Top Navigation */}
-      <Navbar
-        currentView={currentView as any}
-        onNavigate={(view) => {
-          audioService.playPopSound(500);
-          setCurrentView(view);
-        }}
-        stars={profile.stars}
-        soundEnabled={soundEnabled}
-        onToggleSound={handleToggleSound}
-        onOpenParentGate={() => setIsParentGateOpen(true)}
-      />
+      <div className="shrink-0 z-40">
+        <Navbar
+          currentView={currentView as any}
+          onNavigate={(view) => {
+            audioService.playPopSound(500);
+            setCurrentView(view);
+          }}
+          stars={profile.stars}
+          soundEnabled={soundEnabled}
+          onToggleSound={handleToggleSound}
+          onOpenParentGate={() => setIsParentGateOpen(true)}
+        />
+      </div>
 
       {/* Main Content Area */}
-      <main className="flex-1 pb-20">
+      <main className={`flex-1 min-h-0 ${isViewportLockedView ? 'overflow-hidden flex flex-col' : 'overflow-y-auto pb-16'}`}>
         {currentView === 'island_map' && (
           <PhonicsIslandMap
             unlockedGroups={profile.unlockedGroups}

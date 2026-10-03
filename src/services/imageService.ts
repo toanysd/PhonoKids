@@ -14,6 +14,51 @@ const EHON_MAP: Record<string, WordVisual> = {
     type: 'ehon',
     alt: 'Tranh Ehon cắt dán chú mèo cam sọc rực rỡ'
   },
+  'cat_mat': {
+    url: '/assets/ehon/cat_mat.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú mèo ngồi trên chiếc thảm đan rực rỡ'
+  },
+  'cat_nap': {
+    url: '/assets/ehon/cat_nap.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú mèo cuộn tròn ngủ trưa êm đềm'
+  },
+  'sam_pan': {
+    url: '/assets/ehon/sam_pan.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon bạn Sam cầm chiếc chảo nhỏ trong bếp nắng'
+  },
+  'ant_pan': {
+    url: '/assets/ehon/ant_pan.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú kiến bé nhỏ ngồi trong lòng chảo'
+  },
+  'sam_pat_ant': {
+    url: '/assets/ehon/sam_pat_ant.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon bạn Sam vỗ về vuốt ve chú kiến nhỏ trên lá'
+  },
+  'hen_dog': {
+    url: '/assets/ehon/hen_dog.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon cô gà mái đỏ gặp gỡ bạn cún lông xù vui tươi'
+  },
+  'three_fish': {
+    url: '/assets/ehon/three_fish.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon ba chú cá sắc màu bơi lội lấp lánh dưới làn nước biếc'
+  },
+  'queen_park': {
+    url: '/assets/ehon/queen_park.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon Nữ hoàng hiền từ đội vương miện dạo bước trong công viên hoa lá'
+  },
+  'queen_coin': {
+    url: '/assets/ehon/queen_coin.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon Nữ hoàng nhặt đồng xu ngôi sao vàng lấp lánh trên cỏ xanh'
+  },
   'cup': {
     url: '/assets/ehon/cup.jpg',
     type: 'ehon',
@@ -152,19 +197,19 @@ const EHON_MAP: Record<string, WordVisual> = {
     alt: 'Chú cá nhỏ bơi lội trong làn nước xanh'
   },
   'mat': {
-    url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Chiếc thảm dệt ấm áp'
+    url: '/assets/ehon/cat_mat.jpg',
+    type: 'ehon',
+    alt: 'Chiếc thảm dệt đan màu sắc ấm áp'
   },
   'sat': {
     url: '/assets/ehon/cat.jpg',
     type: 'ehon',
-    alt: 'Chú mèo ngồi yên trên thảm'
+    alt: 'Chú mèo ngồi yên sưởi nắng'
   },
   'pat': {
-    url: '/assets/ehon/dog.jpg',
+    url: '/assets/ehon/sam_pat_ant.jpg',
     type: 'ehon',
-    alt: 'Bé vỗ về chú cún con'
+    alt: 'Bé vỗ về vuốt ve thân mật'
   },
   'big': {
     url: 'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?auto=format&fit=crop&w=800&q=80',
@@ -217,7 +262,7 @@ export const getStoryCoverVisual = (storyId: string): WordVisual => {
       };
     case 'story_sam_ant':
       return {
-        url: '/assets/ehon/ant.jpg',
+        url: '/assets/ehon/sam_pan.jpg',
         type: 'ehon',
         alt: 'Tranh bìa Ehon Sam và Bạn Kiến Chăm Chỉ'
       };
@@ -235,7 +280,7 @@ export const getStoryCoverVisual = (storyId: string): WordVisual => {
       };
     case 'story_queen_star':
       return {
-        url: '/assets/ehon/star.jpg',
+        url: '/assets/ehon/queen_park.jpg',
         type: 'ehon',
         alt: 'Tranh bìa Ehon Nữ Hoàng và Ngôi Sao Ước Nguyện'
       };
@@ -246,6 +291,118 @@ export const getStoryCoverVisual = (storyId: string): WordVisual => {
         alt: 'Tranh bìa Ehon câu chuyện khám phá thế giới'
       };
   }
+};
+
+export const getStoryPageVisual = (storyId: string, pageNumber: number): WordVisual => {
+  if (storyId === 'story_cat_sat') {
+    switch (pageNumber) {
+      case 1:
+        return {
+          url: '/assets/ehon/cat.jpg',
+          type: 'ehon',
+          alt: 'Tranh Ehon Chú mèo ngồi sưởi nắng (The cat sat)'
+        };
+      case 2:
+        return {
+          url: '/assets/ehon/cat_mat.jpg',
+          type: 'ehon',
+          alt: 'Tranh Ehon Chú mèo ngồi trên chiếc thảm đan (The cat sat on a mat)'
+        };
+      case 3:
+      default:
+        return {
+          url: '/assets/ehon/cat_nap.jpg',
+          type: 'ehon',
+          alt: 'Tranh Ehon Chú mèo cuộn tròn ngủ trưa ấm áp (The cat has a nap)'
+        };
+    }
+  }
+
+  if (storyId === 'story_sam_ant') {
+    switch (pageNumber) {
+      case 1:
+        return {
+          url: '/assets/ehon/sam_pan.jpg',
+          type: 'ehon',
+          alt: 'Tranh Ehon Bạn Sam cầm chiếc chảo nhỏ (Sam had a pan)'
+        };
+      case 2:
+        return {
+          url: '/assets/ehon/ant_pan.jpg',
+          type: 'ehon',
+          alt: 'Tranh Ehon Chú kiến bé nhỏ ngồi trong chảo (An ant sat on the pan)'
+        };
+      case 3:
+      default:
+        return {
+          url: '/assets/ehon/sam_pat_ant.jpg',
+          type: 'ehon',
+          alt: 'Tranh Ehon Sam vỗ về chú kiến trên chiếc lá (Sam pat the ant)'
+        };
+    }
+  }
+
+  if (storyId === 'story_red_hen') {
+    switch (pageNumber) {
+      case 1:
+        return {
+          url: '/assets/ehon/hen.jpg',
+          type: 'ehon',
+          alt: 'Tranh Ehon Cô gà mái đỏ trong sân nông trại'
+        };
+      case 2:
+        return {
+          url: '/assets/ehon/hen_dog.jpg',
+          type: 'ehon',
+          alt: 'Tranh Ehon Cô gà mái gặp gỡ bạn cún lông xù (The hen met a dog)'
+        };
+      case 3:
+      default:
+        return {
+          url: '/assets/ehon/dog.jpg',
+          type: 'ehon',
+          alt: 'Tranh Ehon Bạn cún và cô gà cùng chạy tung tăng (The dog and hen run)'
+        };
+    }
+  }
+
+  if (storyId === 'story_ship_fog') {
+    switch (pageNumber) {
+      case 1:
+        return {
+          url: '/assets/ehon/ship.jpg',
+          type: 'ehon',
+          alt: 'Tranh Ehon Con tàu buồm rẽ sóng đại dương (A big ship sails in the sea)'
+        };
+      case 2:
+      default:
+        return {
+          url: '/assets/ehon/three_fish.jpg',
+          type: 'ehon',
+          alt: 'Tranh Ehon Ba chú cá bơi lội lấp lánh (They see three fish flash and swim)'
+        };
+    }
+  }
+
+  if (storyId === 'story_queen_star') {
+    switch (pageNumber) {
+      case 1:
+        return {
+          url: '/assets/ehon/queen_park.jpg',
+          type: 'ehon',
+          alt: 'Tranh Ehon Nữ hoàng dạo bước trong công viên rợp bóng cây (The queen went to the green park)'
+        };
+      case 2:
+      default:
+        return {
+          url: '/assets/ehon/queen_coin.jpg',
+          type: 'ehon',
+          alt: 'Tranh Ehon Nữ hoàng tìm thấy đồng xu ngôi sao trên cỏ hoa (She found a bright star coin on the ground)'
+        };
+    }
+  }
+
+  return getStoryCoverVisual(storyId);
 };
 
 export const getIslandVisual = (islandNumber: number): WordVisual => {

@@ -73,14 +73,14 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
     const visual = getWordVisual(word);
 
     return (
-      <div className="relative w-full h-48 sm:h-60 rounded-2xl overflow-hidden mb-3 border-2 border-purple-200 shadow-md bg-purple-50 group">
+      <div className="relative w-full h-36 sm:h-44 rounded-2xl overflow-hidden mb-2.5 border-2 border-purple-200 shadow-md bg-purple-50 group">
         <img
           src={visual.url}
           alt={visual.alt}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
         />
-        <div className="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-xs text-white text-[11px] font-black px-2.5 py-1 rounded-full shadow">
+        <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-xs text-white text-[10px] font-black px-2.5 py-0.5 rounded-full shadow">
           {visual.type === 'ehon' ? '🎨 Tranh Ehon' : '📷 Ảnh Thật Sắc Nét'}
         </div>
         <div className="absolute bottom-2 left-2 bg-white/95 backdrop-blur-xs text-purple-950 text-[10px] font-bold px-2 py-0.5 rounded-lg border border-purple-200">
