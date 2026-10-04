@@ -10,6 +10,8 @@ interface NavbarProps {
   onToggleSound: () => void;
   onOpenParentGate: () => void;
   onOpenStickerAlbum?: () => void;
+  currentLanguage?: 'en' | 'ja';
+  onToggleLanguage?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -20,6 +22,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleSound,
   onOpenParentGate,
   onOpenStickerAlbum,
+  currentLanguage = 'en',
+  onToggleLanguage,
 }) => {
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-4 border-amber-300 shadow-md px-4 py-2.5">
@@ -124,6 +128,28 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right Status Actions */}
         <div className="flex items-center space-x-2 md:space-x-3">
+          {/* Language Switcher: English ⇄ Japanese */}
+          <button
+            onClick={() => {
+              audioService.playPopSound(520);
+              onToggleLanguage?.();
+            }}
+            className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-2xl border-2 font-black text-xs md:text-sm shadow-xs transition-all cursor-pointer active:scale-95 ${
+              currentLanguage === 'ja'
+                ? 'bg-rose-500 text-white border-rose-600 shadow-rose-200'
+                : 'bg-indigo-50 text-indigo-950 border-indigo-300 hover:bg-indigo-100'
+            }`}
+            title="Chuyển đổi môn học: Tiếng Anh Phonics ⇄ Tiếng Nhật Ehon"
+          >
+            <span className="text-base">{currentLanguage === 'ja' ? '🇯🇵' : '🇬🇧'}</span>
+            <span className="hidden sm:inline">
+              {currentLanguage === 'ja' ? 'Tiếng Nhật' : 'Tiếng Anh'}
+            </span>
+            <span className="text-[10px] bg-white/90 text-rose-950 px-1.5 py-0.5 rounded-full font-bold">
+              Đổi ⇄
+            </span>
+          </button>
+
           {/* Star Counter & Sticker Album Trigger */}
           <button
             onClick={() => {

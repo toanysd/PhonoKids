@@ -12,6 +12,7 @@ import { RestBreakModal } from './components/RestBreakModal';
 import { AiBuddyChat } from './components/AiBuddyChat';
 import { StickerAlbumModal } from './components/StickerAlbumModal';
 import { ArcadePlayground } from './components/ArcadePlayground';
+import { JapaneseGojuonView } from './components/JapaneseGojuonView';
 
 import { PhonemeInfo } from './types/phonics';
 import { DecodableStory } from './types/story';
@@ -24,6 +25,13 @@ import { audioService } from './services/audioService';
 type ViewMode = 'island_map' | 'stories' | 'minimal_pairs' | 'blending' | 'lesson' | 'story_reader' | 'ai_chat' | 'arcade';
 
 export const App: React.FC = () => {
+  const [currentLanguage, setCurrentLanguage] = useState<'en' | 'ja'>(() => {
+    try {
+      const saved = localStorage.getItem('phonokids_current_lang');
+      if (saved === 'ja' || saved === 'en') return saved;
+    } catch {}
+    return 'en';
+  });
   const [currentView, setCurrentView] = useState<ViewMode>('island_map');
   const [profile, setProfile] = useState<ChildProfile>(() => storageService.getProfile());
   const [settings, setSettings] = useState<SessionSettings>(() => storageService.getSettings());
@@ -112,7 +120,16 @@ export const App: React.FC = () => {
     handleRefreshProfile();
   };
 
+  const handleToggleLanguage = () => {
+    const nextLang = currentLanguage === 'en' ? 'ja' : 'en';
+    setCurrentLanguage(nextLang);
+    try {
+      localStorage.setItem('phonokids_current_lang', nextLang);
+    } catch {}
+  };
+
   const isViewportLockedView = 
+    currentLanguage === 'ja' ||
     currentView === 'story_reader' || 
     currentView === 'lesson' || 
     currentView === 'ai_chat' ||
@@ -135,82 +152,90 @@ export const App: React.FC = () => {
           onToggleSound={handleToggleSound}
           onOpenParentGate={() => setIsParentGateOpen(true)}
           onOpenStickerAlbum={() => setIsStickerAlbumOpen(true)}
+          currentLanguage={currentLanguage}
+          onToggleLanguage={handleToggleLanguage}
         />
       </div>
 
       {/* Main Content Area */}
       <main className={`flex-1 min-h-0 ${isViewportLockedView ? 'overflow-hidden flex flex-col' : 'overflow-y-auto pb-16'}`}>
-        {currentView === 'island_map' && (
-          <PhonicsIslandMap
-            unlockedGroups={profile.unlockedGroups}
-            masteredPhonemes={profile.masteredPhonemes}
-            profile={profile}
-            onSelectPhoneme={handleSelectPhoneme}
-          />
-        )}
+        {currentLanguage === 'ja' ? (
+          <JapaneseGojuonView onAddStars={handleAddStars} />
+        ) : (
+          <>
+            {currentView === 'island_map' && (
+              <PhonicsIslandMap
+                unlockedGroups={profile.unlockedGroups}
+                masteredPhonemes={profile.masteredPhonemes}
+                profile={profile}
+                onSelectPhoneme={handleSelectPhoneme}
+              />
+            )}
 
-        {currentView === 'lesson' && activePhoneme && (
-          <LessonPlayer
-            phoneme={activePhoneme}
-            onFinishLesson={handleFinishLesson}
-            onNextPhoneme={handleNextPhoneme}
-            onBack={() => setCurrentView('island_map')}
-          />
-        )}
+            {currentView === 'lesson' && activePhoneme && (
+              <LessonPlayer
+                phoneme={activePhoneme}
+                onFinishLesson={handleFinishLesson}
+                onNextPhoneme={handleNextPhoneme}
+                onBack={() => setCurrentView('island_map')}
+              />
+            )}
 
-        {currentView === 'stories' && (
-          <StoryLibrary
-            completedStories={profile.completedStories}
-            onSelectStory={handleSelectStory}
-          />
-        )}
+            {currentView === 'stories' && (
+              <StoryLibrary
+                completedStories={profile.completedStories}
+                onSelectStory={handleSelectStory}
+              />
+            )}
 
-        {currentView === 'story_reader' && activeStory && (() => {
-          const sIdx = DECODABLE_STORIES.findIndex((s) => s.id === activeStory.id);
-          const nextStory = sIdx !== -1 && sIdx + 1 < DECODABLE_STORIES.length
-            ? DECODABLE_STORIES[sIdx + 1]
-            : DECODABLE_STORIES[0];
-          return (
-            <StoryReader
-              story={activeStory}
-              onBackToHome={() => setCurrentView('stories')}
-              onStoryFinished={handleFinishStory}
-              onNextStory={() => {
-                storageService.markStoryCompleted(activeStory.id);
-                storageService.addStars(5);
-                handleRefreshProfile();
-                setActiveStory(nextStory);
-              }}
-              nextStoryTitle={nextStory.title}
-            />
-          );
-        })()}
+            {currentView === 'story_reader' && activeStory && (() => {
+              const sIdx = DECODABLE_STORIES.findIndex((s) => s.id === activeStory.id);
+              const nextStory = sIdx !== -1 && sIdx + 1 < DECODABLE_STORIES.length
+                ? DECODABLE_STORIES[sIdx + 1]
+                : DECODABLE_STORIES[0];
+              return (
+                <StoryReader
+                  story={activeStory}
+                  onBackToHome={() => setCurrentView('stories')}
+                  onStoryFinished={handleFinishStory}
+                  onNextStory={() => {
+                    storageService.markStoryCompleted(activeStory.id);
+                    storageService.addStars(5);
+                    handleRefreshProfile();
+                    setActiveStory(nextStory);
+                  }}
+                  nextStoryTitle={nextStory.title}
+                />
+              );
+            })()}
 
-        {currentView === 'minimal_pairs' && (
-          <MinimalPairsView onAddStars={handleAddStars} />
-        )}
+            {currentView === 'minimal_pairs' && (
+              <MinimalPairsView onAddStars={handleAddStars} />
+            )}
 
-        {currentView === 'blending' && (
-          <BlendingPlayground onAddStars={handleAddStars} />
-        )}
+            {currentView === 'blending' && (
+              <BlendingPlayground onAddStars={handleAddStars} />
+            )}
 
-        {currentView === 'arcade' && (
-          <ArcadePlayground
-            onAddStars={handleAddStars}
-            onBackToHome={() => setCurrentView('island_map')}
-          />
-        )}
+            {currentView === 'arcade' && (
+              <ArcadePlayground
+                onAddStars={handleAddStars}
+                onBackToHome={() => setCurrentView('island_map')}
+              />
+            )}
 
-        {currentView === 'ai_chat' && (
-          <AiBuddyChat
-            onAddStars={handleAddStars}
-            onOpenParentSettings={() => setIsParentGateOpen(true)}
-          />
+            {currentView === 'ai_chat' && (
+              <AiBuddyChat
+                onAddStars={handleAddStars}
+                onOpenParentSettings={() => setIsParentGateOpen(true)}
+              />
+            )}
+          </>
         )}
       </main>
 
-      {/* Interactive Mascot Companion - Only shown on exploration map and story bookshelf to keep lesson action buttons unobstructed */}
-      {(currentView === 'island_map' || currentView === 'stories') && (
+      {/* Interactive Mascot Companion - Only shown on exploration map and story bookshelf in English mode */}
+      {currentLanguage === 'en' && (currentView === 'island_map' || currentView === 'stories') && (
         <CharacterCompanion />
       )}
 

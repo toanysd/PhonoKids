@@ -224,6 +224,56 @@ class AudioService {
   }
 
   /**
+   * High-fidelity Japanese speech synthesis for children (ja-JP).
+   * Automatically picks native Japanese voices (Google 日本語, Kyoko, Nanami, Ayumi, Haruka).
+   */
+  public speakJapanese(text: string, rateMultiplier: number = 0.85): Promise<void> {
+    return new Promise((resolve) => {
+      if (!('speechSynthesis' in window) || !this.soundEnabled) {
+        resolve();
+        return;
+      }
+
+      window.speechSynthesis.cancel(); // Stop previous utterance
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = this.voiceSpeed * rateMultiplier;
+      utterance.pitch = 1.15; // Friendly, natural Japanese tone
+      utterance.lang = 'ja-JP';
+
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoice = voices.find(v =>
+        (v.lang.includes('ja-JP') || v.lang.includes('ja_JP') || v.lang.startsWith('ja')) &&
+        (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Kyoko') || v.name.includes('Nanami') || v.name.includes('Ayumi') || v.name.includes('Haruka'))
+      ) || voices.find(v => v.lang.includes('ja'));
+
+      if (preferredVoice) {
+        utterance.voice = preferredVoice;
+      }
+
+      utterance.onend = () => resolve();
+      utterance.onerror = () => resolve();
+
+      window.speechSynthesis.speak(utterance);
+    });
+  }
+
+  /**
+   * Play authentic native Japanese TPR chant:
+   * Speaks the rhythmic chant (e.g. "あ・あ・あめ！"), short pause, then speaks target word.
+   */
+  public async playJapaneseTprAction(chantJa: string, wordJa: string): Promise<void> {
+    if (!this.soundEnabled) return;
+    try {
+      await this.speakJapanese(chantJa, 0.85);
+      await new Promise((r) => setTimeout(r, 260));
+      await this.speakJapanese(wordJa, 0.85);
+    } catch {
+      // Ignore
+    }
+  }
+
+  /**
    * Play authentic native TPR action: speaks natural English chant,
    * followed by pure native sound clips of the target phoneme repeated 3 times.
    */
