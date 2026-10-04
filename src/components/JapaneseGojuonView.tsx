@@ -3,6 +3,7 @@ import { JAPANESE_GOJUON_ROWS } from '../data/japanese/gojuonData';
 import { KanaItem, KanaRowGroup } from '../types/japanese';
 import { audioService } from '../services/audioService';
 import { KidButton } from './KidButton';
+import { KanaFlashcardStudio } from './KanaFlashcardStudio';
 import { 
   Volume2, 
   VolumeX, 
@@ -26,6 +27,14 @@ type JapaneseAudioMode = 'kana_only' | 'kana_word' | 'tpr_chant';
 type ActiveSubTab = 'vocabulary' | 'tracing' | 'mouth_guide';
 
 export const JapaneseGojuonView: React.FC<JapaneseGojuonViewProps> = ({ onAddStars }) => {
+  const [viewMode, setViewMode] = useState<'flashcard' | 'explorer'>(() => {
+    try {
+      const saved = localStorage.getItem('phonokids_japanese_view_mode') as 'flashcard' | 'explorer';
+      if (saved === 'flashcard' || saved === 'explorer') return saved;
+    } catch {}
+    return 'flashcard';
+  });
+
   const [selectedRowKey, setSelectedRowKey] = useState<KanaRowGroup['rowKey']>('a');
   const [activeKanaIdx, setActiveKanaIdx] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<ActiveSubTab>('vocabulary');
@@ -244,15 +253,106 @@ export const JapaneseGojuonView: React.FC<JapaneseGojuonViewProps> = ({ onAddSta
     }
   };
 
+  if (viewMode === 'flashcard') {
+    return (
+      <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+        {/* Mode Switcher Header Ribbon */}
+        <div className="shrink-0 max-w-5xl mx-auto w-full px-2 sm:px-4 pt-1.5 flex items-center justify-between">
+          <div className="flex items-center space-x-1.5 bg-rose-100/90 p-1 rounded-2xl border border-rose-200">
+            <button
+              onClick={() => {
+                audioService.playPopSound(520);
+                setViewMode('flashcard');
+                try { localStorage.setItem('phonokids_japanese_view_mode', 'flashcard'); } catch {}
+              }}
+              className="px-3 py-1.5 rounded-xl font-black text-xs sm:text-sm flex items-center space-x-1.5 bg-rose-500 text-white shadow-xs cursor-pointer"
+            >
+              <span>🎴</span>
+              <span>Thẻ Flashcard Bảng Chữ Cái</span>
+            </button>
+
+            <button
+              onClick={() => {
+                audioService.playPopSound(500);
+                setViewMode('explorer');
+                try { localStorage.setItem('phonokids_japanese_view_mode', 'explorer'); } catch {}
+              }}
+              className="px-3 py-1.5 rounded-xl font-black text-xs sm:text-sm flex items-center space-x-1.5 text-rose-900 hover:bg-rose-200/60 transition-all cursor-pointer"
+            >
+              <span>✍️</span>
+              <span>Bản Đồ Khám Phá & Tập Tô</span>
+            </button>
+          </div>
+
+          <div className="text-xs font-black text-rose-800 bg-white/80 px-2.5 py-1 rounded-xl border border-rose-200 hidden sm:block">
+            🇯🇵 Tiếng Nhật Ehon • 3–8 Tuổi
+          </div>
+        </div>
+
+        {/* Kana Flashcard Studio */}
+        <div className="flex-1 min-h-0">
+          <KanaFlashcardStudio
+            onAddStars={onAddStars}
+            onNavigateToBoard={(row, id) => {
+              setViewMode('explorer');
+              try { localStorage.setItem('phonokids_japanese_view_mode', 'explorer'); } catch {}
+              if (row) {
+                setSelectedRowKey(row);
+                const r = JAPANESE_GOJUON_ROWS.find(item => item.rowKey === row);
+                if (r && id) {
+                  const idx = r.characters.findIndex(c => c.id === id);
+                  if (idx !== -1) setActiveKanaIdx(idx);
+                }
+              }
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-6xl mx-auto px-2 sm:px-4 py-1.5 h-[calc(100vh-4.6rem)] flex flex-col justify-between overflow-hidden select-none">
       
+      {/* View Mode Switcher Header Ribbon */}
+      <div className="shrink-0 mb-1 flex items-center justify-between">
+        <div className="flex items-center space-x-1.5 bg-rose-100/90 p-1 rounded-2xl border border-rose-200">
+          <button
+            onClick={() => {
+              audioService.playPopSound(520);
+              setViewMode('flashcard');
+              try { localStorage.setItem('phonokids_japanese_view_mode', 'flashcard'); } catch {}
+            }}
+            className="px-3 py-1.5 rounded-xl font-black text-xs sm:text-sm flex items-center space-x-1.5 text-rose-900 hover:bg-rose-200/60 transition-all cursor-pointer"
+          >
+            <span>🎴</span>
+            <span>Thẻ Flashcard Bảng Chữ Cái</span>
+          </button>
+
+          <button
+            onClick={() => {
+              audioService.playPopSound(500);
+              setViewMode('explorer');
+              try { localStorage.setItem('phonokids_japanese_view_mode', 'explorer'); } catch {}
+            }}
+            className="px-3 py-1.5 rounded-xl font-black text-xs sm:text-sm flex items-center space-x-1.5 bg-rose-500 text-white shadow-xs cursor-pointer"
+          >
+            <span>✍️</span>
+            <span>Bản Đồ Khám Phá & Tập Tô</span>
+          </button>
+        </div>
+
+        <div className="text-xs font-black text-rose-800 bg-white/80 px-2.5 py-1 rounded-xl border border-rose-200 hidden sm:block">
+          🇯🇵 Tiếng Nhật Ehon • 3–8 Tuổi
+        </div>
+      </div>
+
       {/* Top Header Bar: Row Switcher & Audio Controls */}
       <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5 shrink-0 bg-white/90 backdrop-blur-xs p-2 rounded-2xl border-2 border-rose-200 shadow-xs">
         
         {/* Row Selection Tabs */}
-        <div className="flex items-center space-x-1.5">
-          <span className="text-xs font-black text-rose-950 bg-rose-100 px-3 py-1 rounded-xl hidden sm:inline-flex items-center gap-1 border border-rose-200">
+        <div className="flex items-center space-x-1.5 overflow-x-auto pb-0.5 max-w-full scrollbar-none">
+          <span className="text-xs font-black text-rose-950 bg-rose-100 px-3 py-1 rounded-xl hidden sm:inline-flex items-center gap-1 border border-rose-200 shrink-0">
             <span>🌸</span>
             <span>Hàng Chữ Kana:</span>
           </span>
@@ -260,7 +360,7 @@ export const JapaneseGojuonView: React.FC<JapaneseGojuonViewProps> = ({ onAddSta
             <button
               key={row.rowKey}
               onClick={() => handleRowChange(row.rowKey)}
-              className={`px-3 py-1 rounded-xl text-xs sm:text-sm font-black transition-all cursor-pointer border ${
+              className={`px-3 py-1 rounded-xl text-xs sm:text-sm font-black transition-all cursor-pointer border shrink-0 ${
                 selectedRowKey === row.rowKey
                   ? 'bg-rose-500 text-white border-rose-600 shadow-sm scale-102'
                   : 'bg-rose-50 text-rose-900 border-rose-200 hover:bg-rose-100'
@@ -330,8 +430,8 @@ export const JapaneseGojuonView: React.FC<JapaneseGojuonViewProps> = ({ onAddSta
             </span>
           </div>
 
-          {/* 5 Kana Character Buttons */}
-          <div className="grid grid-cols-5 lg:grid-cols-1 gap-1.5 my-auto">
+          {/* Kana Character Buttons */}
+          <div className={`grid ${currentRow.characters.length > 5 ? 'grid-cols-5 lg:grid-cols-2 overflow-y-auto max-h-[350px] pr-1' : 'grid-cols-5 lg:grid-cols-1'} gap-1.5 my-auto`}>
             {currentRow.characters.map((item, idx) => {
               const isSelected = idx === activeKanaIdx;
               return (

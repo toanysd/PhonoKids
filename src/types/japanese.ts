@@ -3,6 +3,20 @@
 
 export type JapaneseScript = 'hiragana' | 'katakana' | 'romaji';
 
+export type KanaRowKey = 
+  | 'a' 
+  | 'ka' 
+  | 'sa' 
+  | 'ta' 
+  | 'na' 
+  | 'ha' 
+  | 'ma' 
+  | 'ya' 
+  | 'ra' 
+  | 'wa' 
+  | 'dakuon' 
+  | 'handakuon';
+
 export interface JapaneseWord {
   word: string;             // e.g. "あめ"
   kanji?: string;           // e.g. "雨" / "飴"
@@ -26,9 +40,10 @@ export interface KanaItem {
   hiragana: string;         // "あ"
   katakana: string;         // "ア"
   romaji: string;           // "a"
-  row: 'a' | 'ka' | 'sa' | 'ta' | 'na' | 'ha' | 'ma' | 'ya' | 'ra' | 'wa';
+  row: KanaRowKey;
+  variant?: 'basic' | 'dakuon' | 'handakuon';
   orderInRow: number;       // 1 to 5
-  vowel: 'a' | 'i' | 'u' | 'e' | 'o';
+  vowel?: 'a' | 'i' | 'u' | 'e' | 'o' | 'n';
   soundDescriptionVi: string;
   mouthGuide: {
     mouthShape: 'open_wide' | 'smile' | 'round_pucker' | 'open_mid' | 'round_mid';
@@ -49,7 +64,7 @@ export interface KanaItem {
 }
 
 export interface KanaRowGroup {
-  rowKey: 'a' | 'ka' | 'sa' | 'ta' | 'na' | 'ha' | 'ma' | 'ya' | 'ra' | 'wa';
+  rowKey: KanaRowKey;
   rowNameVi: string;        // e.g. "Hàng A (5 Nguyên Âm Cốt Lõi)"
   rowNameJa: string;        // e.g. "あ行（あぎょう）"
   themeColor: string;
