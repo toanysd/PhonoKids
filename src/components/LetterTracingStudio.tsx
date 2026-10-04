@@ -44,6 +44,8 @@ export const LetterTracingStudio: React.FC<LetterTracingStudioProps> = ({
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [sparkles, setSparkles] = useState<Array<{ id: number; x: number; y: number; color: string }>>([]);
   const [guideHint, setGuideHint] = useState<string | null>(null);
+  const [autoNextCountdown, setAutoNextCountdown] = useState<number | null>(null);
+  const autoNextTimerRef = useRef<any>(null);
 
   const currentStroke: StrokeGuide | undefined = strokeData.strokes[currentStrokeIndex];
   const totalStrokes = strokeData.strokes.length;
@@ -75,6 +77,11 @@ export const LetterTracingStudio: React.FC<LetterTracingStudioProps> = ({
 
   // Clear canvas and reset progress
   const clearCanvas = useCallback(() => {
+    if (autoNextTimerRef.current) {
+      clearInterval(autoNextTimerRef.current);
+      autoNextTimerRef.current = null;
+    }
+    setAutoNextCountdown(null);
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -315,8 +322,31 @@ export const LetterTracingStudio: React.FC<LetterTracingStudioProps> = ({
       if (onAddStars) {
         onAddStars(2);
       }
-      if (onComplete) {
-        onComplete();
+
+      // Automatically auto-advance to next letter / next step if available!
+      if (onNextLetter || (showNextButton && onComplete)) {
+        setAutoNextCountdown(2);
+        let remaining = 2;
+        const timer = setInterval(() => {
+          remaining -= 1;
+          if (remaining <= 0) {
+            clearInterval(timer);
+            autoNextTimerRef.current = null;
+            setAutoNextCountdown(null);
+            if (onNextLetter) {
+              onNextLetter();
+            } else if (onComplete) {
+              onComplete();
+            }
+          } else {
+            setAutoNextCountdown(remaining);
+          }
+        }, 1000);
+        autoNextTimerRef.current = timer;
+      } else if (onComplete) {
+        setTimeout(() => {
+          onComplete();
+        }, 1500);
       }
     }
   };
@@ -655,15 +685,27 @@ export const LetterTracingStudio: React.FC<LetterTracingStudioProps> = ({
                 <CheckCircle2 className="w-9 h-9" />
               </div>
               <h3 className="text-xl sm:text-2xl font-black mb-0.5 drop-shadow-sm">Bé Viết Rất Đẹp! 🎉</h3>
-              <p className="text-xs sm:text-sm font-bold text-emerald-100 mb-3 text-center">
+              <p className="text-xs sm:text-sm font-bold text-emerald-100 mb-2 text-center">
                 Đã tô đủ 100% nét chữ /{phonemeId}/ xuất sắc!
               </p>
+
+              {/* Auto-Next Countdown Notice */}
+              {(onNextLetter || (showNextButton && onComplete)) && (
+                <div className="mb-3 px-3 py-1 bg-white/20 backdrop-blur-xs rounded-full border border-white/40 text-xs font-black flex items-center space-x-1.5 animate-pulse text-white">
+                  <span>🚀 Tự động chuyển chữ tiếp theo sau {autoNextCountdown ?? 2}s...</span>
+                </div>
+              )}
 
               {/* Seamless Action Flow Buttons */}
               <div className="flex flex-col sm:flex-row items-center gap-2 w-full max-w-xs justify-center">
                 {(onNextLetter || (showNextButton && onComplete)) && (
                   <button
                     onClick={() => {
+                      if (autoNextTimerRef.current) {
+                        clearInterval(autoNextTimerRef.current);
+                        autoNextTimerRef.current = null;
+                      }
+                      setAutoNextCountdown(null);
                       if (onNextLetter) {
                         onNextLetter();
                       } else if (onComplete) {

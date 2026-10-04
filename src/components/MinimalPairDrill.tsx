@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MinimalPairItem } from '../types/phonics';
 import { audioService } from '../services/audioService';
 import { getWordVisual } from '../services/imageService';
@@ -18,9 +18,16 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
   const [showHint, setShowHint] = useState<boolean>(false);
   const [options, setOptions] = useState<string[]>([]);
   const [isPlayingTarget, setIsPlayingTarget] = useState<boolean>(false);
+  const [shakingWord, setShakingWord] = useState<string | null>(null);
+  const [gentleWrongNotice, setGentleWrongNotice] = useState<string | null>(null);
+
+  const autoNextTimerRef = useRef<any>(null);
+  const wrongTimerRef = useRef<any>(null);
 
   // Shuffle options on drill change to prevent positional bias
   useEffect(() => {
+    if (autoNextTimerRef.current) clearTimeout(autoNextTimerRef.current);
+    if (wrongTimerRef.current) clearTimeout(wrongTimerRef.current);
     const shuffled = Math.random() > 0.5
       ? [drill.targetWord, drill.distractorWord]
       : [drill.distractorWord, drill.targetWord];
@@ -28,7 +35,17 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
     setSelectedWord(null);
     setIsAnswered(false);
     setShowHint(false);
+    setShakingWord(null);
+    setGentleWrongNotice(null);
   }, [drill.id, drill.targetWord, drill.distractorWord]);
+
+  // Clean up timers on unmount
+  useEffect(() => {
+    return () => {
+      if (autoNextTimerRef.current) clearTimeout(autoNextTimerRef.current);
+      if (wrongTimerRef.current) clearTimeout(wrongTimerRef.current);
+    };
+  }, []);
 
   const handleHearTargetWord = async () => {
     setIsPlayingTarget(true);
@@ -42,10 +59,16 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
   };
 
   const handleSelectOption = (word: string) => {
-    setSelectedWord(word);
-    setIsAnswered(true);
+    if (isAnswered && selectedWord === drill.targetWord) return; // Prevent clicking while advancing
+
+    if (wrongTimerRef.current) clearTimeout(wrongTimerRef.current);
+    setGentleWrongNotice(null);
 
     if (word === drill.targetWord) {
+      setSelectedWord(word);
+      setIsAnswered(true);
+      setShakingWord(null);
+
       audioService.playSuccessJingle();
       try {
         confetti({
@@ -57,15 +80,38 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
         // Ignore
       }
       onSuccess?.();
+
+      // Automatically advance to next drill after 1400ms!
+      if (autoNextTimerRef.current) clearTimeout(autoNextTimerRef.current);
+      autoNextTimerRef.current = setTimeout(() => {
+        handleNext();
+      }, 1400);
     } else {
+      // Gentle retry feedback: soft wiggle, supportive sound and friendly text, allowing reselection
+      setShakingWord(word);
       audioService.playGentleTryAgain();
+      setGentleWrongNotice('Chưa đúng rồi! Bé lắng nghe kỹ âm thanh và chạm chọn lại nhé! 🌸');
+
+      wrongTimerRef.current = setTimeout(() => {
+        setShakingWord(null);
+      }, 700);
+
+      setTimeout(() => {
+        setGentleWrongNotice(null);
+      }, 3500);
     }
   };
 
   const handleNext = () => {
+    if (autoNextTimerRef.current) {
+      clearTimeout(autoNextTimerRef.current);
+      autoNextTimerRef.current = null;
+    }
     setSelectedWord(null);
     setIsAnswered(false);
     setShowHint(false);
+    setShakingWord(null);
+    setGentleWrongNotice(null);
     if (onNextDrill) {
       onNextDrill();
     }
@@ -144,6 +190,7 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
         {options.map((word) => {
           const isTarget = word === drill.targetWord;
           const isSelected = selectedWord === word;
+          const isShaking = shakingWord === word;
 
           return (
             <div
@@ -152,8 +199,8 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
               className={`p-3 sm:p-4 rounded-2xl border-3 transition-all duration-200 flex flex-col items-center justify-between cursor-pointer shadow-md transform active:scale-95 ${
                 isAnswered && isSelected && isTarget
                   ? 'bg-emerald-100 border-emerald-500 ring-4 ring-emerald-300 scale-102'
-                  : isAnswered && isSelected && !isTarget
-                  ? 'bg-amber-100 border-amber-400 scale-98'
+                  : isShaking
+                  ? 'bg-amber-50 border-amber-400 ring-4 ring-amber-200 scale-98 animate-wiggle'
                   : 'bg-white border-purple-200 hover:border-purple-400'
               }`}
             >
@@ -182,7 +229,7 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
                   </span>
                 )}
 
-                {isAnswered && isSelected && !isTarget && (
+                {isShaking && (
                   <span className="text-[11px] font-bold text-amber-700">
                     Nghe lại nhé!
                   </span>
@@ -193,42 +240,43 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
         })}
       </div>
 
+      {/* Gentle feedback notification when wrong */}
+      {gentleWrongNotice && (
+        <div className="shrink-0 my-1 p-2 bg-amber-100/95 border-2 border-amber-300 rounded-2xl text-xs sm:text-sm font-black text-amber-950 flex items-center justify-between gap-2 max-w-lg mx-auto animate-fadeIn shadow-sm">
+          <div className="flex items-center space-x-1.5">
+            <span className="text-lg">🌸</span>
+            <span>{gentleWrongNotice}</span>
+          </div>
+          <button
+            onClick={handleHearTargetWord}
+            className="px-2.5 py-1 bg-amber-400 hover:bg-amber-500 text-amber-950 font-black rounded-xl text-xs flex items-center space-x-1 shrink-0 cursor-pointer shadow-xs active:scale-95"
+            title="Nghe lại âm mẫu cần tìm"
+          >
+            <Volume2 className="w-3.5 h-3.5" />
+            <span>Nghe lại mẫu</span>
+          </button>
+        </div>
+      )}
+
       {/* Feedback banner */}
-      {isAnswered && (
+      {isAnswered && isCorrect && (
         <div className="shrink-0 pt-1">
-          {isCorrect ? (
-            <div className="flex items-center justify-center space-x-3">
-              <div className="p-2 bg-emerald-100/90 border border-emerald-400 rounded-xl text-emerald-950 text-xs sm:text-sm font-black flex items-center space-x-1.5">
-                <Award className="w-5 h-5 text-emerald-600 animate-bounce" />
-                <span>Bé chọn chuẩn xác! +2 ⭐</span>
-              </div>
-              <KidButton 
-                variant="success" 
-                size="md" 
-                onClick={handleNext} 
-                className="py-2 px-5 text-xs sm:text-sm font-black shadow-lg"
-                title="Sang bài luyện tiếp theo"
-              >
-                <span>Bài Tiếp Theo ➔</span>
-                <Sparkles className="w-4 h-4 ml-1" />
-              </KidButton>
+          <div className="flex items-center justify-center space-x-3">
+            <div className="p-2 bg-emerald-100/90 border border-emerald-400 rounded-xl text-emerald-950 text-xs sm:text-sm font-black flex items-center space-x-1.5 animate-pulse">
+              <Award className="w-5 h-5 text-emerald-600 animate-bounce" />
+              <span>Chính xác! Đang tự chuyển tiếp... 🚀</span>
             </div>
-          ) : (
-            <div className="flex items-center justify-center space-x-3">
-              <p className="text-xs font-bold text-purple-900">
-                Bé ấn "Nghe Thẻ Này 🔊" để cảm nhận luồng hơi nhé!
-              </p>
-              <KidButton 
-                variant="secondary" 
-                size="sm" 
-                onClick={handleHearTargetWord} 
-                className="py-1.5 px-3 text-xs font-bold"
-              >
-                <Volume2 className="w-4 h-4 mr-1" />
-                <span>Nghe Lại Mẫu</span>
-              </KidButton>
-            </div>
-          )}
+            <KidButton 
+              variant="success" 
+              size="md" 
+              onClick={handleNext} 
+              className="py-2 px-5 text-xs sm:text-sm font-black shadow-lg"
+              title="Sang bài luyện tiếp theo ngay"
+            >
+              <span>Bài Tiếp Theo ➔</span>
+              <Sparkles className="w-4 h-4 ml-1" />
+            </KidButton>
+          </div>
         </div>
       )}
     </div>

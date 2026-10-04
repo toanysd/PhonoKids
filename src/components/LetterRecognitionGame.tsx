@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { audioService } from '../services/audioService';
 import { CONFUSION_PAIRS_CATALOG, ConfusionPairItem } from '../data/letterStrokes';
 import { Volume2, Sparkles, Trophy, CheckCircle2, RotateCcw, ArrowRight, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -53,11 +53,18 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
   const [shakingBubbleId, setShakingBubbleId] = useState<string | null>(null);
   const [isRoundWon, setIsRoundWon] = useState<boolean>(false);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
+  const [autoNextCountdown, setAutoNextCountdown] = useState<number | null>(null);
+  const [gentleWrongNotice, setGentleWrongNotice] = useState<{ char: string; phonemeId: string; soundText: string } | null>(null);
 
   // Confusion detective mode state
   const [selectedPairIndex, setSelectedPairIndex] = useState<number>(0);
   const activePair: ConfusionPairItem = CONFUSION_PAIRS_CATALOG[selectedPairIndex] || CONFUSION_PAIRS_CATALOG[0];
   const [activeTargetInPair, setActiveTargetInPair] = useState<'A' | 'B'>('A');
+  const [pairSuccessNotice, setPairSuccessNotice] = useState<string | null>(null);
+  const [shakingPairChoice, setShakingPairChoice] = useState<'A' | 'B' | null>(null);
+
+  const autoNextTimerRef = useRef<any>(null);
+  const wrongNoticeTimerRef = useRef<any>(null);
 
   // Intelligent distractor selection based on phonetics and visual similarity
   const getDistractorsFor = useCallback((target: string): string[] => {
@@ -137,12 +144,49 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
     setTargetPhoneme(initialPhonemeId);
     setRound(1);
     setIsGameOver(false);
+    setAutoNextCountdown(null);
+    setGentleWrongNotice(null);
     startNewRound(1);
   }, [initialPhonemeId, startNewRound]);
+
+  // Clean up timers on unmount
+  useEffect(() => {
+    return () => {
+      if (autoNextTimerRef.current) clearInterval(autoNextTimerRef.current);
+      if (wrongNoticeTimerRef.current) clearTimeout(wrongNoticeTimerRef.current);
+    };
+  }, []);
+
+  const handleCancelAutoNextAndProceed = () => {
+    if (autoNextTimerRef.current) {
+      clearInterval(autoNextTimerRef.current);
+      autoNextTimerRef.current = null;
+    }
+    setAutoNextCountdown(null);
+    setIsGameOver(false);
+    if (onNextPhoneme) {
+      onNextPhoneme();
+    } else if (onComplete) {
+      onComplete();
+    }
+  };
+
+  const handleCancelAutoNextAndReplay = () => {
+    if (autoNextTimerRef.current) {
+      clearInterval(autoNextTimerRef.current);
+      autoNextTimerRef.current = null;
+    }
+    setAutoNextCountdown(null);
+    setIsGameOver(false);
+    startNewRound(1);
+  };
 
   // Handle Bubble Tap in Mode 1
   const handleTapBubble = (bubble: BubbleItem) => {
     if (isRoundWon || isGameOver) return;
+
+    if (wrongNoticeTimerRef.current) clearTimeout(wrongNoticeTimerRef.current);
+    setGentleWrongNotice(null);
 
     if (bubble.isCorrect) {
       setPoppedBubbleId(bubble.id);
@@ -178,6 +222,29 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
           if (onComplete) {
             onComplete();
           }
+
+          // Automatic countdown transition to next phoneme if available!
+          if (onNextPhoneme || onComplete) {
+            setAutoNextCountdown(2);
+            let remaining = 2;
+            const timer = setInterval(() => {
+              remaining -= 1;
+              if (remaining <= 0) {
+                clearInterval(timer);
+                autoNextTimerRef.current = null;
+                setAutoNextCountdown(null);
+                setIsGameOver(false);
+                if (onNextPhoneme) {
+                  onNextPhoneme();
+                } else if (onComplete) {
+                  onComplete();
+                }
+              } else {
+                setAutoNextCountdown(remaining);
+              }
+            }, 1000);
+            autoNextTimerRef.current = timer;
+          }
         }
       }, 1400);
     } else {
@@ -188,9 +255,20 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
         audioService.playPhoneme(bubble.phonemeId);
       }, 200);
 
+      setGentleWrongNotice({
+        char: bubble.char,
+        phonemeId: bubble.phonemeId,
+        soundText: `Chưa đúng rồi nè! Đây là âm /${bubble.phonemeId}/, bé lắng nghe và chạm lại bóng đúng nhé! 🎈`
+      });
+
       setTimeout(() => {
         setShakingBubbleId(null);
-      }, 500);
+      }, 600);
+
+      if (wrongNoticeTimerRef.current) clearTimeout(wrongNoticeTimerRef.current);
+      wrongNoticeTimerRef.current = setTimeout(() => {
+        setGentleWrongNotice(null);
+      }, 4000);
     }
   };
 
@@ -207,6 +285,9 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
 
   // Mode 2: Handle pair choice tap
   const handleSelectPairChoice = (choice: 'A' | 'B') => {
+    if (wrongNoticeTimerRef.current) clearTimeout(wrongNoticeTimerRef.current);
+    setGentleWrongNotice(null);
+
     if (choice === activeTargetInPair) {
       audioService.playPopSound(600);
       const soundId = choice === 'A' ? activePair.phonemeIdA : activePair.phonemeIdB;
@@ -228,7 +309,10 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
         onAddStars(1);
       }
 
+      setPairSuccessNotice('Chính xác! Bé phân biệt chữ rất siêu! ⭐');
+
       setTimeout(() => {
+        setPairSuccessNotice(null);
         if (activeTargetInPair === 'A') {
           setActiveTargetInPair('B');
           audioService.playPhoneme(activePair.phonemeIdB);
@@ -240,11 +324,28 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
         }
       }, 1200);
     } else {
+      setShakingPairChoice(choice);
       audioService.playGentleTryAgain();
       const soundId = choice === 'A' ? activePair.phonemeIdA : activePair.phonemeIdB;
+      const wrongChar = choice === 'A' ? activePair.charA : activePair.charB;
       setTimeout(() => {
         audioService.playPhoneme(soundId);
       }, 200);
+
+      setGentleWrongNotice({
+        char: wrongChar,
+        phonemeId: soundId,
+        soundText: `Chưa đúng rồi nè! Đó là chữ "${wrongChar}". Bé hãy nghe lại và chọn lại nhé! 🌸`
+      });
+
+      setTimeout(() => {
+        setShakingPairChoice(null);
+      }, 600);
+
+      if (wrongNoticeTimerRef.current) clearTimeout(wrongNoticeTimerRef.current);
+      wrongNoticeTimerRef.current = setTimeout(() => {
+        setGentleWrongNotice(null);
+      }, 4000);
     }
   };
 
@@ -350,7 +451,7 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
           <div className="w-full max-w-xl h-full flex flex-col justify-between items-center bg-radial from-amber-50 to-orange-100/50 rounded-3xl border-4 md:border-6 border-amber-300 shadow-xl p-3 sm:p-4 relative overflow-hidden">
             
             {/* Audio Prompt Button Banner */}
-            <div className="shrink-0 flex flex-col items-center mb-1 z-10">
+            <div className="shrink-0 flex flex-col items-center mb-1 z-10 w-full">
               <button
                 onClick={handlePlayPromptAudio}
                 className="flex items-center space-x-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-black px-6 py-2.5 rounded-full shadow-lg border-2 border-amber-200 active:scale-95 transition-transform cursor-pointer animate-bounce"
@@ -361,6 +462,24 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
               <p className="text-xs sm:text-sm font-bold text-amber-900 mt-1">
                 Bé hãy chạm vào bong bóng có âm vừa nghe nhé!
               </p>
+
+              {/* Gentle Feedback Banner when Wrong - Encouraging re-selection */}
+              {gentleWrongNotice && (
+                <div className="mt-2 px-4 py-2 bg-amber-100/95 border-2 border-amber-400 text-amber-950 rounded-2xl text-xs sm:text-sm font-black shadow-md animate-fadeIn flex items-center justify-between gap-3 max-w-md mx-auto">
+                  <div className="flex items-center space-x-2 text-left">
+                    <span className="text-xl">🌸</span>
+                    <span>{gentleWrongNotice.soundText}</span>
+                  </div>
+                  <button
+                    onClick={handlePlayPromptAudio}
+                    className="px-2.5 py-1 bg-amber-400 hover:bg-amber-500 text-amber-950 font-black rounded-xl text-xs flex items-center space-x-1 shrink-0 cursor-pointer shadow-xs active:scale-95"
+                    title="Nghe lại âm cần tìm"
+                  >
+                    <Volume2 className="w-3.5 h-3.5" />
+                    <span>Nghe lại</span>
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Floating Bubbles Field */}
@@ -381,7 +500,7 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
                         isPopped
                           ? 'scale-125 opacity-0 duration-300'
                           : isShaking
-                          ? 'animate-wiggle scale-95 ring-4 ring-rose-400'
+                          ? 'animate-wiggle scale-95 ring-4 ring-amber-300'
                           : 'hover:scale-105 hover:shadow-xl'
                       }`}
                       style={{
@@ -414,22 +533,22 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
               <div className="absolute inset-0 bg-amber-500/95 backdrop-blur-xs flex flex-col items-center justify-center text-white z-30 p-4 animate-fadeIn">
                 <Trophy className="w-16 h-16 text-yellow-300 animate-bounce mb-2" />
                 <h2 className="text-2xl sm:text-3xl font-black mb-1">Xuất Sắc Hoàn Thành! 🏆</h2>
-                <p className="text-sm font-bold text-amber-100 mb-4 text-center">
+                <p className="text-sm font-bold text-amber-100 mb-2 text-center">
                   Bé đã nhận diện cực kỳ chuẩn xác âm /{targetPhoneme}/!
                 </p>
+
+                {/* Auto-Next Countdown Notice */}
+                {(onNextPhoneme || onComplete) && (
+                  <div className="mb-4 px-4 py-1.5 bg-white/20 backdrop-blur-xs rounded-full border border-white/40 text-xs sm:text-sm font-black flex items-center space-x-2 animate-pulse">
+                    <span>🚀 Tự động chuyển âm kế tiếp sau {autoNextCountdown ?? 2}s...</span>
+                  </div>
+                )}
 
                 {/* Primary Seamless Forward Action Button */}
                 <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full max-w-sm justify-center">
                   {(onNextPhoneme || onComplete) && (
                     <button
-                      onClick={() => {
-                        setIsGameOver(false);
-                        if (onNextPhoneme) {
-                          onNextPhoneme();
-                        } else if (onComplete) {
-                          onComplete();
-                        }
-                      }}
+                      onClick={handleCancelAutoNextAndProceed}
                       className="w-full py-3.5 px-6 bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-500 hover:to-teal-600 text-white font-black text-sm sm:text-base rounded-2xl shadow-xl border-2 border-white cursor-pointer active:scale-95 flex items-center justify-center space-x-2 animate-bounce"
                     >
                       <span>
@@ -444,14 +563,11 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
                   )}
 
                   <button
-                    onClick={() => {
-                      setIsGameOver(false);
-                      startNewRound(1);
-                    }}
+                    onClick={handleCancelAutoNextAndReplay}
                     className="w-full sm:w-auto py-2.5 px-4 bg-white/20 hover:bg-white/30 text-white font-bold rounded-2xl border border-white/40 cursor-pointer text-xs active:scale-95 flex items-center justify-center space-x-1"
                   >
                     <RotateCcw className="w-4 h-4" />
-                    <span>Chơi Lại</span>
+                    <span>Luyện lại 🔄</span>
                   </button>
                 </div>
               </div>
@@ -472,16 +588,42 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
             </div>
 
             {/* Audio Challenge Button */}
-            <div className="shrink-0 mb-2">
+            <div className="shrink-0 mb-2 w-full text-center">
               <button
                 onClick={handlePlayPromptAudio}
-                className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-black px-5 py-2 rounded-full shadow-md border-2 border-purple-200 active:scale-95 transition-transform cursor-pointer animate-pulse"
+                className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-black px-5 py-2 rounded-full shadow-md border-2 border-purple-200 active:scale-95 transition-transform cursor-pointer animate-pulse mx-auto"
               >
                 <Volume2 className="w-5 h-5" />
                 <span className="text-sm sm:text-base">
                   Nghe âm: &quot;{activeTargetInPair === 'A' ? activePair.soundA : activePair.soundB}&quot; (Bấm nghe 🔊)
                 </span>
               </button>
+
+              {/* Gentle Feedback Banner when Wrong in Mode 2 */}
+              {gentleWrongNotice && (
+                <div className="mt-2 px-4 py-2 bg-purple-100/95 border-2 border-purple-400 text-purple-950 rounded-2xl text-xs sm:text-sm font-black shadow-md animate-fadeIn flex items-center justify-between gap-3 max-w-md mx-auto">
+                  <div className="flex items-center space-x-2 text-left">
+                    <span className="text-xl">🌸</span>
+                    <span>{gentleWrongNotice.soundText}</span>
+                  </div>
+                  <button
+                    onClick={handlePlayPromptAudio}
+                    className="px-2.5 py-1 bg-purple-300 hover:bg-purple-400 text-purple-950 font-black rounded-xl text-xs flex items-center space-x-1 shrink-0 cursor-pointer shadow-xs active:scale-95"
+                    title="Nghe lại âm cần tìm"
+                  >
+                    <Volume2 className="w-3.5 h-3.5" />
+                    <span>Nghe lại</span>
+                  </button>
+                </div>
+              )}
+
+              {/* Success Badge in Mode 2 */}
+              {pairSuccessNotice && (
+                <div className="mt-2 px-4 py-1.5 bg-emerald-100/95 border-2 border-emerald-400 text-emerald-950 rounded-2xl text-xs sm:text-sm font-black shadow-md animate-fadeIn flex items-center justify-center space-x-2 max-w-md mx-auto">
+                  <span className="text-xl">🎉</span>
+                  <span>{pairSuccessNotice}</span>
+                </div>
+              )}
             </div>
 
             {/* Two Side-by-Side Target Cards */}
@@ -489,7 +631,11 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
               {/* Option A */}
               <button
                 onClick={() => handleSelectPairChoice('A')}
-                className="flex-1 max-w-[170px] h-[180px] bg-white hover:bg-amber-50 rounded-3xl border-4 border-amber-300 shadow-lg flex flex-col items-center justify-between p-3 active:scale-95 transition-transform cursor-pointer group"
+                className={`flex-1 max-w-[170px] h-[180px] bg-white hover:bg-amber-50 rounded-3xl border-4 shadow-lg flex flex-col items-center justify-between p-3 active:scale-95 transition-all cursor-pointer group ${
+                  shakingPairChoice === 'A'
+                    ? 'border-amber-400 ring-4 ring-amber-200 animate-wiggle'
+                    : 'border-amber-300 hover:border-amber-400'
+                }`}
               >
                 <span className="text-3xl sm:text-4xl">{activePair.mnemonicVisualA}</span>
                 <span className="text-5xl sm:text-6xl font-black text-amber-900 group-hover:scale-110 transition-transform">
@@ -508,7 +654,11 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
               {/* Option B */}
               <button
                 onClick={() => handleSelectPairChoice('B')}
-                className="flex-1 max-w-[170px] h-[180px] bg-white hover:bg-sky-50 rounded-3xl border-4 border-sky-300 shadow-lg flex flex-col items-center justify-between p-3 active:scale-95 transition-transform cursor-pointer group"
+                className={`flex-1 max-w-[170px] h-[180px] bg-white hover:bg-sky-50 rounded-3xl border-4 shadow-lg flex flex-col items-center justify-between p-3 active:scale-95 transition-all cursor-pointer group ${
+                  shakingPairChoice === 'B'
+                    ? 'border-amber-400 ring-4 ring-amber-200 animate-wiggle'
+                    : 'border-sky-300 hover:border-sky-400'
+                }`}
               >
                 <span className="text-3xl sm:text-4xl">{activePair.mnemonicVisualB}</span>
                 <span className="text-5xl sm:text-6xl font-black text-sky-900 group-hover:scale-110 transition-transform">
