@@ -101,6 +101,11 @@ const EHON_MAP: Record<string, WordVisual> = {
     type: 'ehon',
     alt: 'Tranh Ehon quả chanh xanh mọng nước thơm mát'
   },
+  'ten': {
+    url: '/assets/ehon/ten_apples.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon mười quả táo xanh thơm ngon trong giỏ dã ngoại'
+  },
   'otter': {
     url: '/assets/ehon/otter.jpg',
     type: 'ehon',

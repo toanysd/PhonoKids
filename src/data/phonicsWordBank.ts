@@ -560,9 +560,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Ten green apples.",
     "sampleSentenceVi": "Mười quả táo xanh thơm.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Mười ngón tay xinh xắn sắc màu"
+      "url": "/assets/ehon/ten_apples.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon mười quả táo xanh thơm ngon trong giỏ dã ngoại"
     }
   },
   {

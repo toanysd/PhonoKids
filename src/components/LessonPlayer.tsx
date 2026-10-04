@@ -52,7 +52,11 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
   const [vocabViewMode, setVocabViewMode] = useState<'grid' | 'flashcard'>('flashcard');
   const [lessonFlashcardIdx, setLessonFlashcardIdx] = useState<number>(0);
   const [isLessonAutoPlay, setIsLessonAutoPlay] = useState<boolean>(false);
+  const [lessonAudioMode, setLessonAudioMode] = useState<'all' | 'spell_word' | 'word_only' | 'sentence_only'>('all');
+  const [lessonPlayingSegment, setLessonPlayingSegment] = useState<'phonemes' | 'word' | 'sentence' | null>(null);
+  const [lessonActivePhonemeIdx, setLessonActivePhonemeIdx] = useState<number | null>(null);
   const lessonAutoPlayTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lessonAudioSequenceAbortRef = useRef<{ cancelled: boolean }>({ cancelled: false });
   const [blendingWordIndex, setBlendingWordIndex] = useState<number>(0);
   const [isWordBankModalOpen, setIsWordBankModalOpen] = useState<boolean>(false);
 
@@ -158,6 +162,78 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
     }
   };
 
+  // Flexible audio player for Lesson Step 5 flashcards
+  const playLessonCardAudio = async (
+    item: { id?: string; word: string; phonemes: string[]; sampleSentence?: string },
+    mode: 'all' | 'spell_word' | 'word_only' | 'sentence_only' = lessonAudioMode
+  ): Promise<void> => {
+    lessonAudioSequenceAbortRef.current.cancelled = true;
+    audioService.stopSpeaking();
+
+    const token = { cancelled: false };
+    lessonAudioSequenceAbortRef.current = token;
+
+    try {
+      if (mode === 'all') {
+        setLessonPlayingSegment('phonemes');
+        for (let i = 0; i < item.phonemes.length; i++) {
+          if (token.cancelled) return;
+          setLessonActivePhonemeIdx(i);
+          await audioService.playPhoneme(item.phonemes[i]);
+          if (token.cancelled) return;
+          await new Promise((r) => setTimeout(r, 110));
+        }
+        setLessonActivePhonemeIdx(null);
+        if (token.cancelled) return;
+        await new Promise((r) => setTimeout(r, 180));
+        if (token.cancelled) return;
+
+        setLessonPlayingSegment('word');
+        await audioService.speakEnglish(item.word, 0.85);
+        if (token.cancelled) return;
+
+        if (item.sampleSentence) {
+          await new Promise((r) => setTimeout(r, 450));
+          if (token.cancelled) return;
+          setLessonPlayingSegment('sentence');
+          await audioService.speakEnglish(item.sampleSentence, 0.85);
+        }
+      } else if (mode === 'spell_word') {
+        setLessonPlayingSegment('phonemes');
+        for (let i = 0; i < item.phonemes.length; i++) {
+          if (token.cancelled) return;
+          setLessonActivePhonemeIdx(i);
+          await audioService.playPhoneme(item.phonemes[i]);
+          if (token.cancelled) return;
+          await new Promise((r) => setTimeout(r, 110));
+        }
+        setLessonActivePhonemeIdx(null);
+        if (token.cancelled) return;
+        await new Promise((r) => setTimeout(r, 180));
+        if (token.cancelled) return;
+
+        setLessonPlayingSegment('word');
+        await audioService.speakEnglish(item.word, 0.85);
+      } else if (mode === 'word_only') {
+        setLessonPlayingSegment('word');
+        await audioService.speakEnglish(item.word, 0.85);
+      } else if (mode === 'sentence_only') {
+        if (item.sampleSentence) {
+          setLessonPlayingSegment('sentence');
+          await audioService.speakEnglish(item.sampleSentence, 0.85);
+        } else {
+          setLessonPlayingSegment('word');
+          await audioService.speakEnglish(item.word, 0.85);
+        }
+      }
+    } finally {
+      if (!token.cancelled) {
+        setLessonPlayingSegment(null);
+        setLessonActivePhonemeIdx(null);
+      }
+    }
+  };
+
   // Step 5 Continuous Flashcard navigation
   const handleNextLessonFlashcard = () => {
     const currentItem = vocabList[lessonFlashcardIdx];
@@ -171,7 +247,7 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
       audioService.playPopSound(540);
       const nextItem = vocabList[nextIdx];
       if (nextItem) {
-        audioService.speakEnglish(nextItem.word, 0.85);
+        playLessonCardAudio(nextItem, lessonAudioMode);
       }
     } else {
       // Finished all cards in lesson -> advance to Step 6 (Blending)
@@ -187,7 +263,7 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
       audioService.playPopSound(480);
       const prevItem = vocabList[prevIdx];
       if (prevItem) {
-        audioService.speakEnglish(prevItem.word, 0.85);
+        playLessonCardAudio(prevItem, lessonAudioMode);
       }
     }
   };
@@ -196,6 +272,10 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
   useEffect(() => {
     if (currentStep !== 5 || vocabViewMode !== 'flashcard' || !isLessonAutoPlay || vocabList.length === 0) {
       if (lessonAutoPlayTimeoutRef.current) clearTimeout(lessonAutoPlayTimeoutRef.current);
+      lessonAudioSequenceAbortRef.current.cancelled = true;
+      audioService.stopSpeaking();
+      setLessonPlayingSegment(null);
+      setLessonActivePhonemeIdx(null);
       return;
     }
 
@@ -203,40 +283,38 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
     if (!currentItem) return;
 
     let cancelled = false;
-    audioService.speakEnglish(currentItem.word, 0.85);
+
     if (!selectedCards.includes(currentItem.word)) {
       setSelectedCards(prev => [...prev, currentItem.word]);
     }
 
-    lessonAutoPlayTimeoutRef.current = setTimeout(() => {
+    const runLessonAutoPlay = async () => {
+      await playLessonCardAudio(currentItem, lessonAudioMode);
       if (cancelled) return;
-      if (currentItem.sampleSentence) {
-        audioService.speakEnglish(currentItem.sampleSentence, 0.85);
-        lessonAutoPlayTimeoutRef.current = setTimeout(() => {
-          if (cancelled) return;
-          if (lessonFlashcardIdx < vocabList.length - 1) {
-            setLessonFlashcardIdx(prev => prev + 1);
-          } else {
-            setIsLessonAutoPlay(false);
-          }
-        }, 2400);
-      } else {
-        lessonAutoPlayTimeoutRef.current = setTimeout(() => {
-          if (cancelled) return;
-          if (lessonFlashcardIdx < vocabList.length - 1) {
-            setLessonFlashcardIdx(prev => prev + 1);
-          } else {
-            setIsLessonAutoPlay(false);
-          }
-        }, 1800);
-      }
-    }, 1600);
+
+      const pauseMs = lessonAudioMode === 'all' ? 1400 : lessonAudioMode === 'sentence_only' ? 1100 : 1300;
+      lessonAutoPlayTimeoutRef.current = setTimeout(() => {
+        if (cancelled) return;
+        if (lessonFlashcardIdx < vocabList.length - 1) {
+          setLessonFlashcardIdx(prev => prev + 1);
+        } else {
+          setIsLessonAutoPlay(false);
+          audioService.playSuccessJingle();
+          handleNextStep();
+        }
+      }, pauseMs);
+    };
+
+    runLessonAutoPlay();
 
     return () => {
       cancelled = true;
       if (lessonAutoPlayTimeoutRef.current) clearTimeout(lessonAutoPlayTimeoutRef.current);
+      lessonAudioSequenceAbortRef.current.cancelled = true;
+      setLessonPlayingSegment(null);
+      setLessonActivePhonemeIdx(null);
     };
-  }, [currentStep, vocabViewMode, isLessonAutoPlay, lessonFlashcardIdx, vocabList, selectedCards]);
+  }, [currentStep, vocabViewMode, isLessonAutoPlay, lessonFlashcardIdx, vocabList, selectedCards, lessonAudioMode]);
 
   // Safe dynamic font sizing for grapheme letters
   const getGraphemeFontClass = (text: string) => {
@@ -715,10 +793,85 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                       </button>
                     </div>
 
+                    {/* Step 5 Audio Reading Mode Selection Bar */}
+                    <div className="my-1 py-1 px-2 bg-gradient-to-r from-amber-100/90 via-orange-50 to-amber-100/90 rounded-2xl border border-amber-200 flex items-center justify-between gap-1.5 shrink-0 flex-wrap shadow-2xs">
+                      <div className="flex items-center space-x-1 text-[11px] sm:text-xs font-black text-amber-900 shrink-0">
+                        <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                        <span>Chế độ đọc:</span>
+                      </div>
+
+                      <div className="flex items-center gap-1 flex-wrap">
+                        <button
+                          onClick={() => {
+                            audioService.playPopSound(500);
+                            setLessonAudioMode('all');
+                            playLessonCardAudio(currentCard, 'all');
+                          }}
+                          className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xl text-[11px] sm:text-xs font-black cursor-pointer transition-all flex items-center space-x-1 ${
+                            lessonAudioMode === 'all'
+                              ? 'bg-amber-500 text-white shadow-xs ring-2 ring-amber-300 font-black'
+                              : 'bg-white/80 hover:bg-white text-amber-900 border border-amber-200'
+                          }`}
+                          title="Đánh vần từng âm vị ➔ Ghép lại đọc từ ➔ Đọc câu ví dụ mẫu"
+                        >
+                          <span>🌟 Toàn Bộ</span>
+                          <span className="hidden md:inline text-[10px] opacity-90">(Âm ➔ Từ ➔ Câu)</span>
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            audioService.playPopSound(500);
+                            setLessonAudioMode('spell_word');
+                            playLessonCardAudio(currentCard, 'spell_word');
+                          }}
+                          className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xl text-[11px] sm:text-xs font-black cursor-pointer transition-all flex items-center space-x-1 ${
+                            lessonAudioMode === 'spell_word'
+                              ? 'bg-amber-500 text-white shadow-xs ring-2 ring-amber-300 font-black'
+                              : 'bg-white/80 hover:bg-white text-amber-900 border border-amber-200'
+                          }`}
+                          title="Đánh vần từng âm vị rồi ghép lại đọc từ"
+                        >
+                          <span>🔤 Đánh Vần & Từ</span>
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            audioService.playPopSound(500);
+                            setLessonAudioMode('word_only');
+                            playLessonCardAudio(currentCard, 'word_only');
+                          }}
+                          className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xl text-[11px] sm:text-xs font-black cursor-pointer transition-all flex items-center space-x-1 ${
+                            lessonAudioMode === 'word_only'
+                              ? 'bg-amber-500 text-white shadow-xs ring-2 ring-amber-300 font-black'
+                              : 'bg-white/80 hover:bg-white text-amber-900 border border-amber-200'
+                          }`}
+                          title="Chỉ phát âm từ vựng"
+                        >
+                          <span>🔊 Chỉ Đọc Từ</span>
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            audioService.playPopSound(500);
+                            setLessonAudioMode('sentence_only');
+                            playLessonCardAudio(currentCard, 'sentence_only');
+                          }}
+                          className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xl text-[11px] sm:text-xs font-black cursor-pointer transition-all flex items-center space-x-1 ${
+                            lessonAudioMode === 'sentence_only'
+                              ? 'bg-amber-500 text-white shadow-xs ring-2 ring-amber-300 font-black'
+                              : 'bg-white/80 hover:bg-white text-amber-900 border border-amber-200'
+                          }`}
+                          title="Chỉ đọc câu ví dụ mẫu"
+                        >
+                          <span>📖 Chỉ Đọc Câu</span>
+                        </button>
+                      </div>
+                    </div>
+
                     {/* Artwork + Typography */}
                     <div className="flex flex-col items-center justify-center py-2">
                       <div
-                        onClick={() => handleTapSampleWord(currentCard.word)}
+                        onClick={() => playLessonCardAudio(currentCard, lessonAudioMode)}
                         className="relative w-full max-w-sm h-36 sm:h-44 md:h-48 rounded-2xl overflow-hidden border-3 border-amber-300 shadow-md bg-amber-50 group cursor-pointer shrink-0"
                       >
                         <img
@@ -734,7 +887,7 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                           {cardVisual.type === 'ehon' ? '🎨 Tranh Ehon' : '📷 Ảnh Thật'}
                         </div>
                         <div className="absolute bottom-2 left-2 bg-white/95 text-amber-800 p-1.5 rounded-full shadow">
-                          <Volume2 className="w-4 h-4 animate-pulse" />
+                          <Volume2 className={`w-4 h-4 ${lessonPlayingSegment ? 'text-amber-600 animate-bounce' : 'animate-pulse'}`} />
                         </div>
                         {isCardSelected && (
                           <div className="absolute top-2 right-2 bg-emerald-500 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full shadow flex items-center space-x-1">
@@ -746,12 +899,16 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
 
                       <div className="text-center mt-2.5 w-full max-w-md">
                         <div className="flex items-center justify-center space-x-2">
-                          <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-amber-950 uppercase tracking-wider">
+                          <h3 className={`text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-wider transition-all duration-300 ${
+                            lessonPlayingSegment === 'word' ? 'text-amber-600 scale-105 drop-shadow-sm' : 'text-amber-950'
+                          }`}>
                             {currentCard.word}
                           </h3>
                           <button
-                            onClick={() => handleTapSampleWord(currentCard.word)}
-                            className="p-1.5 bg-amber-400 hover:bg-amber-500 text-amber-950 rounded-full shadow-xs cursor-pointer active:scale-95 transition-transform"
+                            onClick={() => playLessonCardAudio(currentCard, lessonAudioMode)}
+                            className={`p-1.5 rounded-full shadow-xs cursor-pointer active:scale-95 transition-transform ${
+                              lessonPlayingSegment === 'word' ? 'bg-amber-500 text-white animate-pulse' : 'bg-amber-400 hover:bg-amber-500 text-amber-950'
+                            }`}
                             title="Phát âm từ"
                           >
                             <Volume2 className="w-5 h-5" />
@@ -771,7 +928,11 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                                 e.stopPropagation();
                                 audioService.speakPhoneme(ph);
                               }}
-                              className="px-2.5 py-0.5 bg-amber-100 hover:bg-amber-200 text-amber-950 font-black rounded-lg border border-amber-300 text-xs shadow-2xs cursor-pointer active:scale-90 transition-transform"
+                              className={`px-2.5 py-0.5 font-black rounded-lg border text-xs shadow-2xs cursor-pointer active:scale-90 transition-all ${
+                                lessonActivePhonemeIdx === idx
+                                  ? 'bg-amber-400 text-amber-950 border-amber-500 ring-2 ring-amber-400 scale-110'
+                                  : 'bg-amber-100 hover:bg-amber-200 text-amber-950 border-amber-300'
+                              }`}
                               title={`Nghe âm /${ph}/`}
                             >
                               /{ph}/
@@ -798,11 +959,15 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                               e.stopPropagation();
                               audioService.speakEnglish(currentCard.sampleSentence!, 0.85);
                             }}
-                            className="mt-2 bg-amber-50/90 hover:bg-amber-100/90 border border-amber-200 rounded-xl px-3 py-1 text-center cursor-pointer transition-colors max-w-md mx-auto"
+                            className={`mt-2 border rounded-xl px-3 py-1 text-center cursor-pointer transition-all max-w-md mx-auto ${
+                              lessonPlayingSegment === 'sentence'
+                                ? 'bg-amber-200/90 border-amber-400 ring-2 ring-amber-300 scale-102 shadow-sm'
+                                : 'bg-amber-50/90 hover:bg-amber-100/90 border-amber-200'
+                            }`}
                             title="Chạm để nghe câu mẫu"
                           >
                             <div className="text-xs font-black text-amber-950 flex items-center justify-center space-x-1">
-                              <Volume2 className="w-3 h-3 text-amber-700 shrink-0" />
+                              <Volume2 className={`w-3 h-3 shrink-0 ${lessonPlayingSegment === 'sentence' ? 'text-amber-800 animate-bounce' : 'text-amber-700'}`} />
                               <span className="italic truncate">&quot;{currentCard.sampleSentence}&quot;</span>
                             </div>
                             {currentCard.sampleSentenceVi && (
@@ -827,9 +992,11 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                       </button>
 
                       <button
-                        onClick={() => handleTapSampleWord(currentCard.word)}
-                        className="p-2 sm:p-2.5 bg-amber-400 hover:bg-amber-500 text-amber-950 font-black rounded-2xl border-2 border-amber-300 shadow-md cursor-pointer flex items-center justify-center active:scale-95 transition-transform shrink-0"
-                        title="Nghe lại phát âm từ"
+                        onClick={() => playLessonCardAudio(currentCard, lessonAudioMode)}
+                        className={`p-2 sm:p-2.5 rounded-2xl border-2 border-amber-300 shadow-md cursor-pointer flex items-center justify-center active:scale-95 transition-transform shrink-0 ${
+                          lessonPlayingSegment ? 'bg-amber-500 text-white animate-pulse' : 'bg-amber-400 hover:bg-amber-500 text-amber-950'
+                        }`}
+                        title="Nghe lại phát âm theo chế độ hiện tại"
                       >
                         <Volume2 className="w-5 h-5 text-amber-950" />
                       </button>

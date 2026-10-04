@@ -59,7 +59,11 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
   const [flashcardIndex, setFlashcardIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
   const [isShuffled, setIsShuffled] = useState(false);
+  const [audioMode, setAudioMode] = useState<'all' | 'spell_word' | 'word_only' | 'sentence_only'>('all');
+  const [playingSegment, setPlayingSegment] = useState<'phonemes' | 'word' | 'sentence' | null>(null);
+  const [activePhonemeIdx, setActivePhonemeIdx] = useState<number | null>(null);
   const autoPlayTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const audioSequenceAbortRef = useRef<{ cancelled: boolean }>({ cancelled: false });
 
   // Sync props when opening
   useEffect(() => {
@@ -172,7 +176,86 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
     audioService.speakEnglish(sentence, 0.85);
   };
 
-  // Continuous flashcard navigation with auto-pronunciation
+  // Flexible audio player for flashcards: handles all, spell_word, word_only, sentence_only
+  const playCardAudio = async (
+    item: PhonicsWordBankItem,
+    mode: 'all' | 'spell_word' | 'word_only' | 'sentence_only' = audioMode
+  ): Promise<void> => {
+    // Cancel previous ongoing sequence
+    audioSequenceAbortRef.current.cancelled = true;
+    audioService.stopSpeaking();
+
+    const token = { cancelled: false };
+    audioSequenceAbortRef.current = token;
+    setActiveWordId(item.id);
+
+    try {
+      if (mode === 'all') {
+        // 1. Spell phonemes sequentially
+        setPlayingSegment('phonemes');
+        for (let i = 0; i < item.phonemes.length; i++) {
+          if (token.cancelled) return;
+          setActivePhonemeIdx(i);
+          await audioService.playPhoneme(item.phonemes[i]);
+          if (token.cancelled) return;
+          await new Promise((r) => setTimeout(r, 110));
+        }
+        setActivePhonemeIdx(null);
+        if (token.cancelled) return;
+        await new Promise((r) => setTimeout(r, 180));
+        if (token.cancelled) return;
+
+        // 2. Read full word
+        setPlayingSegment('word');
+        await audioService.speakEnglish(item.word, 0.85);
+        if (token.cancelled) return;
+
+        // 3. Read example sentence
+        if (item.sampleSentence) {
+          await new Promise((r) => setTimeout(r, 450));
+          if (token.cancelled) return;
+          setPlayingSegment('sentence');
+          await audioService.speakEnglish(item.sampleSentence, 0.85);
+        }
+      } else if (mode === 'spell_word') {
+        // 1. Spell phonemes sequentially
+        setPlayingSegment('phonemes');
+        for (let i = 0; i < item.phonemes.length; i++) {
+          if (token.cancelled) return;
+          setActivePhonemeIdx(i);
+          await audioService.playPhoneme(item.phonemes[i]);
+          if (token.cancelled) return;
+          await new Promise((r) => setTimeout(r, 110));
+        }
+        setActivePhonemeIdx(null);
+        if (token.cancelled) return;
+        await new Promise((r) => setTimeout(r, 180));
+        if (token.cancelled) return;
+
+        // 2. Read full word
+        setPlayingSegment('word');
+        await audioService.speakEnglish(item.word, 0.85);
+      } else if (mode === 'word_only') {
+        setPlayingSegment('word');
+        await audioService.speakEnglish(item.word, 0.85);
+      } else if (mode === 'sentence_only') {
+        if (item.sampleSentence) {
+          setPlayingSegment('sentence');
+          await audioService.speakEnglish(item.sampleSentence, 0.85);
+        } else {
+          setPlayingSegment('word');
+          await audioService.speakEnglish(item.word, 0.85);
+        }
+      }
+    } finally {
+      if (!token.cancelled) {
+        setPlayingSegment(null);
+        setActivePhonemeIdx(null);
+      }
+    }
+  };
+
+  // Continuous flashcard navigation with auto-pronunciation matching the active mode
   const handleNextFlashcard = () => {
     if (displayWords.length === 0) return;
     audioService.playPopSound(540);
@@ -180,7 +263,7 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
     setFlashcardIndex(nextIdx);
     const nextItem = displayWords[nextIdx];
     if (nextItem) {
-      audioService.speakEnglish(nextItem.word, 0.85);
+      playCardAudio(nextItem, audioMode);
     }
   };
 
@@ -191,7 +274,7 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
     setFlashcardIndex(prevIdx);
     const prevItem = displayWords[prevIdx];
     if (prevItem) {
-      audioService.speakEnglish(prevItem.word, 0.85);
+      playCardAudio(prevItem, audioMode);
     }
   };
 
@@ -199,6 +282,10 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
   useEffect(() => {
     if (!isAutoPlaying || viewMode !== 'flashcard' || displayWords.length === 0) {
       if (autoPlayTimeoutRef.current) clearTimeout(autoPlayTimeoutRef.current);
+      audioSequenceAbortRef.current.cancelled = true;
+      audioService.stopSpeaking();
+      setPlayingSegment(null);
+      setActivePhonemeIdx(null);
       return;
     }
 
@@ -207,31 +294,27 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
 
     let cancelled = false;
 
-    // 1. Speak word
-    audioService.speakEnglish(currentItem.word, 0.85);
-
-    // 2. Speak sentence after 1.5s
-    autoPlayTimeoutRef.current = setTimeout(() => {
+    const runAutoPlayStep = async () => {
+      await playCardAudio(currentItem, audioMode);
       if (cancelled) return;
-      if (currentItem.sampleSentence) {
-        audioService.speakEnglish(currentItem.sampleSentence, 0.85);
-        autoPlayTimeoutRef.current = setTimeout(() => {
-          if (cancelled) return;
-          setFlashcardIndex((prev) => (prev + 1) % displayWords.length);
-        }, 2500);
-      } else {
-        autoPlayTimeoutRef.current = setTimeout(() => {
-          if (cancelled) return;
-          setFlashcardIndex((prev) => (prev + 1) % displayWords.length);
-        }, 1800);
-      }
-    }, 1500);
+
+      const pauseMs = audioMode === 'all' ? 1400 : audioMode === 'sentence_only' ? 1100 : 1300;
+      autoPlayTimeoutRef.current = setTimeout(() => {
+        if (cancelled) return;
+        setFlashcardIndex((prev) => (prev + 1) % displayWords.length);
+      }, pauseMs);
+    };
+
+    runAutoPlayStep();
 
     return () => {
       cancelled = true;
       if (autoPlayTimeoutRef.current) clearTimeout(autoPlayTimeoutRef.current);
+      audioSequenceAbortRef.current.cancelled = true;
+      setPlayingSegment(null);
+      setActivePhonemeIdx(null);
     };
-  }, [isAutoPlaying, flashcardIndex, viewMode, displayWords]);
+  }, [isAutoPlaying, flashcardIndex, viewMode, displayWords, audioMode]);
 
   // Keyboard navigation for desktop: Left/Right arrow to flip, Space to speak
   useEffect(() => {
@@ -250,23 +333,21 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
       } else if (e.key === ' ' || e.key === 'Spacebar') {
         e.preventDefault();
         if (currentFlashcard) {
-          audioService.playPopSound(540);
-          audioService.speakEnglish(currentFlashcard.word, 0.85);
+          playCardAudio(currentFlashcard, audioMode);
         }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, viewMode, flashcardIndex, displayWords, currentFlashcard]);
+  }, [isOpen, viewMode, flashcardIndex, displayWords, currentFlashcard, audioMode]);
 
   // Safely close modal and clean up timers/speech
   const handleClose = () => {
     setIsAutoPlaying(false);
+    audioSequenceAbortRef.current.cancelled = true;
+    audioService.stopSpeaking();
     if (autoPlayTimeoutRef.current) clearTimeout(autoPlayTimeoutRef.current);
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
     audioService.playPopSound(420);
     onClose();
   };
@@ -598,12 +679,87 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
                     </div>
                   </div>
 
+                  {/* Audio Reading Mode Selection Bar */}
+                  <div className="my-1 py-1 px-2 bg-gradient-to-r from-amber-100/90 via-orange-50 to-amber-100/90 rounded-2xl border border-amber-200 flex items-center justify-between gap-1.5 shrink-0 flex-wrap shadow-2xs">
+                    <div className="flex items-center space-x-1 text-[11px] sm:text-xs font-black text-amber-900 shrink-0">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                      <span>Chế độ đọc:</span>
+                    </div>
+
+                    <div className="flex items-center gap-1 flex-wrap">
+                      <button
+                        onClick={() => {
+                          audioService.playPopSound(500);
+                          setAudioMode('all');
+                          if (currentFlashcard) playCardAudio(currentFlashcard, 'all');
+                        }}
+                        className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xl text-[11px] sm:text-xs font-black cursor-pointer transition-all flex items-center space-x-1 ${
+                          audioMode === 'all'
+                            ? 'bg-amber-500 text-white shadow-xs ring-2 ring-amber-300 font-black'
+                            : 'bg-white/80 hover:bg-white text-amber-900 border border-amber-200'
+                        }`}
+                        title="Đánh vần từng âm vị ➔ Ghép lại đọc từ ➔ Đọc câu ví dụ mẫu"
+                      >
+                        <span>🌟 Toàn Bộ</span>
+                        <span className="hidden md:inline text-[10px] opacity-90">(Âm ➔ Từ ➔ Câu)</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          audioService.playPopSound(500);
+                          setAudioMode('spell_word');
+                          if (currentFlashcard) playCardAudio(currentFlashcard, 'spell_word');
+                        }}
+                        className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xl text-[11px] sm:text-xs font-black cursor-pointer transition-all flex items-center space-x-1 ${
+                          audioMode === 'spell_word'
+                            ? 'bg-amber-500 text-white shadow-xs ring-2 ring-amber-300 font-black'
+                            : 'bg-white/80 hover:bg-white text-amber-900 border border-amber-200'
+                        }`}
+                        title="Đánh vần từng âm vị rồi ghép lại đọc từ"
+                      >
+                        <span>🔤 Đánh Vần & Từ</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          audioService.playPopSound(500);
+                          setAudioMode('word_only');
+                          if (currentFlashcard) playCardAudio(currentFlashcard, 'word_only');
+                        }}
+                        className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xl text-[11px] sm:text-xs font-black cursor-pointer transition-all flex items-center space-x-1 ${
+                          audioMode === 'word_only'
+                            ? 'bg-amber-500 text-white shadow-xs ring-2 ring-amber-300 font-black'
+                            : 'bg-white/80 hover:bg-white text-amber-900 border border-amber-200'
+                        }`}
+                        title="Chỉ phát âm từ vựng"
+                      >
+                        <span>🔊 Chỉ Đọc Từ</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          audioService.playPopSound(500);
+                          setAudioMode('sentence_only');
+                          if (currentFlashcard) playCardAudio(currentFlashcard, 'sentence_only');
+                        }}
+                        className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xl text-[11px] sm:text-xs font-black cursor-pointer transition-all flex items-center space-x-1 ${
+                          audioMode === 'sentence_only'
+                            ? 'bg-amber-500 text-white shadow-xs ring-2 ring-amber-300 font-black'
+                            : 'bg-white/80 hover:bg-white text-amber-900 border border-amber-200'
+                        }`}
+                        title="Chỉ đọc câu ví dụ mẫu"
+                      >
+                        <span>📖 Chỉ Đọc Câu</span>
+                      </button>
+                    </div>
+                  </div>
+
                   {/* Card Center: Large Ehon Artwork & Word Details */}
                   <div className="flex-1 min-h-0 flex flex-col items-center justify-center py-1 sm:py-2">
                     
                     {/* Big Painting Area */}
                     <div
-                      onClick={() => handlePlayWord(currentFlashcard)}
+                      onClick={() => playCardAudio(currentFlashcard, audioMode)}
                       className="relative w-full max-w-sm h-36 sm:h-44 md:h-48 rounded-2xl overflow-hidden border-3 border-amber-300 shadow-md bg-amber-50 group cursor-pointer shrink-0"
                     >
                       <img
@@ -632,7 +788,7 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
 
                       {/* Floating speaker indicator */}
                       <div className="absolute bottom-2 left-2 bg-white/95 text-amber-800 p-1.5 rounded-full shadow">
-                        <Volume2 className="w-4 h-4 animate-pulse" />
+                        <Volume2 className={`w-4 h-4 ${playingSegment ? 'text-amber-600 animate-bounce' : 'animate-pulse'}`} />
                       </div>
 
                       {/* Zoom to Focus Sheet Button */}
@@ -652,12 +808,16 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
                     {/* Word Details & Sound Breakdown */}
                     <div className="text-center mt-2 w-full max-w-md">
                       <div className="flex items-center justify-center space-x-2">
-                        <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-amber-950 uppercase tracking-wider">
+                        <h3 className={`text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-wider transition-all duration-300 ${
+                          playingSegment === 'word' ? 'text-amber-600 scale-105 drop-shadow-sm' : 'text-amber-950'
+                        }`}>
                           {currentFlashcard.word}
                         </h3>
                         <button
-                          onClick={() => handlePlayWord(currentFlashcard)}
-                          className="p-1.5 bg-amber-400 hover:bg-amber-500 text-amber-950 rounded-full shadow-xs cursor-pointer active:scale-95 transition-transform"
+                          onClick={() => playCardAudio(currentFlashcard, audioMode)}
+                          className={`p-1.5 rounded-full shadow-xs cursor-pointer active:scale-95 transition-transform ${
+                            playingSegment === 'word' ? 'bg-amber-500 text-white animate-pulse' : 'bg-amber-400 hover:bg-amber-500 text-amber-950'
+                          }`}
                           title="Phát âm từ"
                         >
                           <Volume2 className="w-5 h-5" />
@@ -677,7 +837,11 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
                               e.stopPropagation();
                               audioService.speakPhoneme(ph);
                             }}
-                            className="px-2.5 py-0.5 bg-amber-100 hover:bg-amber-200 text-amber-950 font-black rounded-lg border border-amber-300 text-xs shadow-2xs cursor-pointer active:scale-90 transition-transform"
+                            className={`px-2.5 py-0.5 font-black rounded-lg border text-xs shadow-2xs cursor-pointer active:scale-90 transition-all ${
+                              activePhonemeIdx === idx
+                                ? 'bg-amber-400 text-amber-950 border-amber-500 ring-2 ring-amber-400 scale-110'
+                                : 'bg-amber-100 hover:bg-amber-200 text-amber-950 border-amber-300'
+                            }`}
                             title={`Nghe âm /${ph}/`}
                           >
                             /{ph}/
@@ -697,11 +861,15 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
                       {currentFlashcard.sampleSentence && (
                         <div
                           onClick={(e) => handlePlaySentence(e, currentFlashcard.sampleSentence)}
-                          className="mt-2 bg-amber-50/90 hover:bg-amber-100/90 border border-amber-200 rounded-xl px-3 py-1 text-center cursor-pointer transition-colors max-w-md mx-auto"
+                          className={`mt-2 border rounded-xl px-3 py-1 text-center cursor-pointer transition-all max-w-md mx-auto ${
+                            playingSegment === 'sentence'
+                              ? 'bg-amber-200/90 border-amber-400 ring-2 ring-amber-300 scale-102 shadow-sm'
+                              : 'bg-amber-50/90 hover:bg-amber-100/90 border-amber-200'
+                          }`}
                           title="Chạm để nghe đọc câu mẫu decodable"
                         >
                           <div className="text-xs font-black text-amber-950 flex items-center justify-center space-x-1">
-                            <Volume2 className="w-3 h-3 text-amber-700 shrink-0" />
+                            <Volume2 className={`w-3 h-3 shrink-0 ${playingSegment === 'sentence' ? 'text-amber-800 animate-bounce' : 'text-amber-700'}`} />
                             <span className="italic truncate">&quot;{currentFlashcard.sampleSentence}&quot;</span>
                           </div>
                           {currentFlashcard.sampleSentenceVi && (
@@ -725,11 +893,13 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
                     </button>
 
                     <button
-                      onClick={() => handlePlayWord(currentFlashcard)}
-                      className="p-2 sm:p-2.5 bg-amber-400 hover:bg-amber-500 text-amber-950 font-black rounded-2xl border-2 border-amber-300 shadow-md cursor-pointer flex items-center justify-center active:scale-95 transition-transform shrink-0"
-                      title="Nghe lại phát âm từ"
+                      onClick={() => playCardAudio(currentFlashcard, audioMode)}
+                      className={`p-2 sm:p-2.5 rounded-2xl border-2 border-amber-300 shadow-md cursor-pointer flex items-center justify-center active:scale-95 transition-transform shrink-0 ${
+                        playingSegment ? 'bg-amber-500 text-white animate-pulse' : 'bg-amber-400 hover:bg-amber-500 text-amber-950'
+                      }`}
+                      title={`Nghe lại theo chế độ: ${audioMode === 'all' ? 'Toàn bộ' : audioMode === 'spell_word' ? 'Đánh vần & từ' : audioMode === 'word_only' ? 'Chỉ đọc từ' : 'Chỉ đọc câu'}`}
                     >
-                      <Volume2 className="w-5 h-5 text-amber-950" />
+                      <Volume2 className="w-5 h-5" />
                     </button>
 
                     <button
