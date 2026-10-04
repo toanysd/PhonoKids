@@ -61,7 +61,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/sun.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon mặt trời rạng rỡ tỏa tia nắng muôn màu"
+      "alt": "Tranh Ehon mặt trời rạng rỡ tỏa tia nắng"
     }
   },
   {
@@ -105,7 +105,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/cat_mat.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon chú mèo ngồi yên sưởi nắng trên thảm"
+      "alt": "Tranh Ehon chú mèo ngồi yên sưởi nắng"
     }
   },
   {
@@ -236,9 +236,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A seal claps on ice.",
     "sampleSentenceVi": "Chú hải cẩu vỗ tay trên băng.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1551085254-e96b210df58a?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú hải cẩu đáng yêu trên tảng băng"
+      "url": "/assets/ehon/seal.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú hải cẩu trắng đáng yêu trên tảng băng"
     }
   },
   {
@@ -324,9 +324,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The ax cuts wood.",
     "sampleSentenceVi": "Cái rìu bổ củi.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1588619461234-583597b8195e?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Cái rìu bổ củi của bác tiều phu"
+      "url": "/assets/ehon/ax.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chiếc rìu gỗ dựng bên gốc cây nở hoa"
     }
   },
   {
@@ -516,9 +516,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A tin has seeds.",
     "sampleSentenceVi": "Chiếc hộp thiếc đựng hạt mầm.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chiếc hộp thiếc đựng hạt mầm kỳ diệu"
+      "url": "/assets/ehon/tin.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon hộp thiếc cổ điển đựng bánh quy và kẹo ngọt"
     }
   },
   {
@@ -935,7 +935,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/sam_pat_ant.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon bé vỗ về vuốt ve thân mật"
+      "alt": "Tranh Ehon bạn nhỏ vỗ về vuốt ve thân mật"
     }
   },
   {
@@ -955,9 +955,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "An egg on the pan.",
     "sampleSentenceVi": "Chiếc trứng thơm trên chảo.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chiếc chảo chiên rán vàng bóng"
+      "url": "/assets/ehon/sam_pan.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chiếc chảo rán nhỏ trong gian bếp ấm cúng"
     }
   },
   {
@@ -1023,7 +1023,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/pig.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon chú heo hồng tung tăng nô đùa"
+      "alt": "Tranh Ehon chú heo hồng tinh nghịch"
     }
   },
   {
@@ -1043,9 +1043,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Draw with a pen.",
     "sampleSentenceVi": "Vẽ tranh bằng cây bút mực.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1585336261026-4180718399b3?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chiếc bút mực viết chữ nắn nót"
+      "url": "/assets/ehon/pen.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chiếc bút máy lấp lánh viết chữ xinh"
     }
   },
   {
@@ -1178,7 +1178,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/cat_nap.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon chú mèo cuộn tròn ngủ trưa êm ái"
+      "alt": "Tranh Ehon chú mèo cuộn tròn ngủ trưa êm đềm"
     }
   },
   {
@@ -1379,7 +1379,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/cat.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon chú mèo cam rực rỡ sắc màu"
+      "alt": "Tranh Ehon chú mèo cam sọc rực rỡ"
     }
   },
   {
@@ -1401,7 +1401,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/cup.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon chiếc cốc trà bốc khói thơm dịu"
+      "alt": "Tranh Ehon tách trà rực rỡ bốc khói ấm áp"
     }
   },
   {
@@ -1490,7 +1490,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/kite.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon cánh diều bay lượn trên trời xanh"
+      "alt": "Tranh Ehon cánh diều rực rỡ bay trên bầu trời xanh"
     }
   },
   {
@@ -1510,9 +1510,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A can of fresh juice.",
     "sampleSentenceVi": "Lon nước trái cây tươi.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chiếc lon nước quả mát lành"
+      "url": "/assets/ehon/can.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon lon nước ép hoa quả cam dâu tươi mát"
     }
   },
   {
@@ -1576,9 +1576,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Kick the soccer ball.",
     "sampleSentenceVi": "Sút quả bóng lăn tít trên sân cỏ.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Bé sút bóng trên sân cỏ xanh"
+      "url": "/assets/ehon/ball.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon quả bóng lăn trên thảm cỏ xanh"
     }
   },
   {
@@ -1798,9 +1798,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A red pen writes letters.",
     "sampleSentenceVi": "Cây bút đỏ viết từng nét chữ.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1585336261026-4180718399b3?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chiếc bút mực viết chữ nắn nót"
+      "url": "/assets/ehon/pen.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chiếc bút máy lấp lánh viết chữ xinh"
     }
   },
   {
@@ -1844,7 +1844,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/hen.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon cô gà mái đỏ mổ thóc trên sân"
+      "alt": "Tranh Ehon cô gà mái đỏ mổ thóc trên sân nông trại"
     }
   },
   {
@@ -1908,9 +1908,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Give mom a big hug.",
     "sampleSentenceVi": "Trao mẹ cái ôm ấm áp.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Cái ôm ấm áp yêu thương giữa hai bạn nhỏ"
+      "url": "/assets/ehon/puppy_hug.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon cái ôm ấm áp vỗ về bạn cún nhỏ"
     }
   },
   {
@@ -2130,9 +2130,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Sit on the soft rug.",
     "sampleSentenceVi": "Ngồi trên thảm len êm ái.",
     "visual": {
-      "url": "/assets/ehon/cat_mat.jpg",
+      "url": "/assets/ehon/bug_rug.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon tấm thảm dệt đan hoa văn rực rỡ"
+      "alt": "Tranh Ehon tấm thảm len đan màu sắc ấm áp"
     }
   },
   {
@@ -2240,9 +2240,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A silver friendship ring.",
     "sampleSentenceVi": "Chiếc nhẫn tình bạn sáng lấp lánh.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chiếc nhẫn ngọc lấp lánh sắc màu"
+      "url": "/assets/ehon/king_ring.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chiếc nhẫn vàng ngọc lấp lánh"
     }
   },
   {
@@ -2286,7 +2286,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/cat_mat.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon tấm thảm đan màu sắc ấm áp"
+      "alt": "Tranh Ehon chú mèo ngồi trên chiếc thảm đan"
     }
   },
   {
@@ -2462,9 +2462,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The crescent moon shines.",
     "sampleSentenceVi": "Vầng trăng khuyết sáng dịu dàng.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1532693322450-2cb5c511067d?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Mặt trăng tròn vằng vặc tỏa ánh vàng dịu mát"
+      "url": "/assets/ehon/moon_spoon.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon vầng trăng tròn vành vạnh đêm rằm"
     }
   },
   {
@@ -2486,7 +2486,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/dog.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon chú cún cưng nô đùa vui vẻ"
+      "alt": "Tranh Ehon chú cún cưng nô đùa trên đồng cỏ"
     }
   },
   {
@@ -2661,9 +2661,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A lovely vintage doll.",
     "sampleSentenceVi": "Búp bê xinh xắn cài nơ hồng.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Búp bê xinh xắn cài nơ hồng"
+      "url": "/assets/ehon/doll.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon búp bê vải xinh xắn mặc váy hoa"
     }
   },
   {
@@ -2863,9 +2863,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The mountain goat leaps.",
     "sampleSentenceVi": "Chú dê núi nhảy qua mỏm đá.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1524024973431-2ad916746881?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú dê trắng nhởn nhơ gặm cỏ"
+      "url": "/assets/ehon/goat_boat.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon bạn dê trắng chèo thuyền trên sông"
     }
   },
   {
@@ -3014,9 +3014,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The playful otter swims.",
     "sampleSentenceVi": "Chú rái cá tinh nghịch bơi lội.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1551085254-e96b210df58a?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú rái cá tinh nghịch nổi trên mặt nước"
+      "url": "/assets/ehon/otter.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú rái cá bơi ngửa trên dòng suối trong"
     }
   },
   {
@@ -3130,9 +3130,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A clever little fox.",
     "sampleSentenceVi": "Chú cáo con thông minh lém lỉnh.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1474511320723-9a56873867b5?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú cáo lông đỏ tinh ranh"
+      "url": "/assets/ehon/fox_box.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú cáo nhỏ tinh nghịch trong chiếc hộp"
     }
   },
   {
@@ -3291,7 +3291,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/sun.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon mặt trời rạng rỡ tỏa tia nắng muôn màu"
+      "alt": "Tranh Ehon mặt trời rạng rỡ tỏa tia nắng"
     }
   },
   {
@@ -3335,7 +3335,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/cup.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon chiếc cốc trà bốc khói thơm dịu"
+      "alt": "Tranh Ehon tách trà rực rỡ bốc khói ấm áp"
     }
   },
   {
@@ -3355,9 +3355,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A little bug crawls.",
     "sampleSentenceVi": "Chú bọ rùa bò chầm chậm.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú bọ rùa nhỏ xinh xắn trên cành lá"
+      "url": "/assets/ehon/bug_rug.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú bọ nhỏ dễ thương trên tấm thảm len"
     }
   },
   {
@@ -3399,9 +3399,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A frog on a brown log.",
     "sampleSentenceVi": "Chú ếch ngồi trên khúc gỗ.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Khúc gỗ sồi nằm giữa khu rừng xanh"
+      "url": "/assets/ehon/frog_log.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon khúc gỗ mộc trên thảm rêu xanh"
     }
   },
   {
@@ -3533,9 +3533,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Squeeze a fresh green lime.",
     "sampleSentenceVi": "Vắt quả chanh xanh thơm mát.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1534856966150-c832f7b7a005?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Quả chanh xanh tươi mát thơm phức"
+      "url": "/assets/ehon/lime.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon quả chanh xanh mọng nước thơm mát"
     }
   },
   {
@@ -3579,9 +3579,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The friendly lion roars.",
     "sampleSentenceVi": "Chú sư tử thân thiện cất tiếng gầm.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú sư tử bờm vàng oai vệ"
+      "url": "/assets/ehon/leo.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú sư tử nhỏ dũng cảm"
     }
   },
   {
@@ -3601,9 +3601,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A quick sly fox.",
     "sampleSentenceVi": "Chú cáo thông minh nhanh nhẹn.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1474511320723-9a56873867b5?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú cáo lông đỏ tinh ranh"
+      "url": "/assets/ehon/fox_box.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú cáo nhỏ tinh nghịch trong chiếc hộp"
     }
   },
   {
@@ -3713,7 +3713,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/three_fish.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon ba chú cá tung tăng dưới nước"
+      "alt": "Tranh Ehon đàn cá sắc màu bơi lội dưới làn nước biếc"
     }
   },
   {
@@ -3734,9 +3734,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A green frog hops.",
     "sampleSentenceVi": "Chú ếch xanh nhảy tõm xuống ao.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1579380656108-328e8042d34d?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú ếch xanh ngồi trên lá sen"
+      "url": "/assets/ehon/frog_log.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú ếch xanh ngồi trên khúc gỗ"
     }
   },
   {
@@ -3779,9 +3779,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Use a fork for cake.",
     "sampleSentenceVi": "Dùng nĩa thưởng thức miếng bánh thơm.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chiếc nĩa ăn hoa quả bằng bạc"
+      "url": "/assets/ehon/fork.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chiếc nĩa và thìa vui tươi thưởng thức hoa quả"
     }
   },
   {
@@ -3845,9 +3845,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A surprise inside the box.",
     "sampleSentenceVi": "Món quà bất ngờ trong hộp.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chiếc hộp quà thần kỳ màu sắc"
+      "url": "/assets/ehon/fox_box.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chiếc hộp các-tông xinh xắn"
     }
   },
   {
@@ -3889,9 +3889,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A green bug on a leaf.",
     "sampleSentenceVi": "Chú bọ xanh đậu trên lá biếc.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú bọ rùa nhỏ xinh xắn trên cành lá"
+      "url": "/assets/ehon/bug_rug.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú bọ nhỏ dễ thương trên tấm thảm len"
     }
   },
   {
@@ -4020,9 +4020,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Float a paper boat.",
     "sampleSentenceVi": "Thả chiếc thuyền giấy trên dòng suối.",
     "visual": {
-      "url": "/assets/ehon/ship.jpg",
+      "url": "/assets/ehon/goat_boat.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon con thuyền gỗ bồng bềnh trên sông"
+      "alt": "Tranh Ehon con thuyền nhỏ lướt sóng êm đềm"
     }
   },
   {
@@ -4042,9 +4042,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Rain falls from the cloud.",
     "sampleSentenceVi": "Mưa rơi tí tách trên mái nhà.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Cơn mưa rào mùa hạ tưới mát cây cối"
+      "url": "/assets/ehon/train_rain.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon đoàn tàu chạy dưới cơn mưa mát lành"
     }
   },
   {
@@ -4132,9 +4132,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The steam train chugs.",
     "sampleSentenceVi": "Đoàn tàu hỏa xình xịch lăn bánh.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Đoàn tàu hỏa xình xịch vượt qua thung lũng"
+      "url": "/assets/ehon/train_rain.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon đoàn tàu hơi nước sắc màu chạy qua thung lũng"
     }
   },
   {
@@ -4221,9 +4221,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Fill the blue pail with sand.",
     "sampleSentenceVi": "Xúc cát đầy chiếc xô xanh.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chiếc xô nhựa xúc cát màu vàng"
+      "url": "/assets/ehon/pail.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon xô xúc cát vàng rực rỡ bên bờ biển"
     }
   },
   {
@@ -4491,9 +4491,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Row the little boat.",
     "sampleSentenceVi": "Chèo chiếc thuyền con trên sông.",
     "visual": {
-      "url": "/assets/ehon/ship.jpg",
+      "url": "/assets/ehon/goat_boat.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon con thuyền gỗ bồng bềnh trên sông"
+      "alt": "Tranh Ehon con thuyền nhỏ lướt sóng êm đềm"
     }
   },
   {
@@ -4535,9 +4535,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The goat climbs rocks.",
     "sampleSentenceVi": "Chú dê leo trèo vách núi.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1524024973431-2ad916746881?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú dê trắng nhởn nhơ gặm cỏ"
+      "url": "/assets/ehon/goat_boat.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon bạn dê trắng chèo thuyền trên sông"
     }
   },
   {
@@ -4557,9 +4557,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Wash hands with bubbly soap.",
     "sampleSentenceVi": "Rửa tay sạch bằng xà phòng thơm.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1607006314144-846d03d3db26?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Bánh xà phòng thơm nức nhiều bọt bóng"
+      "url": "/assets/ehon/soap.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon bánh xà phòng thơm nhiều bọt bóng lấp lánh"
     }
   },
   {
@@ -4601,9 +4601,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A little toad rests in moss.",
     "sampleSentenceVi": "Chú cóc nằm nghỉ dưới thảm rêu.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1579380656108-328e8042d34d?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú cóc nhỏ hiền lành nấp sau tảng đá"
+      "url": "/assets/ehon/toad.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú cóc nhỏ hiền lành ngồi trên tảng đá bên suối"
     }
   },
   {
@@ -4932,9 +4932,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The busy bee visits flowers.",
     "sampleSentenceVi": "Chú ong bay tìm mật hoa thơm.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú ong vàng chăm chỉ hút mật hoa"
+      "url": "/assets/ehon/bee_tree.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú ong chăm chỉ bay quanh tán cây cổ thụ"
     }
   },
   {
@@ -4954,9 +4954,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Green leaves on the tree.",
     "sampleSentenceVi": "Lá xanh mướt trên cành cây.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Cây cổ thụ vươn cành đón nắng mai"
+      "url": "/assets/ehon/bee_tree.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon cây đại thụ xanh tươi rợp bóng mát"
     }
   },
   {
@@ -5155,9 +5155,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Use a fork for noodles.",
     "sampleSentenceVi": "Dùng nĩa ăn món mì ngon.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chiếc nĩa ăn hoa quả bằng bạc"
+      "url": "/assets/ehon/fork.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chiếc nĩa và thìa vui tươi thưởng thức hoa quả"
     }
   },
   {
@@ -5244,9 +5244,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The cork floats in water.",
     "sampleSentenceVi": "Nút bấc nổi bồng bềnh trên nước.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Nút bấc gỗ nhẹ nổi trên mặt nước"
+      "url": "/assets/ehon/tin.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon nút đậy đồ dùng nhỏ xinh"
     }
   },
   {
@@ -5833,9 +5833,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A shiny gold ring.",
     "sampleSentenceVi": "Chiếc nhẫn vàng xinh xắn.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chiếc nhẫn ngọc lấp lánh sắc màu"
+      "url": "/assets/ehon/king_ring.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chiếc nhẫn vàng ngọc lấp lánh"
     }
   },
   {
@@ -5877,9 +5877,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The king wears a crown.",
     "sampleSentenceVi": "Vị vua đội vương miện vàng.",
     "visual": {
-      "url": "/assets/ehon/queen_park.jpg",
+      "url": "/assets/ehon/king_ring.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon vị vua hiền từ đội vương miện"
+      "alt": "Tranh Ehon đức vua hiền từ đeo chiếc nhẫn vàng"
     }
   },
   {
@@ -5990,9 +5990,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Swing high into the air.",
     "sampleSentenceVi": "Đung đưa xích đu bay bổng lên cao.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chiếc xích đu gỗ đung đưa dưới bóng cây"
+      "url": "/assets/ehon/swing.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chiếc xích đu gỗ đu đưa dưới tán cây cổ thụ"
     }
   },
   {
@@ -6296,9 +6296,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Read an Ehon picture book.",
     "sampleSentenceVi": "Đọc cuốn sách tranh Ehon tuyệt đẹp.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Cuốn sách truyện tranh mở ra chân trời mới"
+      "url": "/assets/ehon/good_book.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon cuốn sách truyện tranh mở ra muôn điều hay"
     }
   },
   {
@@ -6517,9 +6517,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The bright moon glows at night.",
     "sampleSentenceVi": "Vầng trăng tròn sáng lung linh.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1532693322450-2cb5c511067d?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Mặt trăng tròn vằng vặc tỏa ánh vàng dịu mát"
+      "url": "/assets/ehon/moon_spoon.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon vầng trăng tròn vành vạnh đêm rằm"
     }
   },
   {
@@ -6540,9 +6540,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Eat cereal with a silver spoon.",
     "sampleSentenceVi": "Dùng thìa con ăn ngũ cốc.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chiếc thìa xúc cháo ngoan ngoãn"
+      "url": "/assets/ehon/moon_spoon.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chiếc thìa nhỏ xinh ánh trăng"
     }
   },
   {
@@ -6805,9 +6805,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Roasted sweet yam.",
     "sampleSentenceVi": "Củ khoai nướng thơm bùi.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1596450514735-111a2fe0ac44?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Củ khoai mỡ thơm bùi ngọt lành"
+      "url": "/assets/ehon/carrot.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon củ khoai thơm ngọt từ đất lành"
     }
   },
   {
@@ -6920,9 +6920,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Spin the yo-yo up and down.",
     "sampleSentenceVi": "Kéo con quay yo-yo lên xuống nhịp nhàng.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Con quay yo-yo gỗ quay tít"
+      "url": "/assets/ehon/yoyo.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon con quay yoyo sắc màu xoay tít lấp lánh"
     }
   },
   {
@@ -6964,9 +6964,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Open the treasure box.",
     "sampleSentenceVi": "Mở chiếc hộp báu vật.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chiếc hộp quà thần kỳ màu sắc"
+      "url": "/assets/ehon/fox_box.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chiếc hộp các-tông xinh xắn"
     }
   },
   {
@@ -7030,9 +7030,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A little red fox.",
     "sampleSentenceVi": "Chú cáo lông đỏ xinh đẹp.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1474511320723-9a56873867b5?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú cáo lông đỏ tinh ranh"
+      "url": "/assets/ehon/fox_box.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú cáo nhỏ tinh nghịch trong chiếc hộp"
     }
   },
   {
@@ -7117,9 +7117,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A small hand ax.",
     "sampleSentenceVi": "Chiếc rìu nhỏ của bác thợ rừng.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1588619461234-583597b8195e?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Cái rìu bổ củi của bác tiều phu"
+      "url": "/assets/ehon/ax.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chiếc rìu gỗ dựng bên gốc cây nở hoa"
     }
   },
   {
@@ -7205,9 +7205,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Chop carrots for dinner.",
     "sampleSentenceVi": "Thái củ cà rốt giòn ngọt.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1588619461234-583597b8195e?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chặt củi khô chuẩn bị sưởi ấm"
+      "url": "/assets/ehon/ax.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chiếc rìu bổ củi của bác tiều phu"
     }
   },
   {
@@ -7272,9 +7272,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A crunchy potato chip.",
     "sampleSentenceVi": "Mẩu khoai tây chiên giòn tan.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Miếng khoai tây chiên giòn rụm"
+      "url": "/assets/ehon/chick_chip.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú gà con nhặt hạt thóc nhỏ"
     }
   },
   {
@@ -7294,9 +7294,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Fluffy yellow chick chirps.",
     "sampleSentenceVi": "Chú gà con lông tơ kêu chiếp chiếp.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú gà con lông tơ vàng óng đáng yêu"
+      "url": "/assets/ehon/chick_chip.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú gà con lông vàng hót líu lo"
     }
   },
   {
@@ -7408,7 +7408,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/ship.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon con tàu rẽ sóng ra khơi"
+      "alt": "Tranh Ehon con tàu rẽ sóng đại dương"
     }
   },
   {
@@ -7472,9 +7472,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Find a smooth shell on the sand.",
     "sampleSentenceVi": "Nhặt vỏ ốc óng ánh bên bờ cát.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Vỏ sò biển lấp lánh trên cát trắng"
+      "url": "/assets/ehon/shells_box.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon những vỏ sò óng ánh trong hộp báu vật"
     }
   },
   {
@@ -7695,9 +7695,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A soft moth flies by the light.",
     "sampleSentenceVi": "Chú bướm đêm bay lượn bên ánh đèn.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú bướm đêm cánh nhung vỗ cánh"
+      "url": "/assets/ehon/three_moths.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon ba chú bướm đêm vỗ cánh dịu dàng"
     }
   },
   {
@@ -8073,7 +8073,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/queen_park.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon Nữ Hoàng nhân từ đội vương miện dạo bước"
+      "alt": "Tranh Ehon Nữ hoàng hiền từ dạo bước trong công viên hoa lá"
     }
   },
   {
@@ -8117,9 +8117,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A cozy patchwork quilt.",
     "sampleSentenceVi": "Chiếc chăn ghép vải ấm cúng.",
     "visual": {
-      "url": "/assets/ehon/cat_mat.jpg",
+      "url": "/assets/ehon/quilt.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon chiếc chăn đắp ghép vải hoa ấm cúng"
+      "alt": "Tranh Ehon chiếc chăn ghép vải hoa ấm cúng trên ghế bập bênh"
     }
   },
   {
@@ -8322,9 +8322,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Fluffy white clouds float.",
     "sampleSentenceVi": "Những đám mây trắng bồng bềnh trôi.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1534088568595-a066f410bcda?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Đám mây trắng bồng bềnh như kẹo bông"
+      "url": "/assets/ehon/clown_cloud.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon đám mây bông trắng bồng bềnh"
     }
   },
   {
@@ -8389,9 +8389,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A tiny field mouse nibbles.",
     "sampleSentenceVi": "Chú chuột nhắt gặm hạt ngô.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1541364983171-a8ba01e95cfc?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú chuột đồng nhỏ xíu đáng yêu"
+      "url": "/assets/ehon/mouse.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú chuột nhỏ quàng khăn cầm quả dâu"
     }
   },
   {
@@ -8435,9 +8435,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A round bouncing ball.",
     "sampleSentenceVi": "Quả bóng tròn nảy tưng tưng.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Quả bóng tròn xoe nảy tưng tưng"
+      "url": "/assets/ehon/ball.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon quả bóng tròn nảy tưng tưng"
     }
   },
   {
@@ -8771,9 +8771,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Find the secret clue.",
     "sampleSentenceVi": "Tìm manh mối thám hiểm bí ẩn.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Dấu vết manh mối mở ra rương kho báu"
+      "url": "/assets/ehon/blue_clue.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon dấu chân manh mối màu xanh kỳ diệu"
     }
   },
   {
@@ -9095,9 +9095,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The farmer gathers ripe fruit.",
     "sampleSentenceVi": "Bác nông dân hái trái ngọt thơm.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Bác nông dân chăm chỉ thu hoạch trái ngọt trên cánh đồng"
+      "url": "/assets/ehon/farmer_barn.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon bác nông dân chăm chỉ bên nông trại nắng ấm"
     }
   },
   {
@@ -9213,7 +9213,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/star.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon ngôi sao vàng khổng lồ lấp lánh"
+      "alt": "Tranh Ehon ngôi sao vàng lấp lánh"
     }
   },
   {
@@ -9256,7 +9256,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/queen_park.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon công viên rợp bóng cây xanh"
+      "alt": "Tranh Ehon công viên hoa lá rực rỡ nắng mai"
     }
   },
   {
@@ -9298,9 +9298,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Hay stored inside the red barn.",
     "sampleSentenceVi": "Cỏ khô xếp trong nhà kho đỏ.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Nhà kho đỏ đựng cỏ khô trên nông trại"
+      "url": "/assets/ehon/farmer_barn.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chuồng trại nông thôn màu đỏ ấm áp"
     }
   },
   {
@@ -9550,7 +9550,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "visual": {
       "url": "/assets/ehon/star.jpg",
       "type": "ehon",
-      "alt": "Tranh Ehon ngôi sao vàng khổng lồ lấp lánh"
+      "alt": "Tranh Ehon ngôi sao vàng lấp lánh"
     }
   },
   {
@@ -9727,9 +9727,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Hold the spoon to eat your meal.",
     "sampleSentenceVi": "Cầm thìa con ăn bữa thật ngon.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chiếc thìa xúc cháo ngoan ngoãn"
+      "url": "/assets/ehon/moon_spoon.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chiếc thìa nhỏ xinh ánh trăng"
     }
   },
   {
@@ -9771,9 +9771,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Wash hands clean with bubbly soap.",
     "sampleSentenceVi": "Rửa tay sạch bong cùng xà phòng thơm.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1607006314144-846d03d3db26?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Bánh xà phòng thơm nức nhiều bọt bóng"
+      "url": "/assets/ehon/soap.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon bánh xà phòng thơm nhiều bọt bóng lấp lánh"
     }
   },
   {
@@ -10234,9 +10234,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Aim the soft ball into the basket.",
     "sampleSentenceVi": "Ngắm quả bóng mềm ném vào rổ.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Bé nhắm đích quả bóng lăn trúng khung thành"
+      "url": "/assets/ehon/ball.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon nhắm đích quả bóng lăn trúng đích"
     }
   },
   {
@@ -10373,9 +10373,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A bumpy toad hops across the lawn.",
     "sampleSentenceVi": "Chú cóc hoa nhảy lò cò qua bãi cỏ.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1579380656108-328e8042d34d?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú cóc nhỏ hiền lành nấp sau tảng đá"
+      "url": "/assets/ehon/toad.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú cóc nhỏ hiền lành ngồi trên tảng đá bên suối"
     }
   },
   {
@@ -10395,9 +10395,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The big oak tree gives cool shade.",
     "sampleSentenceVi": "Cây sồi lớn cho bóng mát rượi.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Cây cổ thụ vươn cành đón nắng mai"
+      "url": "/assets/ehon/bee_tree.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon cây đại thụ xanh tươi rợp bóng mát"
     }
   },
   {
@@ -11629,9 +11629,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The sleepy koala hugs an eucalyptus tree.",
     "sampleSentenceVi": "Gấu koala ôm cây bạch đàn ngủ say.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1526970371639-bf02e6263d97?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú koala ôm chặt thân cây bạch đàn ngủ say"
+      "url": "/assets/ehon/koala.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú gấu túi koala ôm cành cây bạch đàn"
     }
   },
   {
@@ -11724,9 +11724,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A fluffy white cloud drifts in the sky.",
     "sampleSentenceVi": "Đám mây trắng bồng bềnh trôi trên trời.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1534088568595-a066f410bcda?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Đám mây trắng bồng bềnh như kẹo bông"
+      "url": "/assets/ehon/clown_cloud.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon đám mây bông trắng bồng bềnh"
     }
   },
   {
@@ -11793,9 +11793,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The bunny loves crunchy orange carrots.",
     "sampleSentenceVi": "Chú thỏ thích ăn củ cà rốt giòn ngọt.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1598170845058-32b9d6a5c317?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Củ cà rốt cam giòn ngọt tươi ngon"
+      "url": "/assets/ehon/carrot.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon củ cà rốt cam tươi ngon trong vườn"
     }
   },
   {
@@ -11905,9 +11905,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Catch the bouncy ball with both hands.",
     "sampleSentenceVi": "Bắt lấy quả bóng nảy bằng cả hai tay.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Bé đón bắt gọn gàng quả bóng màu sắc"
+      "url": "/assets/ehon/ball.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon đón bắt quả bóng sắc màu"
     }
   },
   {
@@ -12021,9 +12021,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Erase pencil marks cleanly with an eraser.",
     "sampleSentenceVi": "Tẩy sạch nét chì bằng cục gôm mềm.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Cục tẩy trắng nhỏ xinh tẩy sạch nét chì"
+      "url": "/assets/ehon/eraser.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon cục tẩy nhỏ xinh sạch nét chì"
     }
   },
   {
@@ -12165,9 +12165,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "A tiny hedgehog curls into a prickly ball.",
     "sampleSentenceVi": "Chú nhím gai cuộn tròn như một quả bóng nhỏ.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1505672678857-9293d8919bf5?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú nhím nhỏ xíu cuộn tròn đáng yêu"
+      "url": "/assets/ehon/hedgehog.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú nhím gai cuộn tròn ngủ giữa lá mùa thu"
     }
   },
   {
@@ -12585,9 +12585,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The space rocket zooms to the moon.",
     "sampleSentenceVi": "Tàu tên lửa bay vút lên cung trăng.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1517976487588-29a32c253d71?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Tàu con thoi phóng vút vào không gian vũ trụ"
+      "url": "/assets/ehon/rocket.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon tàu con thoi bay qua các vì sao"
     }
   },
   {
@@ -12651,9 +12651,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Roll the ball gently across the carpet.",
     "sampleSentenceVi": "Lăn nhẹ quả bóng qua thảm êm.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Quả bóng tròn lăn tít trên sân cỏ"
+      "url": "/assets/ehon/ball.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon quả bóng tròn lăn tít trên sân cỏ"
     }
   },
   {
@@ -12717,9 +12717,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The velvety moth flies near the lantern.",
     "sampleSentenceVi": "Chú bướm đêm bay lượn bên ánh đèn lồng.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú bướm đêm cánh nhung vỗ cánh"
+      "url": "/assets/ehon/three_moths.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon ba chú bướm đêm vỗ cánh dịu dàng"
     }
   },
   {
@@ -14458,9 +14458,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The industrious beaver builds a safe home.",
     "sampleSentenceVi": "Hải ly cần cù xây dựng tổ ấm vững chãi.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1551085254-e96b210df58a?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Hải ly chăm chỉ xây đập nước bằng cành cây"
+      "url": "/assets/ehon/otter.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú hải ly bơi lội trên dòng suối mát"
     }
   },
   {
@@ -14624,9 +14624,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Bounce the bright red ball up and down.",
     "sampleSentenceVi": "Nảy quả bóng đỏ tưng tưng lên xuống thật vui.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Quả bóng nảy tưng tưng trên mặt sân"
+      "url": "/assets/ehon/ball.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon quả bóng nảy tưng tưng vui mắt"
     }
   },
   {
@@ -15469,9 +15469,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Slice fresh green zucchini for our dinner.",
     "sampleSentenceVi": "Cắt lát quả bí ngòi xanh tươi cho bữa tối.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1598170845058-32b9d6a5c317?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Quả bí ngòi xanh tươi ngon trong vườn nhà"
+      "url": "/assets/ehon/carrot.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon củ quả tươi ngon trong vườn nhà"
     }
   },
   {
@@ -15537,9 +15537,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The tusked walrus rests on floating ice.",
     "sampleSentenceVi": "Hải mã với cặp ngà dài nằm nghỉ trên tảng băng.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1551085254-e96b210df58a?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Hải mã với cặp ngà dài nằm nghỉ trên tảng băng"
+      "url": "/assets/ehon/seal.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú hải cẩu bơi trên tảng băng trắng"
     }
   },
   {
@@ -16234,9 +16234,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Spin the colorful yo-yo up and down.",
     "sampleSentenceVi": "Thả con quay yo-yo lên xuống thật khéo.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Con quay yo-yo gỗ quay tít lên xuống"
+      "url": "/assets/ehon/yoyo.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon con quay yoyo sắc màu xoay tít lấp lánh"
     }
   },
   {
@@ -16347,9 +16347,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The woodcutter rests his axe against a log.",
     "sampleSentenceVi": "Bác tiều phu dựng cây rìu bên khúc gỗ.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chiếc rìu nhỏ bằng gỗ đồ chơi an toàn cho bé"
+      "url": "/assets/ehon/ax.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chiếc rìu gỗ dựng bên gốc cây nở hoa"
     }
   },
   {
@@ -17548,9 +17548,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Bounce the soft rubber ball across the yard.",
     "sampleSentenceVi": "Nảy quả bóng cao su tưng tưng khắp sân.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Quả bóng nảy tưng tưng trên mặt sân"
+      "url": "/assets/ehon/ball.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon quả bóng nảy tưng tưng vui mắt"
     }
   },
   {
@@ -17757,9 +17757,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "The brown otter catches a silvery fish.",
     "sampleSentenceVi": "Rái cá nâu bắt được chú cá ánh bạc.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1551085254-e96b210df58a?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Chú rái cá tinh nghịch nổi trên mặt nước"
+      "url": "/assets/ehon/otter.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon chú rái cá bơi ngửa trên dòng suối trong"
     }
   },
   {
@@ -17873,9 +17873,9 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
     "sampleSentence": "Draw straight lines with the wooden ruler.",
     "sampleSentenceVi": "Kẻ những đường thẳng tắp bằng cây thước gỗ.",
     "visual": {
-      "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-      "type": "photo",
-      "alt": "Cây thước kẻ gỗ đo từng phân thẳng tắp"
+      "url": "/assets/ehon/ruler.jpg",
+      "type": "ehon",
+      "alt": "Tranh Ehon cây thước kẻ gỗ đo nét thẳng"
     }
   },
   {

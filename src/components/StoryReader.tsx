@@ -240,6 +240,10 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
               src={pageVisual.url}
               alt={pageVisual.alt}
               className="w-full h-full object-cover transition-transform duration-700"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = '/assets/ehon/archipelago.jpg';
+              }}
             />
 
             {/* Picture-book caption badge */}

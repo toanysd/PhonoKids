@@ -12,7 +12,7 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
   "sun": {
     "url": "/assets/ehon/sun.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon mặt trời rạng rỡ tỏa tia nắng muôn màu"
+    "alt": "Tranh Ehon mặt trời rạng rỡ tỏa tia nắng"
   },
   "sit": {
     "url": "/assets/ehon/sit.jpg",
@@ -22,7 +22,7 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
   "sat": {
     "url": "/assets/ehon/cat_mat.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon chú mèo ngồi yên sưởi nắng trên thảm"
+    "alt": "Tranh Ehon chú mèo ngồi yên sưởi nắng"
   },
   "sad": {
     "url": "https://images.unsplash.com/photo-1541364983171-a8ba01e95cfc?auto=format&fit=crop&w=800&q=80",
@@ -50,9 +50,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Tranh Ehon quả táo đỏ mọng cắt dán rực rỡ"
   },
   "ax": {
-    "url": "https://images.unsplash.com/photo-1588619461234-583597b8195e?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Cái rìu bổ củi của bác tiều phu"
+    "url": "/assets/ehon/ax.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chiếc rìu gỗ dựng bên gốc cây nở hoa"
   },
   "act": {
     "url": "https://images.unsplash.com/photo-1469488865564-c2de10f69f96?auto=format&fit=crop&w=800&q=80",
@@ -75,9 +75,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Vòi nước sạch trong vắt mát lành"
   },
   "tin": {
-    "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chiếc hộp thiếc đựng hạt mầm kỳ diệu"
+    "url": "/assets/ehon/tin.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon hộp thiếc cổ điển đựng bánh quy và kẹo ngọt"
   },
   "top": {
     "url": "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80",
@@ -132,12 +132,12 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
   "pat": {
     "url": "/assets/ehon/sam_pat_ant.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon bé vỗ về vuốt ve thân mật"
+    "alt": "Tranh Ehon bạn nhỏ vỗ về vuốt ve thân mật"
   },
   "pan": {
-    "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chiếc chảo chiên rán vàng bóng"
+    "url": "/assets/ehon/sam_pan.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chiếc chảo rán nhỏ trong gian bếp ấm cúng"
   },
   "pin": {
     "url": "https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=800&q=80",
@@ -152,12 +152,12 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
   "pig": {
     "url": "/assets/ehon/pig.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon chú heo hồng tung tăng nô đùa"
+    "alt": "Tranh Ehon chú heo hồng tinh nghịch"
   },
   "pen": {
-    "url": "https://images.unsplash.com/photo-1585336261026-4180718399b3?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chiếc bút mực viết chữ nắn nót"
+    "url": "/assets/ehon/pen.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chiếc bút máy lấp lánh viết chữ xinh"
   },
   "net": {
     "url": "https://images.unsplash.com/photo-1519750783826-e2420f4d687f?auto=format&fit=crop&w=800&q=80",
@@ -167,7 +167,7 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
   "nap": {
     "url": "/assets/ehon/cat_nap.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon chú mèo cuộn tròn ngủ trưa êm ái"
+    "alt": "Tranh Ehon chú mèo cuộn tròn ngủ trưa êm đềm"
   },
   "nut": {
     "url": "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=800&q=80",
@@ -192,12 +192,12 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
   "cat": {
     "url": "/assets/ehon/cat.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon chú mèo cam rực rỡ sắc màu"
+    "alt": "Tranh Ehon chú mèo cam sọc rực rỡ"
   },
   "cup": {
     "url": "/assets/ehon/cup.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon chiếc cốc trà bốc khói thơm dịu"
+    "alt": "Tranh Ehon tách trà rực rỡ bốc khói ấm áp"
   },
   "cap": {
     "url": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=800&q=80",
@@ -217,7 +217,7 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
   "kite": {
     "url": "/assets/ehon/kite.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon cánh diều bay lượn trên trời xanh"
+    "alt": "Tranh Ehon cánh diều rực rỡ bay trên bầu trời xanh"
   },
   "egg": {
     "url": "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&w=800&q=80",
@@ -247,7 +247,7 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
   "hen": {
     "url": "/assets/ehon/hen.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon cô gà mái đỏ mổ thóc trên sân"
+    "alt": "Tranh Ehon cô gà mái đỏ mổ thóc trên sân nông trại"
   },
   "hop": {
     "url": "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?auto=format&fit=crop&w=800&q=80",
@@ -260,9 +260,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Tranh Ehon mặt trời nắng ấm rực rỡ"
   },
   "hug": {
-    "url": "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Cái ôm ấm áp yêu thương giữa hai bạn nhỏ"
+    "url": "/assets/ehon/puppy_hug.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon cái ôm ấm áp vỗ về bạn cún nhỏ"
   },
   "hut": {
     "url": "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=800&q=80",
@@ -290,9 +290,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Xé nhẹ tờ giấy màu thủ công"
   },
   "rug": {
-    "url": "/assets/ehon/cat_mat.jpg",
+    "url": "/assets/ehon/bug_rug.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon tấm thảm dệt đan hoa văn rực rỡ"
+    "alt": "Tranh Ehon tấm thảm len đan màu sắc ấm áp"
   },
   "rob": {
     "url": "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=800&q=80",
@@ -307,7 +307,7 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
   "mat": {
     "url": "/assets/ehon/cat_mat.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon tấm thảm đan màu sắc ấm áp"
+    "alt": "Tranh Ehon chú mèo ngồi trên chiếc thảm đan"
   },
   "mud": {
     "url": "/assets/ehon/pig.jpg",
@@ -332,7 +332,7 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
   "dog": {
     "url": "/assets/ehon/dog.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon chú cún cưng nô đùa vui vẻ"
+    "alt": "Tranh Ehon chú cún cưng nô đùa trên đồng cỏ"
   },
   "dad": {
     "url": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80",
@@ -415,9 +415,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Đôi môi hồng xinh xắn của em bé đang cười"
   },
   "log": {
-    "url": "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Khúc gỗ sồi nằm giữa khu rừng xanh"
+    "url": "/assets/ehon/frog_log.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon khúc gỗ mộc trên thảm rêu xanh"
   },
   "leg": {
     "url": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=800&q=80",
@@ -430,9 +430,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Thật nhiều trái cây thơm ngọt"
   },
   "fox": {
-    "url": "https://images.unsplash.com/photo-1474511320723-9a56873867b5?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chú cáo lông đỏ tinh ranh"
+    "url": "/assets/ehon/fox_box.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chú cáo nhỏ tinh nghịch trong chiếc hộp"
   },
   "fun": {
     "url": "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80",
@@ -455,9 +455,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Chú dơi con sải cánh bay đêm"
   },
   "box": {
-    "url": "https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chiếc hộp quà thần kỳ màu sắc"
+    "url": "/assets/ehon/fox_box.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chiếc hộp các-tông xinh xắn"
   },
   "bag": {
     "url": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80",
@@ -465,14 +465,14 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Chiếc túi vải xinh xắn đựng đồ chơi"
   },
   "bug": {
-    "url": "https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chú bọ rùa nhỏ xinh xắn trên cành lá"
+    "url": "/assets/ehon/bug_rug.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chú bọ nhỏ dễ thương trên tấm thảm len"
   },
   "rain": {
-    "url": "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Cơn mưa rào mùa hạ tưới mát cây cối"
+    "url": "/assets/ehon/train_rain.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon đoàn tàu chạy dưới cơn mưa mát lành"
   },
   "tail": {
     "url": "/assets/ehon/cat.jpg",
@@ -510,9 +510,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Bé giúp mẹ làm việc nhà chăm chỉ"
   },
   "boat": {
-    "url": "/assets/ehon/ship.jpg",
+    "url": "/assets/ehon/goat_boat.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon con thuyền gỗ bồng bềnh trên sông"
+    "alt": "Tranh Ehon con thuyền nhỏ lướt sóng êm đềm"
   },
   "coat": {
     "url": "https://images.unsplash.com/photo-1544923246-77307dd654cb?auto=format&fit=crop&w=800&q=80",
@@ -520,14 +520,14 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Chiếc áo khoác ấm áp mùa đông"
   },
   "goat": {
-    "url": "https://images.unsplash.com/photo-1524024973431-2ad916746881?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chú dê trắng nhởn nhơ gặm cỏ"
+    "url": "/assets/ehon/goat_boat.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon bạn dê trắng chèo thuyền trên sông"
   },
   "soap": {
-    "url": "https://images.unsplash.com/photo-1607006314144-846d03d3db26?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Bánh xà phòng thơm nức nhiều bọt bóng"
+    "url": "/assets/ehon/soap.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon bánh xà phòng thơm nhiều bọt bóng lấp lánh"
   },
   "pie": {
     "url": "https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&w=800&q=80",
@@ -545,14 +545,14 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Tranh Ehon chú mèo nằm thư giãn trên thảm"
   },
   "bee": {
-    "url": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chú ong vàng chăm chỉ hút mật hoa"
+    "url": "/assets/ehon/bee_tree.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chú ong chăm chỉ bay quanh tán cây cổ thụ"
   },
   "tree": {
-    "url": "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Cây cổ thụ vươn cành đón nắng mai"
+    "url": "/assets/ehon/bee_tree.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon cây đại thụ xanh tươi rợp bóng mát"
   },
   "seed": {
     "url": "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=800&q=80",
@@ -565,9 +565,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Đôi bàn chân bé nhỏ xinh xắn"
   },
   "fork": {
-    "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chiếc nĩa ăn hoa quả bằng bạc"
+    "url": "/assets/ehon/fork.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chiếc nĩa và thìa vui tươi thưởng thức hoa quả"
   },
   "horn": {
     "url": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=800&q=80",
@@ -625,9 +625,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Mạng nhện giăng tơ long lanh sương sớm"
   },
   "ring": {
-    "url": "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chiếc nhẫn ngọc lấp lánh sắc màu"
+    "url": "/assets/ehon/king_ring.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chiếc nhẫn vàng ngọc lấp lánh"
   },
   "sing": {
     "url": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=800&q=80",
@@ -635,9 +635,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Bé con ca hát líu lo vang rộn"
   },
   "king": {
-    "url": "/assets/ehon/queen_park.jpg",
+    "url": "/assets/ehon/king_ring.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon vị vua hiền từ đội vương miện"
+    "alt": "Tranh Ehon đức vua hiền từ đeo chiếc nhẫn vàng"
   },
   "wing": {
     "url": "https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&w=800&q=80",
@@ -660,9 +660,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Chiếc áo vest thanh lịch cho ngày lễ hội"
   },
   "book": {
-    "url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Cuốn sách truyện tranh mở ra chân trời mới"
+    "url": "/assets/ehon/good_book.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon cuốn sách truyện tranh mở ra muôn điều hay"
   },
   "cook": {
     "url": "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=800&q=80",
@@ -680,14 +680,14 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Bàn chân nhỏ xinh bước đi trên cát"
   },
   "moon": {
-    "url": "https://images.unsplash.com/photo-1532693322450-2cb5c511067d?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Mặt trăng tròn vằng vặc tỏa ánh vàng dịu mát"
+    "url": "/assets/ehon/moon_spoon.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon vầng trăng tròn vành vạnh đêm rằm"
   },
   "spoon": {
-    "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chiếc thìa xúc cháo ngoan ngoãn"
+    "url": "/assets/ehon/moon_spoon.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chiếc thìa nhỏ xinh ánh trăng"
   },
   "room": {
     "url": "/assets/ehon/sit.jpg",
@@ -715,9 +715,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Reo vang cổ vũ trong niềm hân hoan"
   },
   "yam": {
-    "url": "https://images.unsplash.com/photo-1596450514735-111a2fe0ac44?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Củ khoai mỡ thơm bùi ngọt lành"
+    "url": "/assets/ehon/carrot.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon củ khoai thơm ngọt từ đất lành"
   },
   "fix": {
     "url": "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=800&q=80",
@@ -735,9 +735,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Chiếc cằm xinh xắn đáng yêu của em bé"
   },
   "chop": {
-    "url": "https://images.unsplash.com/photo-1588619461234-583597b8195e?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chặt củi khô chuẩn bị sưởi ấm"
+    "url": "/assets/ehon/ax.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chiếc rìu bổ củi của bác tiều phu"
   },
   "chat": {
     "url": "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80",
@@ -752,7 +752,7 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
   "ship": {
     "url": "/assets/ehon/ship.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon con tàu rẽ sóng ra khơi"
+    "alt": "Tranh Ehon con tàu rẽ sóng đại dương"
   },
   "shop": {
     "url": "https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&w=800&q=80",
@@ -765,9 +765,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Nhà kho gỗ nhỏ trong khu vườn"
   },
   "shell": {
-    "url": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Vỏ sò biển lấp lánh trên cát trắng"
+    "url": "/assets/ehon/shells_box.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon những vỏ sò óng ánh trong hộp báu vật"
   },
   "thin": {
     "url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80",
@@ -785,9 +785,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Ngón tay cái giơ lên khen ngợi: Bé giỏi lắm!"
   },
   "moth": {
-    "url": "https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chú bướm đêm cánh nhung vỗ cánh"
+    "url": "/assets/ehon/three_moths.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon ba chú bướm đêm vỗ cánh dịu dàng"
   },
   "this": {
     "url": "/assets/ehon/ant_pan.jpg",
@@ -807,7 +807,7 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
   "queen": {
     "url": "/assets/ehon/queen_park.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon Nữ Hoàng nhân từ đội vương miện dạo bước"
+    "alt": "Tranh Ehon Nữ hoàng hiền từ dạo bước trong công viên hoa lá"
   },
   "quick": {
     "url": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=800&q=80",
@@ -815,9 +815,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Chạy thật nhanh về đích"
   },
   "quilt": {
-    "url": "/assets/ehon/cat_mat.jpg",
+    "url": "/assets/ehon/quilt.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon chiếc chăn đắp ghép vải hoa ấm cúng"
+    "alt": "Tranh Ehon chiếc chăn ghép vải hoa ấm cúng trên ghế bập bênh"
   },
   "quack": {
     "url": "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=800&q=80",
@@ -830,9 +830,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Bước ra ngoài thiên nhiên hít thở gió mát"
   },
   "cloud": {
-    "url": "https://images.unsplash.com/photo-1534088568595-a066f410bcda?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Đám mây trắng bồng bềnh như kẹo bông"
+    "url": "/assets/ehon/clown_cloud.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon đám mây bông trắng bồng bềnh"
   },
   "loud": {
     "url": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=800&q=80",
@@ -870,9 +870,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Tranh Ehon làn nước biển xanh biếc mát rượi"
   },
   "clue": {
-    "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Dấu vết manh mối mở ra rương kho báu"
+    "url": "/assets/ehon/blue_clue.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon dấu chân manh mối màu xanh kỳ diệu"
   },
   "glue": {
     "url": "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=800&q=80",
@@ -902,7 +902,7 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
   "star": {
     "url": "/assets/ehon/star.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon ngôi sao vàng khổng lồ lấp lánh"
+    "alt": "Tranh Ehon ngôi sao vàng lấp lánh"
   },
   "car": {
     "url": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80",
@@ -912,7 +912,7 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
   "park": {
     "url": "/assets/ehon/queen_park.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon công viên rợp bóng cây xanh"
+    "alt": "Tranh Ehon công viên hoa lá rực rỡ nắng mai"
   },
   "farm": {
     "url": "/assets/ehon/hen.jpg",
@@ -922,7 +922,7 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
   "fish": {
     "url": "/assets/ehon/three_fish.jpg",
     "type": "ehon",
-    "alt": "Tranh Ehon ba chú cá tung tăng dưới nước"
+    "alt": "Tranh Ehon đàn cá sắc màu bơi lội dưới làn nước biếc"
   },
   "popcorn": {
     "url": "https://images.unsplash.com/photo-1578849278619-e73505e9610f?auto=format&fit=crop&w=800&q=80",
@@ -970,9 +970,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Tránh né"
   },
   "dab": {
-    "url": "https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chấm nhẹ"
+    "url": "/assets/ehon/dab.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon bạn nhỏ nhảy điệu nhảy dab chiến thắng vui tươi"
   },
   "sock": {
     "url": "https://images.unsplash.com/photo-1582966772680-860e372bb558?auto=format&fit=crop&w=800&q=80",
@@ -985,9 +985,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Bãi cát vàng mịn màng bên bờ biển"
   },
   "seal": {
-    "url": "https://images.unsplash.com/photo-1551085254-e96b210df58a?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chú hải cẩu đáng yêu trên tảng băng"
+    "url": "/assets/ehon/seal.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chú hải cẩu trắng đáng yêu trên tảng băng"
   },
   "soft": {
     "url": "https://images.unsplash.com/photo-1559454403-b8fb88521f11?auto=format&fit=crop&w=800&q=80",
@@ -1095,9 +1095,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Chiếc mũi nhỏ xinh của em bé"
   },
   "can": {
-    "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chiếc lon nước quả mát lành"
+    "url": "/assets/ehon/can.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon lon nước ép hoa quả cam dâu tươi mát"
   },
   "cot": {
     "url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80",
@@ -1110,9 +1110,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Nụ hôn yêu thương của mẹ dành cho con"
   },
   "kick": {
-    "url": "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Bé sút bóng trên sân cỏ xanh"
+    "url": "/assets/ehon/ball.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon quả bóng lăn trên thảm cỏ xanh"
   },
   "elk": {
     "url": "https://images.unsplash.com/photo-1543946207-39bd91e70ca7?auto=format&fit=crop&w=800&q=80",
@@ -1195,9 +1195,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Chiếc trống gỗ gõ vang rộn rã"
   },
   "doll": {
-    "url": "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Búp bê xinh xắn cài nơ hồng"
+    "url": "/assets/ehon/doll.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon búp bê vải xinh xắn mặc váy hoa"
   },
   "desk": {
     "url": "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&w=800&q=80",
@@ -1235,9 +1235,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Những khối đồ chơi số lẻ vui nhộn"
   },
   "otter": {
-    "url": "https://images.unsplash.com/photo-1551085254-e96b210df58a?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chú rái cá tinh nghịch nổi trên mặt nước"
+    "url": "/assets/ehon/otter.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chú rái cá bơi ngửa trên dòng suối trong"
   },
   "ostrich": {
     "url": "https://images.unsplash.com/photo-1543946207-39bd91e70ca7?auto=format&fit=crop&w=800&q=80",
@@ -1285,9 +1285,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Ổ khóa đồng bảo vệ kho báu"
   },
   "lime": {
-    "url": "https://images.unsplash.com/photo-1534856966150-c832f7b7a005?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Quả chanh xanh tươi mát thơm phức"
+    "url": "/assets/ehon/lime.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon quả chanh xanh mọng nước thơm mát"
   },
   "lake": {
     "url": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
@@ -1295,9 +1295,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Mặt hồ phẳng lặng phản chiếu mây trời"
   },
   "lion": {
-    "url": "https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chú sư tử bờm vàng oai vệ"
+    "url": "/assets/ehon/leo.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chú sư tử nhỏ dũng cảm"
   },
   "fog": {
     "url": "https://images.unsplash.com/photo-1509114397022-ed747cca3f65?auto=format&fit=crop&w=800&q=80",
@@ -1305,9 +1305,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Làn sương mù mờ ảo giăng lối"
   },
   "frog": {
-    "url": "https://images.unsplash.com/photo-1579380656108-328e8042d34d?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chú ếch xanh ngồi trên lá sen"
+    "url": "/assets/ehon/frog_log.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chú ếch xanh ngồi trên khúc gỗ"
   },
   "flag": {
     "url": "https://images.unsplash.com/photo-1532375810709-75b1da00537c?auto=format&fit=crop&w=800&q=80",
@@ -1330,9 +1330,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Chú gấu nâu hiền hòa trong rừng"
   },
   "train": {
-    "url": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Đoàn tàu hỏa xình xịch vượt qua thung lũng"
+    "url": "/assets/ehon/train_rain.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon đoàn tàu hơi nước sắc màu chạy qua thung lũng"
   },
   "mail": {
     "url": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80",
@@ -1350,9 +1350,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Bé ngoan kiên nhẫn chờ đến lượt mình"
   },
   "pail": {
-    "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chiếc xô nhựa xúc cát màu vàng"
+    "url": "/assets/ehon/pail.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon xô xúc cát vàng rực rỡ bên bờ biển"
   },
   "chain": {
     "url": "https://images.unsplash.com/photo-1582139329536-e7284fece509?auto=format&fit=crop&w=800&q=80",
@@ -1395,9 +1395,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Con đường quê êm đềm rợp bóng cây"
   },
   "toad": {
-    "url": "https://images.unsplash.com/photo-1579380656108-328e8042d34d?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chú cóc nhỏ hiền lành nấp sau tảng đá"
+    "url": "/assets/ehon/toad.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chú cóc nhỏ hiền lành ngồi trên tảng đá bên suối"
   },
   "oak": {
     "url": "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=800&q=80",
@@ -1485,9 +1485,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Các bạn nhỏ vui mừng gặp gỡ nhau"
   },
   "cork": {
-    "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Nút bấc gỗ nhẹ nổi trên mặt nước"
+    "url": "/assets/ehon/tin.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon nút đậy đồ dùng nhỏ xinh"
   },
   "torch": {
     "url": "https://images.unsplash.com/photo-1509114397022-ed747cca3f65?auto=format&fit=crop&w=800&q=80",
@@ -1590,9 +1590,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Bé khỏe mạnh giơ bắp tay tràn đầy năng lượng"
   },
   "swing": {
-    "url": "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chiếc xích đu gỗ đung đưa dưới bóng cây"
+    "url": "/assets/ehon/swing.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chiếc xích đu gỗ đu đưa dưới tán cây cổ thụ"
   },
   "spring": {
     "url": "https://images.unsplash.com/photo-1522748906645-95d8adfd52c7?auto=format&fit=crop&w=800&q=80",
@@ -1715,9 +1715,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Hũ sữa chua trái cây thơm ngon bổ dưỡng"
   },
   "yoyo": {
-    "url": "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Con quay yo-yo gỗ quay tít"
+    "url": "/assets/ehon/yoyo.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon con quay yoyo sắc màu xoay tít lấp lánh"
   },
   "young": {
     "url": "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=800&q=80",
@@ -1740,14 +1740,14 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Bông hoa lanh màu lam biếc dịu dàng"
   },
   "chip": {
-    "url": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Miếng khoai tây chiên giòn rụm"
+    "url": "/assets/ehon/chick_chip.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chú gà con nhặt hạt thóc nhỏ"
   },
   "chick": {
-    "url": "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chú gà con lông tơ vàng óng đáng yêu"
+    "url": "/assets/ehon/chick_chip.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chú gà con lông vàng hót líu lo"
   },
   "cherry": {
     "url": "https://images.unsplash.com/photo-1557800636-894a64c1696f?auto=format&fit=crop&w=800&q=80",
@@ -1890,9 +1890,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Chú sóc nhỏ đuôi xù gặm hạt dẻ"
   },
   "mouse": {
-    "url": "https://images.unsplash.com/photo-1541364983171-a8ba01e95cfc?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chú chuột đồng nhỏ xíu đáng yêu"
+    "url": "/assets/ehon/mouse.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chú chuột nhỏ quàng khăn cầm quả dâu"
   },
   "house": {
     "url": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80",
@@ -1900,9 +1900,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Ngôi nhà xinh xắn có vườn hoa trước cửa"
   },
   "round": {
-    "url": "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Quả bóng tròn xoe nảy tưng tưng"
+    "url": "/assets/ehon/ball.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon quả bóng tròn nảy tưng tưng"
   },
   "mouth": {
     "url": "https://images.unsplash.com/photo-1485546246426-74dc88dec4d9?auto=format&fit=crop&w=800&q=80",
@@ -2000,9 +2000,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Chú nhện nhỏ chăm chỉ dệt tơ bạc"
   },
   "barn": {
-    "url": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Nhà kho đỏ đựng cỏ khô trên nông trại"
+    "url": "/assets/ehon/farmer_barn.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chuồng trại nông thôn màu đỏ ấm áp"
   },
   "dark": {
     "url": "https://images.unsplash.com/photo-1532693322450-2cb5c511067d?auto=format&fit=crop&w=800&q=80",
@@ -2015,9 +2015,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Tấm thiệp sinh nhật sắc màu bé tự vẽ"
   },
   "farmer": {
-    "url": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Bác nông dân chăm chỉ thu hoạch trái ngọt trên cánh đồng"
+    "url": "/assets/ehon/farmer_barn.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon bác nông dân chăm chỉ bên nông trại nắng ấm"
   },
   "silver": {
     "url": "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80",
@@ -2490,9 +2490,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Chiếc bánh kem sinh nhật dâu tây thơm ngon"
   },
   "carrot": {
-    "url": "https://images.unsplash.com/photo-1598170845058-32b9d6a5c317?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Củ cà rốt cam giòn ngọt tươi ngon"
+    "url": "/assets/ehon/carrot.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon củ cà rốt cam tươi ngon trong vườn"
   },
   "cookie": {
     "url": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=800&q=80",
@@ -2510,9 +2510,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Giá vẽ tranh bằng gỗ của họa sĩ nhí"
   },
   "eraser": {
-    "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Cục tẩy trắng nhỏ xinh tẩy sạch nét chì"
+    "url": "/assets/ehon/eraser.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon cục tẩy nhỏ xinh sạch nét chì"
   },
   "honey": {
     "url": "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=800&q=80",
@@ -2540,9 +2540,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Chiếc radio cổ điển phát những bài ca vui tươi"
   },
   "rocket": {
-    "url": "https://images.unsplash.com/photo-1517976487588-29a32c253d71?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Tàu con thoi phóng vút vào không gian vũ trụ"
+    "url": "/assets/ehon/rocket.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon tàu con thoi bay qua các vì sao"
   },
   "mitten": {
     "url": "https://images.unsplash.com/photo-1582966772680-860e372bb558?auto=format&fit=crop&w=800&q=80",
@@ -2655,9 +2655,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Dây khóa kéo áo khoác ấm áp của bé"
   },
   "zucchini": {
-    "url": "https://images.unsplash.com/photo-1598170845058-32b9d6a5c317?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Quả bí ngòi xanh tươi ngon trong vườn nhà"
+    "url": "/assets/ehon/carrot.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon củ quả tươi ngon trong vườn nhà"
   },
   "wagon": {
     "url": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80",
@@ -2700,9 +2700,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Chiếc du thuyền trắng rẽ sóng khơi xa"
   },
   "yo-yo": {
-    "url": "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Con quay yo-yo gỗ quay tít lên xuống"
+    "url": "/assets/ehon/yoyo.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon con quay yoyo sắc màu xoay tít lấp lánh"
   },
   "yolk": {
     "url": "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=800&q=80",
@@ -2710,9 +2710,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Lòng đỏ trứng gà tròn xoe óng ả bổ dưỡng"
   },
   "axe": {
-    "url": "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Chiếc rìu nhỏ bằng gỗ đồ chơi an toàn cho bé"
+    "url": "/assets/ehon/ax.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon chiếc rìu gỗ dựng bên gốc cây nở hoa"
   },
   "taxi": {
     "url": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80",
@@ -2815,9 +2815,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Trang giấy trắng mịn màng chờ bé tô vẽ"
   },
   "ruler": {
-    "url": "https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Cây thước kẻ gỗ đo từng phân thẳng tắp"
+    "url": "/assets/ehon/ruler.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon cây thước kẻ gỗ đo nét thẳng"
   },
   "hammer": {
     "url": "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=800&q=80",
@@ -2865,9 +2865,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Bé giơ tay đặt câu hỏi thông minh trong lớp"
   },
   "aim": {
-    "url": "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Bé nhắm đích quả bóng lăn trúng khung thành"
+    "url": "/assets/ehon/ball.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon nhắm đích quả bóng lăn trúng đích"
   },
   "admire": {
     "url": "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=800&q=80",
@@ -2955,9 +2955,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Bé can đảm leo lên khung leo trèo công viên"
   },
   "catch": {
-    "url": "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Bé đón bắt gọn gàng quả bóng màu sắc"
+    "url": "/assets/ehon/ball.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon đón bắt quả bóng sắc màu"
   },
   "enter": {
     "url": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=800&q=80",
@@ -3000,9 +3000,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Bé tự tin đạp chiếc xe đạp ba bánh quanh sân"
   },
   "roll": {
-    "url": "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Quả bóng tròn lăn tít trên sân cỏ"
+    "url": "/assets/ehon/ball.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon quả bóng tròn lăn tít trên sân cỏ"
   },
   "march": {
     "url": "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80",
@@ -3090,9 +3090,9 @@ export const WORD_VISUALS_MAP: Record<string, WordVisual> = {
     "alt": "Bé reo mừng khi tìm thấy chiếc vỏ ốc lấp lánh"
   },
   "bounce": {
-    "url": "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=800&q=80",
-    "type": "photo",
-    "alt": "Quả bóng nảy tưng tưng trên mặt sân"
+    "url": "/assets/ehon/ball.jpg",
+    "type": "ehon",
+    "alt": "Tranh Ehon quả bóng nảy tưng tưng vui mắt"
   },
   "build": {
     "url": "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=800&q=80",

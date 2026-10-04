@@ -248,6 +248,10 @@ export const StickerAlbumModal: React.FC<StickerAlbumModalProps> = ({ onClose, o
                           ? 'group-hover:scale-108'
                           : 'filter grayscale opacity-30 scale-95'
                       }`}
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = '/assets/ehon/star.jpg';
+                      }}
                     />
 
                     {/* Locked Overlay */}
@@ -320,7 +324,15 @@ export const StickerAlbumModal: React.FC<StickerAlbumModalProps> = ({ onClose, o
           <div className="px-4 py-2.5 bg-amber-100/90 border-t-2 border-amber-300 flex items-center justify-between shrink-0">
             <div className="flex items-center space-x-3 overflow-hidden">
               <div className="w-10 h-10 rounded-xl overflow-hidden border-2 border-amber-400 shrink-0 bg-white shadow-xs">
-                <img src={selectedSticker.imageUrl} alt={selectedSticker.name} className="w-full h-full object-cover" />
+                <img 
+                  src={selectedSticker.imageUrl} 
+                  alt={selectedSticker.name} 
+                  className="w-full h-full object-cover" 
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = '/assets/ehon/star.jpg';
+                  }}
+                />
               </div>
               <div className="truncate">
                 <div className="text-xs sm:text-sm font-black text-amber-950 flex items-center space-x-1.5 truncate">

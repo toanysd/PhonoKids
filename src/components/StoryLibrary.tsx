@@ -141,6 +141,10 @@ export const StoryLibrary: React.FC<StoryLibraryProps> = ({
                     alt={visual.alt}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = '/assets/ehon/archipelago.jpg';
+                    }}
                   />
                   <div className="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-xs text-white text-[11px] font-black px-2.5 py-1 rounded-full flex items-center space-x-1 shadow">
                     <span>🎨 Tranh Ehon</span>

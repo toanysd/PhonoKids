@@ -399,6 +399,10 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                     src={primaryVisual.url}
                     alt={primaryVisual.alt}
                     className="w-full h-full object-cover rounded-2xl filter drop-shadow hover:scale-105 transition-transform duration-300"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = '/assets/ehon/star.jpg';
+                    }}
                   />
                   <div className="absolute top-2 left-2 bg-amber-400 text-amber-950 text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-xs">
                     🎨 Tranh Sơn Dầu Ehon
@@ -456,6 +460,10 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                   src={primaryVisual.url}
                   alt={primaryVisual.alt}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = '/assets/ehon/star.jpg';
+                  }}
                 />
                 <div className="absolute top-2 right-2 bg-amber-400 text-amber-950 text-[10px] font-black px-2.5 py-0.5 rounded-full shadow">
                   🎨 {phoneme.tprAction.title}
@@ -711,6 +719,10 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                           src={cardVisual.url}
                           alt={cardVisual.alt}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = '/assets/ehon/star.jpg';
+                          }}
                         />
                         <div className="absolute top-2 left-2 bg-amber-400 text-amber-950 text-[10px] font-black px-2.5 py-0.5 rounded-full shadow">
                           {cardVisual.type === 'ehon' ? '🎨 Tranh Ehon' : '📷 Ảnh Thật'}
@@ -855,6 +867,10 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                             alt={visual.alt}
                             className="w-full h-full object-cover rounded-xl filter drop-shadow hover:scale-105 transition-transform duration-300"
                             loading="lazy"
+                            onError={(e) => {
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.src = '/assets/ehon/star.jpg';
+                            }}
                           />
                           
                           <div className="absolute top-2 left-2 bg-amber-400/90 text-amber-950 text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-md backdrop-blur-xs">

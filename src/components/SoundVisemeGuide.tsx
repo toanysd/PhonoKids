@@ -50,6 +50,10 @@ export const SoundVisemeGuide: React.FC<SoundVisemeGuideProps> = ({ phoneme }) =
               src={visemePhoto.url}
               alt={visemePhoto.alt}
               className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = '/assets/visemes/closed.jpg';
+              }}
             />
             {/* Real photo badge */}
             <div className="absolute top-2 left-2 bg-black/70 backdrop-blur-xs text-white text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center space-x-1 shadow">

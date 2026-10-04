@@ -1,6 +1,7 @@
 // Service providing rich Ehon painted artwork and high-res educational photography
 // Eliminating flat icons/vectors in favor of rich oil/gouache/acrylic painted textures
 import { WORD_VISUALS_MAP } from '../data/wordVisuals';
+import { PHONICS_WORD_BANK } from '../data/phonicsWordBank';
 import { DecodableStory, StoryPage } from '../types/story';
 
 export interface WordVisual {
@@ -10,250 +11,491 @@ export interface WordVisual {
 }
 
 const EHON_MAP: Record<string, WordVisual> = {
-  // Core generated Ehon illustrations (Eric Carle collage & gouache style)
+  'pen': {
+    url: '/assets/ehon/pen.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chiếc bút máy lấp lánh viết chữ xinh'
+  },
+  'mouse': {
+    url: '/assets/ehon/mouse.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú chuột nhỏ quàng khăn cầm quả dâu'
+  },
+  'doll': {
+    url: '/assets/ehon/doll.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon búp bê vải xinh xắn mặc váy hoa'
+  },
+  'rocket': {
+    url: '/assets/ehon/rocket.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon tàu con thoi bay qua các vì sao'
+  },
+  'carrot': {
+    url: '/assets/ehon/carrot.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon củ cà rốt cam tươi ngon trong vườn'
+  },
+  'seal': {
+    url: '/assets/ehon/seal.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú hải cẩu trắng đáng yêu trên tảng băng'
+  },
+  'fork': {
+    url: '/assets/ehon/fork.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chiếc nĩa và thìa vui tươi thưởng thức hoa quả'
+  },
+  'soap': {
+    url: '/assets/ehon/soap.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon bánh xà phòng thơm nhiều bọt bóng lấp lánh'
+  },
+  'ax': {
+    url: '/assets/ehon/ax.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chiếc rìu gỗ dựng bên gốc cây nở hoa'
+  },
+  'axe': {
+    url: '/assets/ehon/ax.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chiếc rìu gỗ dựng bên gốc cây nở hoa'
+  },
+  'chop': {
+    url: '/assets/ehon/ax.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chiếc rìu bổ củi của bác tiều phu'
+  },
+  'tin': {
+    url: '/assets/ehon/tin.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon hộp thiếc cổ điển đựng bánh quy và kẹo ngọt'
+  },
+  'quilt': {
+    url: '/assets/ehon/quilt.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chiếc chăn ghép vải hoa ấm cúng trên ghế bập bênh'
+  },
+  'yoyo': {
+    url: '/assets/ehon/yoyo.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon con quay yoyo sắc màu xoay tít lấp lánh'
+  },
+  'yo-yo': {
+    url: '/assets/ehon/yoyo.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon con quay yoyo sắc màu xoay tít lấp lánh'
+  },
+  'swing': {
+    url: '/assets/ehon/swing.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chiếc xích đu gỗ đu đưa dưới tán cây cổ thụ'
+  },
+  'dab': {
+    url: '/assets/ehon/dab.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon bạn nhỏ nhảy điệu nhảy dab chiến thắng vui tươi'
+  },
+  'lime': {
+    url: '/assets/ehon/lime.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon quả chanh xanh mọng nước thơm mát'
+  },
+  'otter': {
+    url: '/assets/ehon/otter.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú rái cá bơi ngửa trên dòng suối trong'
+  },
+  'beaver': {
+    url: '/assets/ehon/otter.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú hải ly bơi lội trên dòng suối mát'
+  },
+  'walrus': {
+    url: '/assets/ehon/seal.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú hải cẩu bơi trên tảng băng trắng'
+  },
+  'toad': {
+    url: '/assets/ehon/toad.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú cóc nhỏ hiền lành ngồi trên tảng đá bên suối'
+  },
+  'koala': {
+    url: '/assets/ehon/koala.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú gấu túi koala ôm cành cây bạch đàn'
+  },
+  'hedgehog': {
+    url: '/assets/ehon/hedgehog.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú nhím gai cuộn tròn ngủ giữa lá mùa thu'
+  },
+  'can': {
+    url: '/assets/ehon/can.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon lon nước ép hoa quả cam dâu tươi mát'
+  },
+  'pail': {
+    url: '/assets/ehon/pail.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon xô xúc cát vàng rực rỡ bên bờ biển'
+  },
+  'ruler': {
+    url: '/assets/ehon/ruler.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon cây thước kẻ gỗ đo nét thẳng'
+  },
+  'eraser': {
+    url: '/assets/ehon/eraser.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon cục tẩy nhỏ xinh sạch nét chì'
+  },
+  'ball': {
+    url: '/assets/ehon/ball.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon quả bóng tròn nảy tưng tưng trên đồng cỏ'
+  },
+  'round': {
+    url: '/assets/ehon/ball.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon quả bóng tròn nảy tưng tưng'
+  },
+  'roll': {
+    url: '/assets/ehon/ball.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon quả bóng tròn lăn tít trên sân cỏ'
+  },
+  'bounce': {
+    url: '/assets/ehon/ball.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon quả bóng nảy tưng tưng vui mắt'
+  },
+  'kick': {
+    url: '/assets/ehon/ball.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon quả bóng lăn trên thảm cỏ xanh'
+  },
+  'catch': {
+    url: '/assets/ehon/ball.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon đón bắt quả bóng sắc màu'
+  },
+  'aim': {
+    url: '/assets/ehon/ball.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon nhắm đích quả bóng lăn trúng đích'
+  },
+  'zucchini': {
+    url: '/assets/ehon/carrot.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon củ quả tươi ngon trong vườn nhà'
+  },
+  'yam': {
+    url: '/assets/ehon/carrot.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon củ khoai thơm ngọt từ đất lành'
+  },
+  'cork': {
+    url: '/assets/ehon/tin.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon nút đậy đồ dùng nhỏ xinh'
+  },
+  'pan': {
+    url: '/assets/ehon/sam_pan.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chiếc chảo rán nhỏ trong gian bếp ấm cúng'
+  },
+  'clue': {
+    url: '/assets/ehon/blue_clue.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon dấu chân manh mối màu xanh kỳ diệu'
+  },
+  'spoon': {
+    url: '/assets/ehon/moon_spoon.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chiếc thìa nhỏ xinh ánh trăng'
+  },
+  'frog': {
+    url: '/assets/ehon/frog_log.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú ếch xanh ngồi trên khúc gỗ'
+  },
+  'log': {
+    url: '/assets/ehon/frog_log.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon khúc gỗ mộc trên thảm rêu xanh'
+  },
+  'fox': {
+    url: '/assets/ehon/fox_box.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú cáo nhỏ tinh nghịch trong chiếc hộp'
+  },
+  'box': {
+    url: '/assets/ehon/fox_box.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chiếc hộp các-tông xinh xắn'
+  },
+  'book': {
+    url: '/assets/ehon/good_book.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon cuốn sách truyện tranh mở ra muôn điều hay'
+  },
+  'goat': {
+    url: '/assets/ehon/goat_boat.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon bạn dê trắng chèo thuyền trên sông'
+  },
+  'boat': {
+    url: '/assets/ehon/goat_boat.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon con thuyền nhỏ lướt sóng êm đềm'
+  },
+  'king': {
+    url: '/assets/ehon/king_ring.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon đức vua hiền từ đeo chiếc nhẫn vàng'
+  },
+  'ring': {
+    url: '/assets/ehon/king_ring.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chiếc nhẫn vàng ngọc lấp lánh'
+  },
+  'rain': {
+    url: '/assets/ehon/train_rain.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon đoàn tàu chạy dưới cơn mưa mát lành'
+  },
+  'train': {
+    url: '/assets/ehon/train_rain.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon đoàn tàu hơi nước sắc màu chạy qua thung lũng'
+  },
+  'bee': {
+    url: '/assets/ehon/bee_tree.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú ong chăm chỉ bay quanh tán cây cổ thụ'
+  },
+  'tree': {
+    url: '/assets/ehon/bee_tree.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon cây đại thụ xanh tươi rợp bóng mát'
+  },
+  'bug': {
+    url: '/assets/ehon/bug_rug.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú bọ nhỏ dễ thương trên tấm thảm len'
+  },
+  'rug': {
+    url: '/assets/ehon/bug_rug.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon tấm thảm len đan màu sắc ấm áp'
+  },
+  'hug': {
+    url: '/assets/ehon/puppy_hug.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon cái ôm ấm áp vỗ về bạn cún nhỏ'
+  },
+  'puppy': {
+    url: '/assets/ehon/puppy_hug.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon bạn cún con lông mềm được ôm âu yếm'
+  },
+  'shell': {
+    url: '/assets/ehon/shells_box.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon những vỏ sò óng ánh trong hộp báu vật'
+  },
+  'shells': {
+    url: '/assets/ehon/shells_box.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon những vỏ sò óng ánh'
+  },
+  'chick': {
+    url: '/assets/ehon/chick_chip.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú gà con lông vàng hót líu lo'
+  },
+  'chip': {
+    url: '/assets/ehon/chick_chip.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú gà con nhặt hạt thóc nhỏ'
+  },
+  'clown': {
+    url: '/assets/ehon/clown_cloud.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú hề tung hứng những đám mây ngũ sắc'
+  },
+  'cloud': {
+    url: '/assets/ehon/clown_cloud.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon đám mây bông trắng bồng bềnh'
+  },
+  'farmer': {
+    url: '/assets/ehon/farmer_barn.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon bác nông dân chăm chỉ bên nông trại nắng ấm'
+  },
+  'barn': {
+    url: '/assets/ehon/farmer_barn.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chuồng trại nông thôn màu đỏ ấm áp'
+  },
+  'queen': {
+    url: '/assets/ehon/queen_park.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon Nữ hoàng hiền từ dạo bước trong công viên hoa lá'
+  },
+  'park': {
+    url: '/assets/ehon/queen_park.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon công viên hoa lá rực rỡ nắng mai'
+  },
+  'coin': {
+    url: '/assets/ehon/queen_coin.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon đồng xu ngôi sao vàng lấp lánh trên cỏ xanh'
+  },
+  'fish': {
+    url: '/assets/ehon/three_fish.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon đàn cá sắc màu bơi lội dưới làn nước biếc'
+  },
+  'moth': {
+    url: '/assets/ehon/three_moths.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon ba chú bướm đêm vỗ cánh dịu dàng'
+  },
+  'star': {
+    url: '/assets/ehon/star.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon ngôi sao vàng lấp lánh'
+  },
+  'sun': {
+    url: '/assets/ehon/sun.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon mặt trời rạng rỡ tỏa tia nắng'
+  },
   'cat': {
     url: '/assets/ehon/cat.jpg',
     type: 'ehon',
-    alt: 'Tranh Ehon cắt dán chú mèo cam sọc rực rỡ'
+    alt: 'Tranh Ehon chú mèo cam sọc rực rỡ'
   },
-  'cat_mat': {
+  'mat': {
     url: '/assets/ehon/cat_mat.jpg',
     type: 'ehon',
-    alt: 'Tranh Ehon chú mèo ngồi trên chiếc thảm đan rực rỡ'
+    alt: 'Tranh Ehon chú mèo ngồi trên chiếc thảm đan'
   },
-  'cat_nap': {
+  'sat': {
+    url: '/assets/ehon/cat_mat.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú mèo ngồi yên sưởi nắng'
+  },
+  'nap': {
     url: '/assets/ehon/cat_nap.jpg',
     type: 'ehon',
     alt: 'Tranh Ehon chú mèo cuộn tròn ngủ trưa êm đềm'
-  },
-  'sam_pan': {
-    url: '/assets/ehon/sam_pan.jpg',
-    type: 'ehon',
-    alt: 'Tranh Ehon bạn Sam cầm chiếc chảo nhỏ trong bếp nắng'
-  },
-  'ant_pan': {
-    url: '/assets/ehon/ant_pan.jpg',
-    type: 'ehon',
-    alt: 'Tranh Ehon chú kiến bé nhỏ ngồi trong lòng chảo'
-  },
-  'sam_pat_ant': {
-    url: '/assets/ehon/sam_pat_ant.jpg',
-    type: 'ehon',
-    alt: 'Tranh Ehon bạn Sam vỗ về vuốt ve chú kiến nhỏ trên lá'
-  },
-  'hen_dog': {
-    url: '/assets/ehon/hen_dog.jpg',
-    type: 'ehon',
-    alt: 'Tranh Ehon cô gà mái đỏ gặp gỡ bạn cún lông xù vui tươi'
-  },
-  'three_fish': {
-    url: '/assets/ehon/three_fish.jpg',
-    type: 'ehon',
-    alt: 'Tranh Ehon ba chú cá sắc màu bơi lội lấp lánh dưới làn nước biếc'
-  },
-  'queen_park': {
-    url: '/assets/ehon/queen_park.jpg',
-    type: 'ehon',
-    alt: 'Tranh Ehon Nữ hoàng hiền từ đội vương miện dạo bước trong công viên hoa lá'
-  },
-  'queen_coin': {
-    url: '/assets/ehon/queen_coin.jpg',
-    type: 'ehon',
-    alt: 'Tranh Ehon Nữ hoàng nhặt đồng xu ngôi sao vàng lấp lánh trên cỏ xanh'
   },
   'cup': {
     url: '/assets/ehon/cup.jpg',
     type: 'ehon',
     alt: 'Tranh Ehon tách trà rực rỡ bốc khói ấm áp'
   },
-  'kite': {
-    url: '/assets/ehon/kite.jpg',
+  'sip': {
+    url: '/assets/ehon/cup.jpg',
     type: 'ehon',
-    alt: 'Tranh Ehon cánh diều rực rỡ bay trên bầu trời xanh'
-  },
-  'sun': {
-    url: '/assets/ehon/sun.jpg',
-    type: 'ehon',
-    alt: 'Tranh Ehon mặt trời rạng rỡ tỏa tia nắng muôn màu'
-  },
-  'apple': {
-    url: '/assets/ehon/apple.jpg',
-    type: 'ehon',
-    alt: 'Tranh Ehon quả táo đỏ mọng cắt dán giấy màu'
+    alt: 'Tranh Ehon nhấp từng ngụm nước ấm trong tách'
   },
   'dog': {
     url: '/assets/ehon/dog.jpg',
     type: 'ehon',
-    alt: 'Tranh Ehon chú cún cưng nô đùa trên đồng cỏ nắng vàng'
+    alt: 'Tranh Ehon chú cún cưng nô đùa trên đồng cỏ'
   },
   'hen': {
     url: '/assets/ehon/hen.jpg',
     type: 'ehon',
     alt: 'Tranh Ehon cô gà mái đỏ mổ thóc trên sân nông trại'
   },
-  'ship': {
-    url: '/assets/ehon/ship.jpg',
+  'pig': {
+    url: '/assets/ehon/pig.jpg',
     type: 'ehon',
-    alt: 'Tranh Ehon con tàu rẽ sóng đại dương rực rỡ sắc màu'
+    alt: 'Tranh Ehon chú heo hồng tinh nghịch'
   },
   'ant': {
     url: '/assets/ehon/ant.jpg',
     type: 'ehon',
-    alt: 'Tranh Ehon chú kiến bé nhỏ vui vẻ vác miếng dâu tây'
+    alt: 'Tranh Ehon chú kiến bé nhỏ chăm chỉ'
   },
-  'pig': {
-    url: '/assets/ehon/pig.jpg',
+  'apple': {
+    url: '/assets/ehon/apple.jpg',
     type: 'ehon',
-    alt: 'Tranh Ehon chú heo hồng tinh nghịch tung tăng vũng nước hoa'
+    alt: 'Tranh Ehon quả táo đỏ mọng cắt dán rực rỡ'
   },
-  'star': {
-    url: '/assets/ehon/star.jpg',
+  'ship': {
+    url: '/assets/ehon/ship.jpg',
     type: 'ehon',
-    alt: 'Tranh Ehon ngôi sao vàng khổng lồ tỏa sáng đêm thanh bình'
+    alt: 'Tranh Ehon con tàu rẽ sóng đại dương'
   },
-  'leo': {
-    url: '/assets/ehon/leo.jpg',
+  'kite': {
+    url: '/assets/ehon/kite.jpg',
     type: 'ehon',
-    alt: 'Tranh Ehon Chú sư tử con Leo thân thiện vẫy tay chào bé'
+    alt: 'Tranh Ehon cánh diều rực rỡ bay trên bầu trời xanh'
   },
-  'giraffe': {
-    url: '/assets/ehon/giraffe.jpg',
+  'sit': {
+    url: '/assets/ehon/sit.jpg',
     type: 'ehon',
-    alt: 'Tranh Ehon Chú hươu cao cổ vươn cổ ngắm những vì sao đêm'
-  },
-  'archipelago': {
-    url: '/assets/ehon/archipelago.jpg',
-    type: 'ehon',
-    alt: 'Tranh toàn cảnh 7 quần đảo Phonics thần tiên nối nhịp cầu vồng'
-  },
-
-  // High-definition rich real photographic assets for vocabulary & drills
-  'snake': {
-    url: 'https://images.unsplash.com/photo-1531386151447-fd76ad50012f?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Chú rắn xanh uốn lượn hiền lành'
-  },
-  'pan': {
-    url: 'https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Chiếc chảo chiên rán sáng bóng'
-  },
-  'tennis': {
-    url: 'https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Quả bóng tennis màu vàng sáng'
-  },
-  'tree': {
-    url: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Cây cổ thụ xanh tươi trong nắng'
+    alt: 'Tranh Ehon em bé ngồi ngoan trên ghế êm ấm áp'
   },
   'moon': {
-    url: 'https://images.unsplash.com/photo-1532693322450-2cb5c511067d?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Mặt trăng tròn vằng vặc đêm rằm'
-  },
-  'umbrella': {
-    url: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Chiếc ô nhiều màu rực rỡ che mưa'
-  },
-  'egg': {
-    url: 'https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Quả trứng gà sạch màu nâu bóng'
-  },
-  'pen': {
-    url: 'https://images.unsplash.com/photo-1585336261026-4180718399b3?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Chiếc bút mực viết chữ đẹp'
-  },
-  'fan': {
-    url: 'https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Chiếc quạt giấy xòe mát rượi'
-  },
-  'van': {
-    url: 'https://images.unsplash.com/photo-1527786356703-4b100091cd2c?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Chiếc xe van dã ngoại xinh xắn'
-  },
-  'tap': {
-    url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Vòi nước sạch trong vắt'
-  },
-  'pin': {
-    url: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Cây ghim an toàn bằng kim loại sáng'
-  },
-  'tin': {
-    url: 'https://images.unsplash.com/photo-1584990347449-34b7f73d8389?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Hộp thiếc đựng bánh kẹo'
-  },
-  'fish': {
-    url: 'https://images.unsplash.com/photo-1524704654690-b56c05c78a00?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Chú cá nhỏ bơi lội trong làn nước xanh'
-  },
-  'mat': {
-    url: '/assets/ehon/cat_mat.jpg',
+    url: '/assets/ehon/moon_spoon.jpg',
     type: 'ehon',
-    alt: 'Chiếc thảm dệt đan màu sắc ấm áp'
-  },
-  'sat': {
-    url: '/assets/ehon/cat.jpg',
-    type: 'ehon',
-    alt: 'Chú mèo ngồi yên sưởi nắng'
+    alt: 'Tranh Ehon vầng trăng tròn vành vạnh đêm rằm'
   },
   'pat': {
     url: '/assets/ehon/sam_pat_ant.jpg',
     type: 'ehon',
-    alt: 'Bé vỗ về vuốt ve thân mật'
+    alt: 'Tranh Ehon bạn nhỏ vỗ về vuốt ve thân mật'
   },
-  'big': {
-    url: 'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Chú voi khổng lồ'
-  },
-  'ben': {
-    url: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Bạn nhỏ tên Ben'
-  },
-  'shun': {
-    url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Tránh né'
-  },
-  'sip': {
-    url: '/assets/ehon/cup.jpg',
+  'leo': {
+    url: '/assets/ehon/leo.jpg',
     type: 'ehon',
-    alt: 'Nhấp từng ngụm nước ấm'
+    alt: 'Tranh Ehon Chú sư tử con Leo thân thiện'
   },
-  'dab': {
-    url: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=800&q=80',
-    type: 'photo',
-    alt: 'Chấm nhẹ'
+  'lion': {
+    url: '/assets/ehon/leo.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú sư tử nhỏ dũng cảm'
+  },
+  'giraffe': {
+    url: '/assets/ehon/giraffe.jpg',
+    type: 'ehon',
+    alt: 'Tranh Ehon chú hươu cao cổ vươn cao ngắm sao'
+  },
+  'archipelago': {
+    url: '/assets/ehon/archipelago.jpg',
+    type: 'ehon',
+    alt: 'Tranh toàn cảnh 7 quần đảo Phonics thần tiên'
   }
 };
 
 export const getWordVisual = (word: string): WordVisual => {
   const clean = word.toLowerCase().trim();
-  if (WORD_VISUALS_MAP[clean]) {
-    return WORD_VISUALS_MAP[clean];
-  }
+  // Prioritize 100% authentic, zero-latency local Ehon artwork first!
   if (EHON_MAP[clean]) {
     return EHON_MAP[clean];
   }
-
-  // Graceful fallback to warm Ehon landscape canvas instead of generic colored pencils
+  if (WORD_VISUALS_MAP[clean]) {
+    return WORD_VISUALS_MAP[clean];
+  }
+  const phMatch = PHONICS_WORD_BANK.find((item) => item.word.toLowerCase() === clean);
+  if (phMatch && phMatch.visual) {
+    return phMatch.visual;
+  }
+  // Safe graceful fallback using local Ehon asset
   return {
-    url: '/assets/ehon/archipelago.jpg',
+    url: '/assets/ehon/star.jpg',
     type: 'ehon',
-    alt: `Tranh Ehon thế giới âm thanh kỳ diệu cho từ ${word}`
+    alt: `Hình minh họa từ vựng: ${word}`
   };
 };
 

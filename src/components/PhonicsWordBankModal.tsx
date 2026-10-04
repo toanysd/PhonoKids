@@ -295,6 +295,10 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
               src={heroBannerUrl} 
               alt="Kho báu từ vựng âm vị Ehon" 
               className="w-full h-full object-cover opacity-85 hover:scale-102 transition-transform duration-700"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = '/assets/ehon/archipelago.jpg';
+              }}
             />
             <div className="absolute inset-0 bg-gradient-to-r from-amber-950/85 via-amber-950/60 to-transparent" />
           </div>
@@ -606,6 +610,10 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
                         src={currentFlashcard.visual.url}
                         alt={currentFlashcard.visual.alt}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = '/assets/ehon/star.jpg';
+                        }}
                       />
 
                       {/* Top Badges */}
@@ -760,6 +768,10 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
                         alt={item.visual.alt}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = '/assets/ehon/star.jpg';
+                        }}
                       />
 
                       {/* Top Badges */}
@@ -930,6 +942,10 @@ export const PhonicsWordBankModal: React.FC<PhonicsWordBankModalProps> = ({
                   src={focusItem.visual.url}
                   alt={focusItem.visual.alt}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = '/assets/ehon/star.jpg';
+                  }}
                 />
                 <div className="absolute top-2 left-2 bg-amber-400 text-amber-950 text-xs font-black px-3 py-1 rounded-full shadow">
                   {focusItem.visual.type === 'ehon' ? '🎨 Tranh Ehon Minh Họa' : '📷 Hình Ảnh Thực Tế'}

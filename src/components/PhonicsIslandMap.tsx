@@ -379,6 +379,10 @@ export const PhonicsIslandMap: React.FC<PhonicsIslandMapProps> = ({
                       !isUnlocked ? 'grayscale' : ''
                     }`}
                     loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = '/assets/ehon/archipelago.jpg';
+                    }}
                   />
                   <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-xs text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow">
                     🎨 Tranh Ehon
