@@ -9,6 +9,7 @@ import confetti from 'canvas-confetti';
 interface ArcadePlaygroundProps {
   onAddStars: (amount: number) => void;
   onBackToHome: () => void;
+  language?: 'en' | 'ja';
 }
 
 type ActiveGame = null | 'phonics_ninja' | 'ehon_claw' | 'letter_tracing' | 'letter_recognition';
@@ -23,6 +24,7 @@ const PRACTICE_LETTERS = [
 export const ArcadePlayground: React.FC<ArcadePlaygroundProps> = ({
   onAddStars,
   onBackToHome,
+  language = 'en'
 }) => {
   const [activeGame, setActiveGame] = useState<ActiveGame>(null);
   const [selectedLetter, setSelectedLetter] = useState<string>('p');
@@ -186,13 +188,19 @@ export const ArcadePlayground: React.FC<ArcadePlaygroundProps> = ({
           <div className="text-center shrink-0 mb-1 sm:mb-2">
             <div className="inline-flex items-center space-x-1.5 bg-amber-200/90 px-3.5 py-1 rounded-full border border-amber-300 text-amber-950 font-black text-xs mb-1 shadow-xs">
               <Gamepad2 className="w-4 h-4 text-amber-700 animate-bounce" />
-              <span>Đấu Trường Tương Tác Sư Phạm Chuẩn Quốc Tế</span>
+              <span>
+                {language === 'ja'
+                  ? 'Đấu Trường Tương Tác Sư Phạm Chuẩn Nhật Bản (ゲーム コーナー)'
+                  : 'Đấu Trường Tương Tác Sư Phạm Chuẩn Quốc Tế'}
+              </span>
             </div>
             <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-amber-950 tracking-tight">
-              Khu Vui Chơi & Ôn Luyện Phonics 🎮
+              {language === 'ja' ? 'Khu Vui Chơi & Ôn Luyện Chữ Kana 🎮🇯🇵' : 'Khu Vui Chơi & Ôn Luyện Phonics 🎮'}
             </h2>
             <p className="text-xs sm:text-sm font-bold text-amber-800 mt-0.5 max-w-2xl mx-auto">
-              Tô nét chữ đa giác quan, săn bắt âm vị, phân biệt cặp chữ dễ nhầm và múa tay vận động thể chất!
+              {language === 'ja'
+                ? 'Tập tô nét chữ Kana cảm ứng, bắt bong bóng Hiragana, chém hoa quả phản xạ và gắp thú Ehon!'
+                : 'Tô nét chữ đa giác quan, săn bắt âm vị, phân biệt cặp chữ dễ nhầm và múa tay vận động thể chất!'}
             </p>
           </div>
 
@@ -207,7 +215,7 @@ export const ArcadePlayground: React.FC<ArcadePlaygroundProps> = ({
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="text-[10px] font-black bg-amber-100 text-amber-900 border border-amber-300 px-2.5 py-0.5 rounded-full uppercase">
-                    ✍️ Đa Giác Quan
+                    ✍️ {language === 'ja' ? 'Thứ Tự Nét Chuẩn' : 'Đa Giác Quan'}
                   </span>
                   <span className="text-[10px] font-black text-amber-900 bg-amber-100 px-2 py-0.5 rounded-full flex items-center space-x-1">
                     <Sparkles className="w-3 h-3 text-amber-600" />
@@ -217,18 +225,20 @@ export const ArcadePlayground: React.FC<ArcadePlaygroundProps> = ({
 
                 <div className="w-full h-28 sm:h-32 rounded-2xl overflow-hidden mb-2 border-2 border-amber-200 relative bg-amber-50 shadow-inner flex items-center justify-center">
                   <div className="text-6xl sm:text-7xl font-black text-amber-500 drop-shadow group-hover:scale-110 transition-transform">
-                    ✍️
+                    {language === 'ja' ? 'あ✍️' : '✍️'}
                   </div>
                   <div className="absolute top-2 left-2 bg-amber-400 text-amber-950 text-[9px] font-black px-2 py-0.5 rounded-full shadow-xs">
-                    Orton-Gillingham
+                    {language === 'ja' ? 'Kana Tracing' : 'Orton-Gillingham'}
                   </div>
                 </div>
 
                 <h3 className="text-base font-black text-amber-950 mb-0.5">
-                  Tô Nét Chữ Diệu Kỳ ✍️
+                  {language === 'ja' ? 'Tô Nét Chữ Kana ✍️' : 'Tô Nét Chữ Diệu Kỳ ✍️'}
                 </h3>
                 <p className="text-[11px] font-bold text-amber-900 leading-snug">
-                  Chấm xuất phát phát sáng, hướng mũi tên chuẩn và phát âm vị bản ngữ chuẩn khi chạm tay!
+                  {language === 'ja'
+                    ? 'Chấm xuất phát phát sáng, hướng mũi tên nét bút chuẩn Tokyo và phát âm bản ngữ khi chạm!'
+                    : 'Chấm xuất phát phát sáng, hướng mũi tên chuẩn và phát âm vị bản ngữ chuẩn khi chạm tay!'}
                 </p>
               </div>
 
@@ -242,7 +252,7 @@ export const ArcadePlayground: React.FC<ArcadePlaygroundProps> = ({
                   }}
                   className="w-full py-2 text-xs font-black shadow-md"
                 >
-                  <span>Vào Tập Tô ✍️</span>
+                  <span>{language === 'ja' ? 'Tập Tô Kana ✍️' : 'Vào Tập Tô ✍️'}</span>
                 </KidButton>
               </div>
             </div>
@@ -255,7 +265,7 @@ export const ArcadePlayground: React.FC<ArcadePlaygroundProps> = ({
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="text-[10px] font-black bg-purple-100 text-purple-900 border border-purple-300 px-2.5 py-0.5 rounded-full uppercase">
-                    🎯 UFLI Foundations
+                    🎯 {language === 'ja' ? 'Phân Biệt Chữ' : 'UFLI Foundations'}
                   </span>
                   <span className="text-[10px] font-black text-purple-900 bg-purple-100 px-2 py-0.5 rounded-full flex items-center space-x-1">
                     <Trophy className="w-3 h-3 text-purple-600" />
@@ -268,15 +278,17 @@ export const ArcadePlayground: React.FC<ArcadePlaygroundProps> = ({
                     🫧🎯
                   </div>
                   <div className="absolute top-2 left-2 bg-purple-400 text-purple-950 text-[9px] font-black px-2 py-0.5 rounded-full shadow-xs">
-                    Cặp b/d & p/q
+                    {language === 'ja' ? 'Hiragana / Katakana' : 'Cặp b/d & p/q'}
                   </div>
                 </div>
 
                 <h3 className="text-base font-black text-purple-950 mb-0.5">
-                  Bắt Bong Bóng Âm Vị 🎯
+                  {language === 'ja' ? 'Bắt Bong Bóng Kana 🎯' : 'Bắt Bong Bóng Âm Vị 🎯'}
                 </h3>
                 <p className="text-[11px] font-bold text-purple-900 leading-snug">
-                  Nghe âm vị tinh khiết, bắt bong bóng tương ứng và giải mã phân biệt các cặp chữ dễ nhầm!
+                  {language === 'ja'
+                    ? 'Nghe âm chuẩn Tokyo, chạm bong bóng chữ Kana tương ứng và phân biệt cặp chữ dễ nhầm!'
+                    : 'Nghe âm vị tinh khiết, bắt bong bóng tương ứng và giải mã phân biệt các cặp chữ dễ nhầm!'}
                 </p>
               </div>
 
@@ -319,16 +331,18 @@ export const ArcadePlayground: React.FC<ArcadePlaygroundProps> = ({
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-2">
                     <span className="text-white font-black text-sm drop-shadow-md">
-                      Phonics Ninja 🍎🗡️
+                      {language === 'ja' ? 'Kana Ninja 🍎🗡️' : 'Phonics Ninja 🍎🗡️'}
                     </span>
                   </div>
                 </div>
 
                 <h3 className="text-base font-black text-emerald-950 mb-0.5">
-                  Chém Âm Vị Ehon 🍎
+                  {language === 'ja' ? 'Ninja Chém Chữ Kana 🍎' : 'Chém Âm Vị Ehon 🍎'}
                 </h3>
                 <p className="text-[11px] font-bold text-emerald-900 leading-snug">
-                  Múa tay trước camera hoặc vuốt ngón tay để chém các quả táo Ehon phát ra âm đang học!
+                  {language === 'ja'
+                    ? 'Múa tay trước camera hoặc vuốt ngón tay để chém các quả táo chứa chữ Kana đang học!'
+                    : 'Múa tay trước camera hoặc vuốt ngón tay để chém các quả táo Ehon phát ra âm đang học!'}
                 </p>
               </div>
 
@@ -380,13 +394,15 @@ export const ArcadePlayground: React.FC<ArcadePlaygroundProps> = ({
                   Gắp Thú Cưng Ehon 🧸
                 </h3>
                 <p className="text-[11px] font-bold text-rose-900 leading-snug">
-                  Lái cần cẩu gắp bạn Leo, Gà Henny, Heo hồng nghe phát âm từ vựng và mở khóa Sticker!
+                  {language === 'ja'
+                    ? 'Lái cần cẩu gắp bạn Leo, Gà Henny, Heo hồng nghe phát âm từ vựng tiếng Nhật và mở khóa Sticker!'
+                    : 'Lái cần cẩu gắp bạn Leo, Gà Henny, Heo hồng nghe phát âm từ vựng và mở khóa Sticker!'}
                 </p>
               </div>
 
               <div className="mt-2 pt-2 border-t border-rose-100">
                 <KidButton
-                  variant="secondary"
+                  variant="accent"
                   size="sm"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -394,7 +410,7 @@ export const ArcadePlayground: React.FC<ArcadePlaygroundProps> = ({
                   }}
                   className="w-full py-2 text-xs font-black shadow-md text-rose-900"
                 >
-                  <span>Gắp Thú Cưng 🧸</span>
+                  <span>{language === 'ja' ? 'Vào Gắp Thú 🧸' : 'Gắp Thú Cưng 🧸'}</span>
                 </KidButton>
               </div>
             </div>

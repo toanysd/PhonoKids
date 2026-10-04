@@ -21,6 +21,16 @@ RULES FOR TALKING TO KIDS:
 5. Response style: Always praise their effort! Include 1 cute emoji (🦁, 🐱, ⭐, 🍎). End with a fun little challenge or question.
 Example: "Great job! A is for Apple! Can you say /æ/ /æ/ Apple? 🍎"`;
 
+const LEO_SYSTEM_INSTRUCTION_JA = `You are Leo the Lion (レオくん), a warm, joyful, and patient Japanese-learning companion for children aged 3 to 8 years old in the PhonoKids Ehon Kana app.
+
+RULES FOR TALKING TO KIDS:
+1. Tone: Cheerful, enthusiastic, kind, gentle, like a big friendly brother lion!
+2. Language: Very simple Japanese in Hiragana/Katakana (1 short sentence) followed by a short Vietnamese translation in parentheses.
+3. Content: Focus ONLY on Japanese Kana sounds (A-I-U-E-O), basic words (animals, flowers, food, colors), clapping, singing, and praising effort!
+4. Child Safety (COPPA): Never ask for child's private info. Gently redirect to Kana fun.
+5. Response style: Always praise their effort! Include 1 cute emoji (🦁, 🐱, 🌸, 🍎). End with a cute question.
+Example: "こんにちは！「あ」は あかい りんご の「あ」だよ！(Xin chào! Chữ 'A' trong quả táo đỏ mọng nè!) 🍎"`;
+
 // Pre-authored pedagogical offline responses when API key is not configured
 const SCRIPTED_RESPONSES: Record<string, { en: string; vi: string }> = {
   'hello': {
@@ -46,6 +56,37 @@ const SCRIPTED_RESPONSES: Record<string, { en: string; vi: string }> = {
   'default': {
     en: "Super effort! English is so much fun with you! Let's roar like a lion together: Roarrr! 🦁⭐",
     vi: "Bé giỏi quá! Học tiếng Anh cùng bé vui thật đấy! Chúng mình cùng gầm vang như sư tử nhé!"
+  }
+};
+
+const SCRIPTED_RESPONSES_JA: Record<string, { ja: string; vi: string }> = {
+  'hello': {
+    ja: "ガオー！こんにちは！ぼくは レオ だよ！きょうも いっしょに たのしく にほんごを まなぼうね！🦁⭐",
+    vi: "Gaooo! Xin chào bạn nhỏ! Tớ là Leo nè! Hôm nay cùng tớ học tiếng Nhật thật vui nhé!"
+  },
+  'cat': {
+    ja: "にゃー！「ねこ」は「ね」から はじまるよ！ねこちゃん かわいいね！🐱",
+    vi: "Meo meo! Con mèo bắt đầu bằng chữ 'ne' đó bé! Chú mèo đáng yêu quá!"
+  },
+  'dog': {
+    ja: "わんわん！「いぬ」は「い」から はじまるよ！げんきな わんちゃんだね！🐶",
+    vi: "Gâu gâu! Chú cún bắt đầu bằng chữ 'i' đó! Bạn cún thật khỏe khoắn!"
+  },
+  'sakura': {
+    ja: "きれい！「さくら」の ピンクいろの はなが さいたよ！🌸",
+    vi: "Đẹp quá! Những bông hoa Sakura màu hồng đã nở rộ rồi nè!"
+  },
+  'apple': {
+    ja: "おいしい！「あかい りんご」を たべよう！あ・か・い！🍎",
+    vi: "Ngon tuyệt! Cùng ăn quả táo đỏ mọng nào! Đỏ thắm thơm ngon!"
+  },
+  'riddle': {
+    ja: "なぞなぞ だよ！「わんわん」と なく かわいい どうぶつは だーれだ？🐶",
+    vi: "Đố bé nè! Bạn động vật nào kêu 'Gâu gâu' đáng yêu vậy nhỉ?"
+  },
+  'default': {
+    ja: "すごいね！じょうずだね！レオと いっしょに ガオー！🦁⭐",
+    vi: "Bé siêu quá! Cố gắng lắm nha! Cùng gầm vang với Leo nào: Gaooo!"
   }
 };
 
@@ -130,7 +171,8 @@ class GeminiService {
   // Send message to Leo (Uses Gemini API when key is configured, with graceful fallback to Scripted Leo)
   async chatWithLeo(
     childMessage: string,
-    history: ChatMessage[] = []
+    history: ChatMessage[] = [],
+    language: 'en' | 'ja' = 'en'
   ): Promise<{ text: string; vietnameseMeaning?: string; isAiGenerated: boolean }> {
     const settings = this.getSettings();
     const apiKey = settings.geminiApiKey?.trim();
@@ -138,11 +180,11 @@ class GeminiService {
 
     // If no API key configured, use friendly offline pedagogical scripted engine
     if (!apiKey) {
-      return this.getScriptedResponse(childMessage);
+      return this.getScriptedResponse(childMessage, language);
     }
 
     // Check fast local cache for repeated kid prompts
-    const cached = this.getCachedResponse(childMessage);
+    const cached = this.getCachedResponse(`${language}_${childMessage}`);
     if (cached) {
       return {
         text: cached,
@@ -152,14 +194,19 @@ class GeminiService {
 
     try {
       // Build conversation history for Gemini API
+      const sysInstruction = language === 'ja' ? LEO_SYSTEM_INSTRUCTION_JA : LEO_SYSTEM_INSTRUCTION;
+      const ackText = language === 'ja'
+        ? "ガオー！わかりました！ぼくは レオ だよ！こどもと いっしょに たのしく にほんごを はなすよ！🦁"
+        : "Roar! I understand! I am Leo the Lion and I will talk cheerfully, simply, and safely with the child! 🦁";
+
       const contents = [
         {
           role: 'user',
-          parts: [{ text: `System Instruction: ${LEO_SYSTEM_INSTRUCTION}` }]
+          parts: [{ text: `System Instruction: ${sysInstruction}` }]
         },
         {
           role: 'model',
-          parts: [{ text: "Roar! I understand! I am Leo the Lion and I will talk cheerfully, simply, and safely with the child! 🦁" }]
+          parts: [{ text: ackText }]
         }
       ];
 
@@ -241,10 +288,35 @@ class GeminiService {
   }
 
   // Offline scripted fallback
-  private getScriptedResponse(childMessage: string): { text: string; vietnameseMeaning: string; isAiGenerated: boolean } {
+  private getScriptedResponse(
+    childMessage: string,
+    language: 'en' | 'ja' = 'en'
+  ): { text: string; vietnameseMeaning: string; isAiGenerated: boolean } {
     const lower = childMessage.toLowerCase();
+
+    if (language === 'ja') {
+      let resJa = SCRIPTED_RESPONSES_JA['default'];
+      if (lower.includes('hello') || lower.includes('hi') || lower.includes('chào') || lower.includes('こんにちは') || lower.includes('konnichiwa')) {
+        resJa = SCRIPTED_RESPONSES_JA['hello'];
+      } else if (lower.includes('cat') || lower.includes('mèo') || lower.includes('ねこ') || lower.includes('neko')) {
+        resJa = SCRIPTED_RESPONSES_JA['cat'];
+      } else if (lower.includes('dog') || lower.includes('chó') || lower.includes('いぬ') || lower.includes('inu')) {
+        resJa = SCRIPTED_RESPONSES_JA['dog'];
+      } else if (lower.includes('sakura') || lower.includes('hoa') || lower.includes('さくら')) {
+        resJa = SCRIPTED_RESPONSES_JA['sakura'];
+      } else if (lower.includes('apple') || lower.includes('táo') || lower.includes('りんご') || lower.includes('ringo')) {
+        resJa = SCRIPTED_RESPONSES_JA['apple'];
+      } else if (lower.includes('đố') || lower.includes('riddle') || lower.includes('chơi') || lower.includes('なぞなぞ')) {
+        resJa = SCRIPTED_RESPONSES_JA['riddle'];
+      }
+      return {
+        text: resJa.ja,
+        vietnameseMeaning: resJa.vi,
+        isAiGenerated: false
+      };
+    }
+
     let res = SCRIPTED_RESPONSES['default'];
-    
     if (lower.includes('hello') || lower.includes('hi') || lower.includes('chào')) {
       res = SCRIPTED_RESPONSES['hello'];
     } else if (lower.includes('cat') || lower.includes('mèo')) {

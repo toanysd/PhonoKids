@@ -8,35 +8,47 @@ import { getStoryCoverVisual } from '../services/imageService';
 interface StoryLibraryProps {
   completedStories: string[];
   onSelectStory: (story: DecodableStory) => void;
+  stories?: DecodableStory[];
+  language?: 'en' | 'ja';
 }
 
 export const StoryLibrary: React.FC<StoryLibraryProps> = ({
   completedStories,
   onSelectStory,
+  stories = DECODABLE_STORIES,
+  language = 'en'
 }) => {
   const [selectedStage, setSelectedStage] = useState<number | 'all'>('all');
 
   const filteredStories = selectedStage === 'all'
-    ? DECODABLE_STORIES
-    : DECODABLE_STORIES.filter(s => s.stage === selectedStage);
+    ? stories
+    : stories.filter(s => s.stage === selectedStage);
 
   const handleStoryClick = (story: DecodableStory) => {
     audioService.playPopSound(500);
     onSelectStory(story);
   };
 
+  const isJa = language === 'ja';
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-4">
       <div className="text-center mb-4">
         <div className="inline-flex items-center space-x-1.5 bg-amber-200/90 px-3.5 py-1 rounded-full border border-amber-300 text-amber-950 font-black text-xs mb-1.5 shadow-xs">
           <BookOpen className="w-4 h-4 text-amber-700" />
-          <span>Thư Viện Tranh Truyện Ehon Đọc Giải Mã (Decodable Picture Books)</span>
+          <span>
+            {isJa
+              ? 'Thư Viện Tranh Truyện Ehon Tiếng Nhật (絵本ライブラリー)'
+              : 'Thư Viện Tranh Truyện Ehon Đọc Giải Mã (Decodable Picture Books)'}
+          </span>
         </div>
         <h2 className="text-2xl md:text-3xl font-black text-amber-950 tracking-tight">
-          Cùng Khám Phá Tranh Truyện Ehon! 📚
+          {isJa ? 'Cùng Khám Phá Tranh Truyện Ehon Tiếng Nhật! 📚🌸' : 'Cùng Khám Phá Tranh Truyện Ehon! 📚'}
         </h2>
         <p className="text-xs md:text-sm font-bold text-amber-800 mt-1 max-w-xl mx-auto">
-          Tranh vẽ cắt dán nghệ thuật rực rỡ, tích hợp đọc giải mã từng từ theo 4 cấp độ từ mầm non đến tiểu học.
+          {isJa
+            ? 'Tranh minh họa ấm áp phong cách Ehon Nhật Bản, câu từ ngắn gọn thuần Hiragana kèm dịch nghĩa giúp bé yêu thích tiếng Nhật tự nhiên.'
+            : 'Tranh vẽ cắt dán nghệ thuật rực rỡ, tích hợp đọc giải mã từng từ theo 4 cấp độ từ mầm non đến tiểu học.'}
         </p>
 
         {/* Stage Filter */}

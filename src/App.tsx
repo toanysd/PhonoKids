@@ -20,6 +20,9 @@ import { DecodableStory } from './types/story';
 import { KanaItem } from './types/japanese';
 import { ChildProfile, SessionSettings } from './types/user';
 import { DECODABLE_STORIES } from './data/stories';
+import { JAPANESE_STORIES } from './data/japaneseStories';
+import { JAPANESE_MINIMAL_PAIRS } from './data/japaneseMinimalPairs';
+import { JAPANESE_BLENDING_WORDS } from './data/japaneseBlendingWords';
 
 import { storageService } from './services/storageService';
 import { audioService } from './services/audioService';
@@ -158,6 +161,15 @@ export const App: React.FC = () => {
     try {
       localStorage.setItem('phonokids_current_lang', nextLang);
     } catch {}
+    if (currentView === 'lesson') {
+      setCurrentView('island_map');
+      setActivePhoneme(null);
+      setActiveKana(null);
+    }
+    if (currentView === 'story_reader') {
+      setCurrentView('stories');
+      setActiveStory(null);
+    }
   };
 
   const isViewportLockedView = 
@@ -234,14 +246,17 @@ export const App: React.FC = () => {
           <StoryLibrary
             completedStories={profile.completedStories}
             onSelectStory={handleSelectStory}
+            stories={currentLanguage === 'ja' ? JAPANESE_STORIES : DECODABLE_STORIES}
+            language={currentLanguage}
           />
         )}
 
         {currentView === 'story_reader' && activeStory && (() => {
-          const sIdx = DECODABLE_STORIES.findIndex((s) => s.id === activeStory.id);
-          const nextStory = sIdx !== -1 && sIdx + 1 < DECODABLE_STORIES.length
-            ? DECODABLE_STORIES[sIdx + 1]
-            : DECODABLE_STORIES[0];
+          const activeStories = currentLanguage === 'ja' ? JAPANESE_STORIES : DECODABLE_STORIES;
+          const sIdx = activeStories.findIndex((s) => s.id === activeStory.id);
+          const nextStory = sIdx !== -1 && sIdx + 1 < activeStories.length
+            ? activeStories[sIdx + 1]
+            : activeStories[0];
           return (
             <StoryReader
               story={activeStory}
@@ -254,22 +269,32 @@ export const App: React.FC = () => {
                 setActiveStory(nextStory);
               }}
               nextStoryTitle={nextStory.title}
+              language={currentLanguage}
             />
           );
         })()}
 
         {currentView === 'minimal_pairs' && (
-          <MinimalPairsView onAddStars={handleAddStars} />
+          <MinimalPairsView
+            onAddStars={handleAddStars}
+            drills={currentLanguage === 'ja' ? JAPANESE_MINIMAL_PAIRS : undefined}
+            language={currentLanguage}
+          />
         )}
 
         {currentView === 'blending' && (
-          <BlendingPlayground onAddStars={handleAddStars} />
+          <BlendingPlayground
+            onAddStars={handleAddStars}
+            blends={currentLanguage === 'ja' ? JAPANESE_BLENDING_WORDS : undefined}
+            language={currentLanguage}
+          />
         )}
 
         {currentView === 'arcade' && (
           <ArcadePlayground
             onAddStars={handleAddStars}
             onBackToHome={() => setCurrentView('island_map')}
+            language={currentLanguage}
           />
         )}
 
@@ -277,6 +302,7 @@ export const App: React.FC = () => {
           <AiBuddyChat
             onAddStars={handleAddStars}
             onOpenParentSettings={() => setIsParentGateOpen(true)}
+            language={currentLanguage}
           />
         )}
       </main>

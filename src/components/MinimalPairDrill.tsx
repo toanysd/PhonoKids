@@ -91,45 +91,71 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
     audioSequenceAbortRef.current = token;
     setIsPlayingTarget(true);
 
+    const isJa = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff]/.test(drill.targetWord);
+    const cleanTarget = drill.targetWord.replace(/\s*\(.*?\)/, '').trim();
+
     try {
-      if (modeToPlay === 'word_only') {
-        await audioService.speakEnglish(drill.targetWord, 0.85);
-      } else if (modeToPlay === 'phoneme_word') {
-        // 1. Play target phoneme sound (e.g. /s/)
-        await audioService.playPhoneme(drill.correctPhoneme);
-        if (token.cancelled) return;
-        await new Promise((r) => setTimeout(r, 220));
-        if (token.cancelled) return;
-        // 2. Speak target word
-        await audioService.speakEnglish(drill.targetWord, 0.85);
-      } else if (modeToPlay === 'spell_word') {
-        // Find phonemes from word bank or fallback to split letters
-        const bankItem = PHONICS_WORD_BANK.find(
-          (item) => item.word.toLowerCase() === drill.targetWord.toLowerCase()
-        );
-        const phonemesToPlay = bankItem?.phonemes || drill.targetWord.toLowerCase().split('');
-        for (let i = 0; i < phonemesToPlay.length; i++) {
+      if (isJa) {
+        if (modeToPlay === 'word_only' || modeToPlay === 'phoneme_word') {
+          await audioService.speakJapanese(cleanTarget, 0.85);
+        } else if (modeToPlay === 'spell_word') {
+          const chars = cleanTarget.split('');
+          for (const ch of chars) {
+            if (token.cancelled) return;
+            await audioService.speakJapanese(ch, 0.9);
+            await new Promise((r) => setTimeout(r, 180));
+          }
           if (token.cancelled) return;
-          await audioService.playPhoneme(phonemesToPlay[i]);
+          await new Promise((r) => setTimeout(r, 220));
           if (token.cancelled) return;
-          await new Promise((r) => setTimeout(r, 130));
+          await audioService.speakJapanese(cleanTarget, 0.85);
+        } else if (modeToPlay === 'all') {
+          await audioService.speakJapanese(cleanTarget, 0.85);
+          if (token.cancelled) return;
+          await new Promise((r) => setTimeout(r, 350));
+          if (token.cancelled) return;
+          await audioService.speakJapanese(cleanTarget, 0.85);
         }
-        if (token.cancelled) return;
-        await new Promise((r) => setTimeout(r, 220));
-        if (token.cancelled) return;
-        await audioService.speakEnglish(drill.targetWord, 0.85);
-      } else if (modeToPlay === 'all') {
-        // Clean prompt: remove phonetic slashes and quotes
-        const cleanPrompt = drill.questionPrompt.replace(/\/[^\/]+\//g, '').replace(/["']/g, '').trim();
-        await audioService.speakEnglish(cleanPrompt, 0.85);
-        if (token.cancelled) return;
-        await new Promise((r) => setTimeout(r, 320));
-        if (token.cancelled) return;
-        await audioService.playPhoneme(drill.correctPhoneme);
-        if (token.cancelled) return;
-        await new Promise((r) => setTimeout(r, 220));
-        if (token.cancelled) return;
-        await audioService.speakEnglish(drill.targetWord, 0.85);
+      } else {
+        if (modeToPlay === 'word_only') {
+          await audioService.speakEnglish(drill.targetWord, 0.85);
+        } else if (modeToPlay === 'phoneme_word') {
+          // 1. Play target phoneme sound (e.g. /s/)
+          await audioService.playPhoneme(drill.correctPhoneme);
+          if (token.cancelled) return;
+          await new Promise((r) => setTimeout(r, 220));
+          if (token.cancelled) return;
+          // 2. Speak target word
+          await audioService.speakEnglish(drill.targetWord, 0.85);
+        } else if (modeToPlay === 'spell_word') {
+          // Find phonemes from word bank or fallback to split letters
+          const bankItem = PHONICS_WORD_BANK.find(
+            (item) => item.word.toLowerCase() === drill.targetWord.toLowerCase()
+          );
+          const phonemesToPlay = bankItem?.phonemes || drill.targetWord.toLowerCase().split('');
+          for (let i = 0; i < phonemesToPlay.length; i++) {
+            if (token.cancelled) return;
+            await audioService.playPhoneme(phonemesToPlay[i]);
+            if (token.cancelled) return;
+            await new Promise((r) => setTimeout(r, 130));
+          }
+          if (token.cancelled) return;
+          await new Promise((r) => setTimeout(r, 220));
+          if (token.cancelled) return;
+          await audioService.speakEnglish(drill.targetWord, 0.85);
+        } else if (modeToPlay === 'all') {
+          // Clean prompt: remove phonetic slashes and quotes
+          const cleanPrompt = drill.questionPrompt.replace(/\/[^\/]+\//g, '').replace(/["']/g, '').trim();
+          await audioService.speakEnglish(cleanPrompt, 0.85);
+          if (token.cancelled) return;
+          await new Promise((r) => setTimeout(r, 320));
+          if (token.cancelled) return;
+          await audioService.playPhoneme(drill.correctPhoneme);
+          if (token.cancelled) return;
+          await new Promise((r) => setTimeout(r, 220));
+          if (token.cancelled) return;
+          await audioService.speakEnglish(drill.targetWord, 0.85);
+        }
       }
     } catch {
       // Ignore interruption
@@ -217,9 +243,13 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
       autoReadTimeoutRef.current = null;
     }
     audioSequenceAbortRef.current.cancelled = true;
-    audioService.stopSpeaking();
-    setIsPlayingTarget(false);
-    audioService.speakEnglish(word, 0.85);
+    const isJaOpt = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff]/.test(word);
+    const cleanWord = word.replace(/\s*\(.*?\)/, '').trim();
+    if (isJaOpt) {
+      audioService.speakJapanese(cleanWord, 0.85);
+    } else {
+      audioService.speakEnglish(word, 0.85);
+    }
   };
 
   const handleSelectOption = (word: string) => {

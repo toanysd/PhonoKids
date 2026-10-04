@@ -6,20 +6,26 @@ import { audioService } from '../services/audioService';
 
 interface MinimalPairsViewProps {
   onAddStars: (amount: number) => void;
+  drills?: typeof MINIMAL_PAIRS_DRILLS;
+  language?: 'en' | 'ja';
 }
 
-export const MinimalPairsView: React.FC<MinimalPairsViewProps> = ({ onAddStars }) => {
+export const MinimalPairsView: React.FC<MinimalPairsViewProps> = ({
+  onAddStars,
+  drills = MINIMAL_PAIRS_DRILLS,
+  language = 'en'
+}) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const currentDrill = MINIMAL_PAIRS_DRILLS[currentIndex];
+  const currentDrill = drills[currentIndex] || drills[0];
 
   const handleNext = () => {
     audioService.playPopSound(500);
-    setCurrentIndex((prev) => (prev + 1) % MINIMAL_PAIRS_DRILLS.length);
+    setCurrentIndex((prev) => (prev + 1) % drills.length);
   };
 
   const handlePrev = () => {
     audioService.playPopSound(450);
-    setCurrentIndex((prev) => (prev - 1 + MINIMAL_PAIRS_DRILLS.length) % MINIMAL_PAIRS_DRILLS.length);
+    setCurrentIndex((prev) => (prev - 1 + drills.length) % drills.length);
   };
 
   const handleSuccess = () => {
@@ -45,7 +51,11 @@ export const MinimalPairsView: React.FC<MinimalPairsViewProps> = ({ onAddStars }
       <div className="flex items-center justify-between mb-2 shrink-0">
         <div className="flex items-center space-x-2 bg-purple-200/90 px-3.5 py-1.5 rounded-full border border-purple-300 text-purple-950 font-black text-xs md:text-sm shadow-xs">
           <Headphones className="w-4 h-4 text-purple-700" />
-          <span>Tai Tinh Mắt Sáng • Phân Biệt Âm (Minimal Pairs)</span>
+          <span>
+            {language === 'ja'
+              ? 'Tai Tinh Mắt Sáng • Luyện Âm Chuẩn Tiếng Nhật (はつおん れんしゅう)'
+              : 'Tai Tinh Mắt Sáng • Phân Biệt Âm (Minimal Pairs)'}
+          </span>
         </div>
 
         {/* Drill Carousel Controls */}
@@ -59,7 +69,7 @@ export const MinimalPairsView: React.FC<MinimalPairsViewProps> = ({ onAddStars }
           </button>
 
           <span className="text-xs font-black text-purple-900 bg-purple-200/90 px-3 py-1 rounded-full">
-            {currentIndex + 1} / {MINIMAL_PAIRS_DRILLS.length}
+            {currentIndex + 1} / {drills.length}
           </span>
 
           <button

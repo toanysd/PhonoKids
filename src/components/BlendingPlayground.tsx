@@ -17,20 +17,26 @@ const SAMPLE_BLENDS: BlendActivity[] = [
 
 interface BlendingPlaygroundProps {
   onAddStars: (amount: number) => void;
+  blends?: BlendActivity[];
+  language?: 'en' | 'ja';
 }
 
-export const BlendingPlayground: React.FC<BlendingPlaygroundProps> = ({ onAddStars }) => {
+export const BlendingPlayground: React.FC<BlendingPlaygroundProps> = ({
+  onAddStars,
+  blends = SAMPLE_BLENDS,
+  language = 'en'
+}) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const currentActivity = SAMPLE_BLENDS[currentIndex];
+  const currentActivity = blends[currentIndex] || blends[0];
 
   const handleNext = () => {
     audioService.playPopSound(500);
-    setCurrentIndex((prev) => (prev + 1) % SAMPLE_BLENDS.length);
+    setCurrentIndex((prev) => (prev + 1) % blends.length);
   };
 
   const handlePrev = () => {
     audioService.playPopSound(450);
-    setCurrentIndex((prev) => (prev - 1 + SAMPLE_BLENDS.length) % SAMPLE_BLENDS.length);
+    setCurrentIndex((prev) => (prev - 1 + blends.length) % blends.length);
   };
 
   return (
@@ -39,7 +45,11 @@ export const BlendingPlayground: React.FC<BlendingPlaygroundProps> = ({ onAddSta
       <div className="flex items-center justify-between mb-2 shrink-0">
         <div className="flex items-center space-x-2 bg-sky-200/90 px-3.5 py-1.5 rounded-full border border-sky-300 text-sky-950 font-black text-xs md:text-sm shadow-xs">
           <Wand2 className="w-4 h-4 text-sky-700" />
-          <span>Ghép Vần Phonics (C-V-C Blending)</span>
+          <span>
+            {language === 'ja'
+              ? 'Ghép Chữ Tranh Vẽ Ehon (ことば あそび)'
+              : 'Ghép Vần Phonics (C-V-C Blending)'}
+          </span>
         </div>
 
         {/* Word Switcher & Pagination Controls */}
@@ -53,7 +63,7 @@ export const BlendingPlayground: React.FC<BlendingPlaygroundProps> = ({ onAddSta
           </button>
 
           <span className="text-xs font-black text-sky-900 bg-sky-200/90 px-3 py-1 rounded-full">
-            Từ {currentIndex + 1} / {SAMPLE_BLENDS.length}
+            Từ {currentIndex + 1} / {blends.length}
           </span>
 
           <button

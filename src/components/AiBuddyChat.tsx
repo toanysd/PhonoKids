@@ -20,9 +20,10 @@ import confetti from 'canvas-confetti';
 interface AiBuddyChatProps {
   onAddStars: (amount: number) => void;
   onOpenParentSettings: () => void;
+  language?: 'en' | 'ja';
 }
 
-const QUICK_PROMPTS = [
+const QUICK_PROMPTS_EN = [
   { label: '🦁 Chào Bạn Leo!', prompt: 'Hello Leo! I am ready to learn English!' },
   { label: '🍎 Dạy bé âm /a/', prompt: 'Leo, can you teach me the /a/ sound like Apple?' },
   { label: '🐱 Truyện Chú Mèo', prompt: 'Tell me a tiny story about a cute cat!' },
@@ -30,15 +31,38 @@ const QUICK_PROMPTS = [
   { label: '🎈 Khen bé một câu', prompt: 'I practiced my phonics today! Am I doing great?' }
 ];
 
-export const AiBuddyChat: React.FC<AiBuddyChatProps> = ({ onAddStars, onOpenParentSettings }) => {
+const QUICK_PROMPTS_JA = [
+  { label: '🦁 Chào Bạn Leo!', prompt: 'こんにちは！レオくん！(Xin chào bạn Leo!)' },
+  { label: '🍎 Dạy bé chữ あ', prompt: '「あ」の おとを おしえて！(Hãy dạy bé âm "A" nhé!)' },
+  { label: '🐱 Truyện Chú Mèo', prompt: 'かわいい ねこちゃんの おはなしを して！(Kể chuyện chú mèo đi!)' },
+  { label: '🌸 Đố vui tiếng Nhật', prompt: 'たのしい なぞなぞを だして！(Đố bé một câu tiếng Nhật nào!)' },
+  { label: '🎈 Khen bé một câu', prompt: 'きょう ひらがなを れんしゅう したよ！(Hôm nay bé luyện chữ Kana giỏi nè!)' }
+];
+
+export const AiBuddyChat: React.FC<AiBuddyChatProps> = ({
+  onAddStars,
+  onOpenParentSettings,
+  language = 'en'
+}) => {
+  const isJa = language === 'ja';
+  const quickPrompts = isJa ? QUICK_PROMPTS_JA : QUICK_PROMPTS_EN;
+
   const [messages, setMessages] = useState<ChatMessage[]>(() => [
-    {
-      id: 'msg_welcome',
-      sender: 'leo',
-      text: "Roar! Hello little explorer! I am Leo the Lion! What English sound or animal would you like to explore today? 🦁⭐",
-      vietnameseMeaning: "Chào bạn nhỏ! Tớ là Bạn Sư Tử Leo! Hôm nay bé muốn khám phá âm tiếng Anh hay con vật đáng yêu nào nào?",
-      timestamp: Date.now()
-    }
+    isJa
+      ? {
+          id: 'msg_welcome_ja',
+          sender: 'leo',
+          text: "ガオー！こんにちは！ぼくは レオ だよ！きょうは どの にほんごの おとや どうぶつを いっしょに まなぼうか？🦁⭐",
+          vietnameseMeaning: "Gaooo! Xin chào bạn nhỏ! Tớ là Bạn Leo nè! Hôm nay bé muốn cùng tớ khám phá âm tiếng Nhật hay con vật đáng yêu nào nào? 🦁⭐",
+          timestamp: Date.now()
+        }
+      : {
+          id: 'msg_welcome',
+          sender: 'leo',
+          text: "Roar! Hello little explorer! I am Leo the Lion! What English sound or animal would you like to explore today? 🦁⭐",
+          vietnameseMeaning: "Chào bạn nhỏ! Tớ là Bạn Sư Tử Leo! Hôm nay bé muốn khám phá âm tiếng Anh hay con vật đáng yêu nào nào?",
+          timestamp: Date.now()
+        }
   ]);
   const [inputValue, setInputValue] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -59,7 +83,11 @@ export const AiBuddyChat: React.FC<AiBuddyChatProps> = ({ onAddStars, onOpenPare
     setIsSpeaking(true);
     // Strip emojis for clean TTS
     const clean = text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
-    audioService.speakEnglish(clean, 0.85);
+    if (isJa || /[\u3040-\u30ff]/.test(text)) {
+      audioService.speakJapanese(clean, 0.85);
+    } else {
+      audioService.speakEnglish(clean, 0.85);
+    }
     setTimeout(() => setIsSpeaking(false), 3000);
   };
 
@@ -78,7 +106,7 @@ export const AiBuddyChat: React.FC<AiBuddyChatProps> = ({ onAddStars, onOpenPare
     setIsLoading(true);
 
     // Call Gemini Service (with automated fallback to Scripted Leo)
-    const reply = await geminiService.chatWithLeo(textToSend, messages);
+    const reply = await geminiService.chatWithLeo(textToSend, messages, language);
 
     const leoMsg: ChatMessage = {
       id: `leo_${Date.now()}`,
@@ -120,13 +148,13 @@ export const AiBuddyChat: React.FC<AiBuddyChatProps> = ({ onAddStars, onOpenPare
     setMicNotice(null);
 
     childSpeechService.startListening(
-      'hello',
+      isJa ? 'こんにちは' : 'hello',
       (result) => {
         setIsListening(false);
         if (result.transcript && result.transcript.trim() !== '') {
           handleSendMessage(result.transcript);
         } else {
-          handleSendMessage('Hello Leo!');
+          handleSendMessage(isJa ? 'こんにちは！' : 'Hello Leo!');
         }
       },
       () => {
@@ -145,7 +173,9 @@ export const AiBuddyChat: React.FC<AiBuddyChatProps> = ({ onAddStars, onOpenPare
             <img src="/assets/ehon/leo.jpg" alt="Leo Avatar" className="w-full h-full object-cover" />
           </div>
           <div>
-            <span className="font-black text-purple-950 text-sm md:text-base">Trò Chuyện Cùng Bạn Sư Tử Leo AI</span>
+            <span className="font-black text-purple-950 text-sm md:text-base">
+              {isJa ? 'Trò Chuyện Cùng Bạn Sư Tử Leo AI (レオくん) 🇯🇵' : 'Trò Chuyện Cùng Bạn Sư Tử Leo AI 🦁'}
+            </span>
             <span className="ml-2 text-[10px] bg-purple-200 text-purple-900 font-bold px-2 py-0.5 rounded-full">
               {settings.geminiApiKey ? 'Google Gemini Trực Tuyến ⚡' : 'Chế Độ Ngoại Tuyến Sư Phạm 🛡️'}
             </span>
@@ -193,10 +223,12 @@ export const AiBuddyChat: React.FC<AiBuddyChatProps> = ({ onAddStars, onOpenPare
               </div>
 
               <h3 className="font-black text-amber-950 text-base md:text-lg mt-2">
-                Sư Tử Nhỏ Leo 🦁
+                {isJa ? 'Sư Tử Nhỏ Leo (レオくん) 🦁' : 'Sư Tử Nhỏ Leo 🦁'}
               </h3>
               <p className="text-[11px] font-bold text-amber-800">
-                Bạn đồng hành tiếng Anh siêu thân thiện cho bé
+                {isJa
+                  ? 'Bạn đồng hành tiếng Nhật siêu thân thiện cho bé 🇯🇵'
+                  : 'Bạn đồng hành tiếng Anh siêu thân thiện cho bé'}
               </p>
             </div>
 
@@ -207,7 +239,7 @@ export const AiBuddyChat: React.FC<AiBuddyChatProps> = ({ onAddStars, onOpenPare
                 <span>Gợi ý câu hỏi nhanh cho bé:</span>
               </div>
               <div className="flex flex-col space-y-1.5">
-                {QUICK_PROMPTS.map((qp, idx) => (
+                {quickPrompts.map((qp, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleSendMessage(qp.prompt)}

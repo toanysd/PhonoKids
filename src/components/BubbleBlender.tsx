@@ -29,9 +29,14 @@ export const BubbleBlender: React.FC<BubbleBlenderProps> = ({
   }, [activity.word]);
 
   const visual = getWordVisual(activity.word);
+  const isJa = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff]/.test(activity.word);
 
   const handleTapBubble = (index: number, phoneme: string) => {
-    audioService.speakPhoneme(phoneme);
+    if (isJa) {
+      audioService.speakJapanese(phoneme, 0.9);
+    } else {
+      audioService.speakPhoneme(phoneme);
+    }
     if (!activeBubbles.includes(index)) {
       setActiveBubbles([...activeBubbles, index]);
     }
@@ -41,11 +46,20 @@ export const BubbleBlender: React.FC<BubbleBlenderProps> = ({
     audioService.playMagicChime();
     setIsBlended(true);
 
-    // Play pure authentic phonemes in sequence
-    await audioService.blendPhonemes(activity.phonemes, 100);
+    if (isJa) {
+      for (const p of activity.phonemes) {
+        await audioService.speakJapanese(p, 0.9);
+        await new Promise((r) => setTimeout(r, 200));
+      }
+      await new Promise((r) => setTimeout(r, 200));
+      await audioService.speakJapanese(activity.word, 0.85);
+    } else {
+      // Play pure authentic phonemes in sequence
+      await audioService.blendPhonemes(activity.phonemes, 100);
+      // Blend complete word
+      await audioService.speakEnglish(activity.word, 0.85);
+    }
 
-    // Blend complete word
-    await audioService.speakEnglish(activity.word, 0.85);
     audioService.playSuccessJingle();
 
     // Trigger celebration confetti
@@ -68,6 +82,14 @@ export const BubbleBlender: React.FC<BubbleBlenderProps> = ({
     setActiveBubbles([]);
   };
 
+  const speakWord = () => {
+    if (isJa) {
+      audioService.speakJapanese(activity.word, 0.85);
+    } else {
+      audioService.speakEnglish(activity.word, 0.85);
+    }
+  };
+
   const handleNextWordClick = () => {
     if (onNextWord) {
       audioService.playPopSound(520);
@@ -82,7 +104,7 @@ export const BubbleBlender: React.FC<BubbleBlenderProps> = ({
       <div className="flex items-center justify-between shrink-0 mb-1">
         <span className="text-xs sm:text-sm font-black text-sky-900 bg-sky-200/90 px-3 py-1 rounded-full uppercase tracking-wider flex items-center space-x-1.5 shadow-xs">
           <Wand2 className="w-4 h-4 text-sky-700" />
-          <span>Ghép âm thần kỳ (Sound Blending)</span>
+          <span>{isJa ? 'Ghép Chữ Ehon Nhật Bản (ことば あそび)' : 'Ghép âm thần kỳ (Sound Blending)'}</span>
         </span>
 
         {isBlended && (
@@ -144,17 +166,23 @@ export const BubbleBlender: React.FC<BubbleBlenderProps> = ({
           
           {/* Hero Ehon Artwork Plate - Clickable to Speak */}
           <div 
-            onClick={() => audioService.speakEnglish(activity.word, 0.85)}
-            className="relative w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 rounded-2xl overflow-hidden border-4 border-amber-400 shadow-xl bg-white group shrink-0 cursor-pointer hover:border-amber-500 transition-all"
+            onClick={speakWord}
+            className="relative w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 rounded-2xl overflow-hidden border-4 border-amber-400 shadow-xl bg-white group shrink-0 cursor-pointer hover:border-amber-500 transition-all flex items-center justify-center"
             title="Chạm vào tranh để nghe đọc"
           >
-            <img
-              src={visual.url}
-              alt={visual.alt}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            />
+            {isJa && activity.emoji ? (
+              <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-amber-50 to-orange-100 group-hover:scale-105 transition-transform">
+                <span className="text-6xl sm:text-7xl md:text-8xl drop-shadow-md">{activity.emoji}</span>
+              </div>
+            ) : (
+              <img
+                src={visual.url}
+                alt={visual.alt}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+            )}
             <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-xs text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow">
-              {visual.type === 'ehon' ? '🎨 Tranh Ehon' : '📷 Ảnh Thật'}
+              {isJa ? '🇯🇵 Tiếng Nhật' : (visual.type === 'ehon' ? '🎨 Tranh Ehon' : '📷 Ảnh Thật')}
             </div>
             <div className="absolute bottom-2 left-2 bg-white/95 backdrop-blur-xs text-amber-950 text-[10px] font-black px-2 py-0.5 rounded-lg border border-amber-300 shadow flex items-center space-x-1">
               <Volume2 className="w-3 h-3 text-amber-600" />
@@ -164,11 +192,11 @@ export const BubbleBlender: React.FC<BubbleBlenderProps> = ({
 
           {/* Big Word Badge */}
           <div 
-            onClick={() => audioService.speakEnglish(activity.word, 0.85)}
+            onClick={speakWord}
             className="inline-block bg-white border-3 border-amber-400 rounded-2xl px-6 py-1 sm:px-8 sm:py-1.5 shadow-md shrink-0 cursor-pointer hover:bg-amber-50 transition-colors"
           >
             <span className="text-3xl sm:text-4xl md:text-5xl font-black text-amber-950 tracking-wider">
-              {activity.word.toUpperCase()}
+              {isJa ? activity.word : activity.word.toUpperCase()}
             </span>
           </div>
 
@@ -182,7 +210,7 @@ export const BubbleBlender: React.FC<BubbleBlenderProps> = ({
             <KidButton
               variant="secondary"
               size="sm"
-              onClick={() => audioService.speakEnglish(activity.word, 0.85)}
+              onClick={speakWord}
               className="py-2 px-3 sm:px-4 text-xs sm:text-sm font-black shadow-md"
               title="Nghe lại phát âm"
             >

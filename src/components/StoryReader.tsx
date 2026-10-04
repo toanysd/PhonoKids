@@ -24,6 +24,7 @@ interface StoryReaderProps {
   onStoryFinished?: () => void;
   onNextStory?: () => void;
   nextStoryTitle?: string;
+  language?: 'en' | 'ja';
 }
 
 export const StoryReader: React.FC<StoryReaderProps> = ({
@@ -31,7 +32,8 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
   onBackToHome,
   onStoryFinished,
   onNextStory,
-  nextStoryTitle
+  nextStoryTitle,
+  language = 'en'
 }) => {
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
   const [activeWordIndex, setActiveWordIndex] = useState<number | null>(null);
@@ -47,6 +49,7 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
   const settings = storageService.getSettings();
   const currentPage: StoryPage = story.pages[currentPageIndex];
   const isLastPage = currentPageIndex === story.pages.length - 1;
+  const isJa = language === 'ja' || /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff]/.test(currentPage.sentence);
 
   // Dedicated illustration for THIS SPECIFIC SENTENCE / PAGE
   const pageVisual = getStoryPageVisual(story.id, currentPage.pageNumber, currentPage);
@@ -70,7 +73,11 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
       if (settings.showWordHighlights) {
         setActiveWordIndex(i);
       }
-      await audioService.speakEnglish(words[i].cleanWord, 0.82);
+      if (isJa) {
+        await audioService.speakJapanese(words[i].cleanWord, 0.85);
+      } else {
+        await audioService.speakEnglish(words[i].cleanWord, 0.82);
+      }
       await new Promise(r => setTimeout(r, 120));
     }
 
@@ -82,7 +89,11 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
     if (settings.showWordHighlights) {
       setActiveWordIndex(index);
     }
-    audioService.speakEnglish(word, 0.85);
+    if (isJa) {
+      audioService.speakJapanese(word, 0.85);
+    } else {
+      audioService.speakEnglish(word, 0.85);
+    }
     setTimeout(() => setActiveWordIndex(null), 1200);
   };
 
@@ -96,7 +107,11 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
 
     if (hs.speechText) {
       setTimeout(() => {
-        audioService.speakEnglish(hs.speechText!, 0.9);
+        if (isJa) {
+          audioService.speakJapanese(hs.speechText!, 0.9);
+        } else {
+          audioService.speakEnglish(hs.speechText!, 0.9);
+        }
       }, 300);
     }
 
@@ -110,7 +125,11 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
     
     // Check if Parent has granted microphone consent in Parent Dashboard
     if (!settings.isMicrophoneConsentGranted) {
-      audioService.speakEnglish(target, 0.8);
+      if (isJa) {
+        audioService.speakJapanese(target, 0.85);
+      } else {
+        audioService.speakEnglish(target, 0.8);
+      }
       setMicNotice('🎙️ Microphone đang tắt để bảo vệ riêng tư. Leo đã đọc mẫu cho bé nghe!');
       setTimeout(() => setMicNotice(null), 4000);
       return;
