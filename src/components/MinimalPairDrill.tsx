@@ -2,9 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { MinimalPairItem } from '../types/phonics';
 import { audioService } from '../services/audioService';
 import { getWordVisual } from '../services/imageService';
+import { PHONICS_WORD_BANK } from '../data/phonicsWordBank';
 import { KidButton } from './KidButton';
-import { Volume2, HelpCircle, CheckCircle2, Award, Sparkles } from 'lucide-react';
+import { Volume2, HelpCircle, CheckCircle2, Award, Sparkles, VolumeX } from 'lucide-react';
 import confetti from 'canvas-confetti';
+
+export type DrillAudioMode = 'word_only' | 'phoneme_word' | 'spell_word' | 'all';
 
 interface MinimalPairDrillProps {
   drill: MinimalPairItem;
@@ -21,8 +24,32 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
   const [shakingWord, setShakingWord] = useState<string | null>(null);
   const [gentleWrongNotice, setGentleWrongNotice] = useState<string | null>(null);
 
+  // Audio Reading Mode preference (word_only | phoneme_word | spell_word | all)
+  const [audioMode, setAudioMode] = useState<DrillAudioMode>(() => {
+    try {
+      const saved = localStorage.getItem('minimal_pairs_audio_mode') as DrillAudioMode;
+      if (saved && ['word_only', 'phoneme_word', 'spell_word', 'all'].includes(saved)) {
+        return saved;
+      }
+    } catch {}
+    return 'word_only';
+  });
+
+  // Auto-read audio toggle (default: true)
+  const [isAutoReadEnabled, setIsAutoReadEnabled] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('minimal_pairs_auto_read');
+      if (saved !== null) {
+        return saved === 'true';
+      }
+    } catch {}
+    return true;
+  });
+
   const autoNextTimerRef = useRef<any>(null);
   const wrongTimerRef = useRef<any>(null);
+  const autoReadTimeoutRef = useRef<any>(null);
+  const audioSequenceAbortRef = useRef<{ cancelled: boolean }>({ cancelled: false });
 
   // Shuffle options on drill change to prevent positional bias
   useEffect(() => {
@@ -42,19 +69,156 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
   // Clean up timers on unmount
   useEffect(() => {
     return () => {
+      if (autoReadTimeoutRef.current) clearTimeout(autoReadTimeoutRef.current);
       if (autoNextTimerRef.current) clearTimeout(autoNextTimerRef.current);
       if (wrongTimerRef.current) clearTimeout(wrongTimerRef.current);
+      audioSequenceAbortRef.current.cancelled = true;
+      audioService.stopSpeaking();
     };
   }, []);
 
-  const handleHearTargetWord = async () => {
+  const playDrillAudio = async (modeToPlay: DrillAudioMode = audioMode): Promise<void> => {
+    if (autoReadTimeoutRef.current) {
+      clearTimeout(autoReadTimeoutRef.current);
+      autoReadTimeoutRef.current = null;
+    }
+
+    // Abort previous sequence and stop speaking
+    audioSequenceAbortRef.current.cancelled = true;
+    audioService.stopSpeaking();
+
+    const token = { cancelled: false };
+    audioSequenceAbortRef.current = token;
     setIsPlayingTarget(true);
-    await audioService.speakEnglish(drill.targetWord, 0.85);
-    setTimeout(() => setIsPlayingTarget(false), 800);
+
+    try {
+      if (modeToPlay === 'word_only') {
+        await audioService.speakEnglish(drill.targetWord, 0.85);
+      } else if (modeToPlay === 'phoneme_word') {
+        // 1. Play target phoneme sound (e.g. /s/)
+        await audioService.playPhoneme(drill.correctPhoneme);
+        if (token.cancelled) return;
+        await new Promise((r) => setTimeout(r, 220));
+        if (token.cancelled) return;
+        // 2. Speak target word
+        await audioService.speakEnglish(drill.targetWord, 0.85);
+      } else if (modeToPlay === 'spell_word') {
+        // Find phonemes from word bank or fallback to split letters
+        const bankItem = PHONICS_WORD_BANK.find(
+          (item) => item.word.toLowerCase() === drill.targetWord.toLowerCase()
+        );
+        const phonemesToPlay = bankItem?.phonemes || drill.targetWord.toLowerCase().split('');
+        for (let i = 0; i < phonemesToPlay.length; i++) {
+          if (token.cancelled) return;
+          await audioService.playPhoneme(phonemesToPlay[i]);
+          if (token.cancelled) return;
+          await new Promise((r) => setTimeout(r, 130));
+        }
+        if (token.cancelled) return;
+        await new Promise((r) => setTimeout(r, 220));
+        if (token.cancelled) return;
+        await audioService.speakEnglish(drill.targetWord, 0.85);
+      } else if (modeToPlay === 'all') {
+        // Clean prompt: remove phonetic slashes and quotes
+        const cleanPrompt = drill.questionPrompt.replace(/\/[^\/]+\//g, '').replace(/["']/g, '').trim();
+        await audioService.speakEnglish(cleanPrompt, 0.85);
+        if (token.cancelled) return;
+        await new Promise((r) => setTimeout(r, 320));
+        if (token.cancelled) return;
+        await audioService.playPhoneme(drill.correctPhoneme);
+        if (token.cancelled) return;
+        await new Promise((r) => setTimeout(r, 220));
+        if (token.cancelled) return;
+        await audioService.speakEnglish(drill.targetWord, 0.85);
+      }
+    } catch {
+      // Ignore interruption
+    } finally {
+      if (!token.cancelled) {
+        setIsPlayingTarget(false);
+      }
+    }
+  };
+
+  // Auto-play audio when drill opens or changes (next, back, auto-advance)
+  useEffect(() => {
+    if (autoReadTimeoutRef.current) {
+      clearTimeout(autoReadTimeoutRef.current);
+      autoReadTimeoutRef.current = null;
+    }
+    audioSequenceAbortRef.current.cancelled = true;
+    audioService.stopSpeaking();
+    setIsPlayingTarget(false);
+
+    if (!isAutoReadEnabled) return;
+
+    // Small delay so card rendering and transitions are smooth before voice speaks
+    autoReadTimeoutRef.current = setTimeout(() => {
+      playDrillAudio(audioMode);
+    }, 280);
+
+    return () => {
+      if (autoReadTimeoutRef.current) {
+        clearTimeout(autoReadTimeoutRef.current);
+        autoReadTimeoutRef.current = null;
+      }
+      audioSequenceAbortRef.current.cancelled = true;
+      audioService.stopSpeaking();
+    };
+  }, [drill.id, isAutoReadEnabled]);
+
+  const handleHearTargetWord = () => {
+    playDrillAudio(audioMode);
+  };
+
+  const handleModeChange = (newMode: DrillAudioMode) => {
+    setAudioMode(newMode);
+    try {
+      localStorage.setItem('minimal_pairs_audio_mode', newMode);
+    } catch {}
+    playDrillAudio(newMode);
+  };
+
+  const handleToggleAutoRead = () => {
+    const nextVal = !isAutoReadEnabled;
+    setIsAutoReadEnabled(nextVal);
+    try {
+      localStorage.setItem('minimal_pairs_auto_read', String(nextVal));
+    } catch {}
+    if (!nextVal) {
+      if (autoReadTimeoutRef.current) {
+        clearTimeout(autoReadTimeoutRef.current);
+        autoReadTimeoutRef.current = null;
+      }
+      audioSequenceAbortRef.current.cancelled = true;
+      audioService.stopSpeaking();
+      setIsPlayingTarget(false);
+    }
+  };
+
+  const getPlayingLabel = () => {
+    if (!isPlayingTarget) return 'Chạm Nghe Âm Mẫu 🔊';
+    switch (audioMode) {
+      case 'word_only':
+        return 'Đang đọc từ mẫu... 🔊';
+      case 'phoneme_word':
+        return 'Đang đọc âm vị & từ... 🎯';
+      case 'spell_word':
+        return 'Đang đánh vần & ghép từ... 🔤';
+      case 'all':
+        return 'Đang đọc toàn bộ... 🌟';
+    }
   };
 
   const handleHearOption = (e: React.MouseEvent, word: string) => {
     e.stopPropagation();
+    if (autoReadTimeoutRef.current) {
+      clearTimeout(autoReadTimeoutRef.current);
+      autoReadTimeoutRef.current = null;
+    }
+    audioSequenceAbortRef.current.cancelled = true;
+    audioService.stopSpeaking();
+    setIsPlayingTarget(false);
     audioService.speakEnglish(word, 0.85);
   };
 
@@ -63,6 +227,15 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
 
     if (wrongTimerRef.current) clearTimeout(wrongTimerRef.current);
     setGentleWrongNotice(null);
+
+    // Stop prompt audio when child interacts
+    if (autoReadTimeoutRef.current) {
+      clearTimeout(autoReadTimeoutRef.current);
+      autoReadTimeoutRef.current = null;
+    }
+    audioSequenceAbortRef.current.cancelled = true;
+    audioService.stopSpeaking();
+    setIsPlayingTarget(false);
 
     if (word === drill.targetWord) {
       setSelectedWord(word);
@@ -103,10 +276,17 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
   };
 
   const handleNext = () => {
+    if (autoReadTimeoutRef.current) {
+      clearTimeout(autoReadTimeoutRef.current);
+      autoReadTimeoutRef.current = null;
+    }
     if (autoNextTimerRef.current) {
       clearTimeout(autoNextTimerRef.current);
       autoNextTimerRef.current = null;
     }
+    audioSequenceAbortRef.current.cancelled = true;
+    audioService.stopSpeaking();
+    setIsPlayingTarget(false);
     setSelectedWord(null);
     setIsAnswered(false);
     setShowHint(false);
@@ -166,6 +346,73 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
         </div>
       )}
 
+      {/* Sleek Auto-Read & Mode Selector Ribbon */}
+      <div className="flex flex-wrap items-center justify-center gap-1.5 py-1 px-3 bg-white/85 backdrop-blur-xs rounded-2xl border-2 border-purple-200 shadow-xs max-w-xl mx-auto my-1 shrink-0">
+        {/* Toggle Auto-Read */}
+        <button
+          onClick={handleToggleAutoRead}
+          className={`px-2.5 py-1 rounded-xl text-xs font-black flex items-center space-x-1.5 transition-all cursor-pointer border ${
+            isAutoReadEnabled
+              ? 'bg-purple-600 text-white border-purple-700 shadow-xs'
+              : 'bg-gray-100 text-gray-500 border-gray-300 hover:bg-gray-200'
+          }`}
+          title={isAutoReadEnabled ? 'Tắt tự động đọc khi lật bài' : 'Bật tự động đọc khi lật bài'}
+        >
+          {isAutoReadEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+          <span>{isAutoReadEnabled ? 'Tự Đọc: BẬT' : 'Tự Đọc: TẮT'}</span>
+        </button>
+
+        <div className="w-[1px] h-4 bg-purple-200 mx-0.5 hidden sm:block" />
+
+        {/* Reading Mode Options */}
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => handleModeChange('word_only')}
+            className={`px-2 py-1 rounded-xl text-xs font-black transition-all cursor-pointer border ${
+              audioMode === 'word_only'
+                ? 'bg-purple-100 text-purple-900 border-purple-400 ring-2 ring-purple-300 shadow-xs'
+                : 'bg-transparent text-purple-700/80 border-transparent hover:bg-purple-50'
+            }`}
+            title="Chỉ đọc từ mẫu mục tiêu"
+          >
+            🔊 Chỉ Từ
+          </button>
+          <button
+            onClick={() => handleModeChange('phoneme_word')}
+            className={`px-2 py-1 rounded-xl text-xs font-black transition-all cursor-pointer border ${
+              audioMode === 'phoneme_word'
+                ? 'bg-purple-100 text-purple-900 border-purple-400 ring-2 ring-purple-300 shadow-xs'
+                : 'bg-transparent text-purple-700/80 border-transparent hover:bg-purple-50'
+            }`}
+            title="Đọc âm vị mẫu rồi đọc từ"
+          >
+            🎯 Âm Vị & Từ
+          </button>
+          <button
+            onClick={() => handleModeChange('spell_word')}
+            className={`px-2 py-1 rounded-xl text-xs font-black transition-all cursor-pointer border ${
+              audioMode === 'spell_word'
+                ? 'bg-purple-100 text-purple-900 border-purple-400 ring-2 ring-purple-300 shadow-xs'
+                : 'bg-transparent text-purple-700/80 border-transparent hover:bg-purple-50'
+            }`}
+            title="Đánh vần từng âm rồi ghép thành từ"
+          >
+            🔤 Đánh Vần
+          </button>
+          <button
+            onClick={() => handleModeChange('all')}
+            className={`px-2 py-1 rounded-xl text-xs font-black transition-all cursor-pointer border ${
+              audioMode === 'all'
+                ? 'bg-purple-100 text-purple-900 border-purple-400 ring-2 ring-purple-300 shadow-xs'
+                : 'bg-transparent text-purple-700/80 border-transparent hover:bg-purple-50'
+            }`}
+            title="Đọc toàn bộ câu hỏi và từ mục tiêu"
+          >
+            🌟 Toàn Bộ
+          </button>
+        </div>
+      </div>
+
       {/* Prominent Target Sound Audio Button */}
       <div className="flex flex-col items-center justify-center my-1 shrink-0">
         <p className="text-xs sm:text-sm font-bold text-purple-900 mb-1">
@@ -178,10 +425,10 @@ export const MinimalPairDrill: React.FC<MinimalPairDrillProps> = ({ drill, onSuc
           className={`py-2 px-6 shadow-xl text-sm sm:text-base font-black ${
             isPlayingTarget ? 'ring-4 ring-purple-300 scale-105 animate-pulse' : ''
           }`}
-          title="Chạm để nghe âm mẫu cần tìm"
+          title="Chạm để nghe âm mẫu cần tìm theo chế độ đã chọn"
         >
           <Volume2 className={`w-6 h-6 mr-2 ${isPlayingTarget ? 'animate-bounce' : 'animate-pulse'}`} />
-          <span>{isPlayingTarget ? 'Đang đọc mẫu...' : 'Chạm Nghe Âm Mẫu 🔊'}</span>
+          <span>{getPlayingLabel()}</span>
         </KidButton>
       </div>
 

@@ -253,7 +253,31 @@ class AudioService {
     if (!this.soundEnabled) return;
     try {
       const cleanId = phonemeId.toLowerCase().replace(/[\/\[\]]/g, '').trim();
-      const audioKey = cleanId;
+      const ipaToFileMap: Record<string, string> = {
+        'ʃ': 'sh',
+        'θ': 'th_unvoiced',
+        'ð': 'th_voiced',
+        'ŋ': 'ng',
+        'tʃ': 'ch',
+        'dʒ': 'j',
+        'sh': 'sh',
+        'ch': 'ch',
+        'th': 'th_unvoiced',
+        'ng': 'ng',
+        'ai': 'ai',
+        'ee': 'ee',
+        'ie': 'ie',
+        'oa': 'oa',
+        'ue': 'ue',
+        'oo': 'oo_short',
+        'ar': 'ar',
+        'or': 'or',
+        'er': 'er',
+        'oi': 'oi',
+        'ou': 'ou',
+        'qu': 'qu',
+      };
+      const audioKey = ipaToFileMap[cleanId] || cleanId;
 
       let audio = this.phonemeAudioCache[audioKey];
       if (!audio) {
