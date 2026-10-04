@@ -3,6 +3,8 @@ import { PhonemeInfo, PhonicsGroup } from '../types/phonics';
 import { PHONICS_GROUPS, PHONEMES_DATA } from '../data/phonicsGroups';
 import { SoundVisemeGuide } from './SoundVisemeGuide';
 import { BubbleBlender } from './BubbleBlender';
+import { LetterTracingStudio } from './LetterTracingStudio';
+import { LetterRecognitionGame } from './LetterRecognitionGame';
 import { KidButton } from './KidButton';
 import { audioService } from '../services/audioService';
 import { getWordVisual } from '../services/imageService';
@@ -113,7 +115,7 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
 
   const handleNextStep = () => {
     audioService.playPopSound(520);
-    if (currentStep < 5) {
+    if (currentStep < 7) {
       setCurrentStep(currentStep + 1);
     } else {
       audioService.playSuccessJingle();
@@ -160,6 +162,8 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
     'Làm Quen Âm Thanh',
     'Khẩu Hình Miệng Chuẩn',
     'Vận Động Toàn Thân (TPR)',
+    'Tô Nét Chữ Diệu Kỳ',
+    'Bắt Bong Bóng Âm Vị',
     'Từ Vựng Tương Ứng (Tranh Ehon)',
     'Thử Thách Ghép Vần',
     'Chiến Thắng!'
@@ -172,9 +176,13 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
     } else if (currentStep === 2) {
       audioService.playTprAction(phoneme.id, phoneme.tprAction.chantEn);
     } else if (currentStep === 3) {
+      audioService.playPhoneme(phoneme.id);
+    } else if (currentStep === 4) {
+      audioService.playPhoneme(phoneme.id);
+    } else if (currentStep === 5) {
       const activeWord = currentVocabSlice[0]?.word || primaryWord;
       audioService.speakEnglish(activeWord, 0.85);
-    } else if (currentStep === 4) {
+    } else if (currentStep === 6) {
       const blendWord = currentBlendItem?.word || primaryWord;
       audioService.speakEnglish(blendWord, 0.85);
     } else {
@@ -222,7 +230,7 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
           </button>
 
           <span className="text-xs font-black text-amber-900 bg-amber-200/90 px-3 py-1 rounded-full shadow-xs">
-            Bước {currentStep + 1} / 6
+            Bước {currentStep + 1} / 8
           </span>
         </div>
       </div>
@@ -418,13 +426,55 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
           </div>
         )}
 
-        {/* ================= STEP 3: VOCABULARY (BIG EHON GALLERY) ================= */}
+        {/* ================= STEP 3: MULTISENSORY LETTER TRACING STUDIO ================= */}
         {currentStep === 3 && (
+          <div className="py-1 animate-fadeIn w-full h-full flex flex-col justify-between">
+            <div className="text-center shrink-0 mb-1">
+              <span className="text-xs font-black text-amber-800 bg-amber-100 px-3.5 py-1 rounded-full uppercase tracking-wider">
+                {stepsTitle[3]} • Chữ cái &quot;{phoneme.grapheme}&quot;
+              </span>
+              <h2 className="text-xl md:text-2xl font-black text-amber-950 mt-0.5">
+                Bé Hãy Tô Theo Nét Chữ /{phoneme.id}/ ✍️
+              </h2>
+            </div>
+
+            <div className="flex-1 min-h-0 w-full flex items-center justify-center">
+              <LetterTracingStudio
+                phonemeId={phoneme.id}
+                showNextButton={false}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* ================= STEP 4: LETTER RECOGNITION & DISCRIMINATION ================= */}
+        {currentStep === 4 && (
+          <div className="py-1 animate-fadeIn w-full h-full flex flex-col justify-between">
+            <div className="text-center shrink-0 mb-1">
+              <span className="text-xs font-black text-amber-800 bg-amber-100 px-3.5 py-1 rounded-full uppercase tracking-wider">
+                {stepsTitle[4]} • Phân Biệt Âm Vị
+              </span>
+              <h2 className="text-xl md:text-2xl font-black text-amber-950 mt-0.5">
+                Bắt Bong Bóng & Nhận Diện Chữ /{phoneme.id}/ 🎯
+              </h2>
+            </div>
+
+            <div className="flex-1 min-h-0 w-full flex items-center justify-center">
+              <LetterRecognitionGame
+                initialPhonemeId={phoneme.id}
+                mode="bubble_sound"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* ================= STEP 5: VOCABULARY (BIG EHON GALLERY) ================= */}
+        {currentStep === 5 && (
           <div className="py-1 animate-fadeIn text-center flex flex-col items-center w-full">
             <div className="flex items-center justify-between w-full max-w-5xl mb-1 px-1 flex-wrap gap-1.5">
               <div className="flex items-center space-x-2">
                 <span className="text-xs font-black text-emerald-800 bg-emerald-100 px-3.5 py-1 rounded-full uppercase tracking-wider">
-                  {stepsTitle[3]} • {vocabList.length} Từ Cốt Lõi
+                  {stepsTitle[5]} • {vocabList.length} Từ Cốt Lõi
                 </span>
                 <button
                   onClick={() => {
@@ -532,7 +582,7 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                           title="Chạm để nghe đọc câu mẫu decodable"
                         >
                           <Volume2 className="w-3 h-3 text-amber-700 shrink-0" />
-                          <span className="truncate italic">"{item.sampleSentence}"</span>
+                          <span className="truncate italic">&quot;{item.sampleSentence}&quot;</span>
                         </div>
                       )}
 
@@ -550,8 +600,8 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
           </div>
         )}
 
-        {/* ================= STEP 4: BLENDING CHALLENGE ================= */}
-        {currentStep === 4 && (
+        {/* ================= STEP 6: BLENDING CHALLENGE ================= */}
+        {currentStep === 6 && (
           <div className="py-1 animate-fadeIn w-full">
             <BubbleBlender
               activity={{
@@ -573,8 +623,8 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
           </div>
         )}
 
-        {/* ================= STEP 5: VICTORY & MASTERY ================= */}
-        {currentStep === 5 && (
+        {/* ================= STEP 7: VICTORY & MASTERY ================= */}
+        {currentStep === 7 && (
           <div className="text-center py-2 animate-fadeIn flex flex-col items-center max-w-xl mx-auto">
             <div className="inline-flex p-3 bg-yellow-100 rounded-full mb-1 animate-bounce">
               <Trophy className="w-10 sm:w-12 h-10 sm:h-12 text-yellow-500" />
@@ -714,7 +764,7 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
             className="py-2.5 px-5 sm:px-8 text-xs sm:text-sm md:text-base font-black shadow-xl"
             title="Sang bước tiếp theo"
           >
-            <span>{currentStep === 5 ? 'Lưu & Khám Phá Tiếp 🏆' : 'Bước Tiếp Theo'}</span>
+            <span>{currentStep === 7 ? 'Lưu & Khám Phá Tiếp 🏆' : 'Bước Tiếp Theo'}</span>
             <ArrowRight className="w-5 h-5 ml-1.5" />
           </KidButton>
         </div>
