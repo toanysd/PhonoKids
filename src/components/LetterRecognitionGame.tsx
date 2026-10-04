@@ -1,14 +1,18 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { audioService } from '../services/audioService';
 import { CONFUSION_PAIRS_CATALOG, ConfusionPairItem } from '../data/letterStrokes';
-import { Volume2, Sparkles, Trophy, CheckCircle2, RotateCcw, ArrowRight, Heart } from 'lucide-react';
+import { Volume2, Sparkles, Trophy, CheckCircle2, RotateCcw, ArrowRight, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface LetterRecognitionGameProps {
   initialPhonemeId?: string;
   mode?: 'bubble_sound' | 'confusion_detective';
   onComplete?: () => void;
+  onNextPhoneme?: () => void;
+  onPrevPhoneme?: () => void;
+  nextPhonemeChar?: string;
   onAddStars?: (amount: number) => void;
+  nextLabel?: string;
 }
 
 interface BubbleItem {
@@ -32,7 +36,11 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
   initialPhonemeId = 'p',
   mode = 'bubble_sound',
   onComplete,
-  onAddStars
+  onNextPhoneme,
+  onPrevPhoneme,
+  nextPhonemeChar,
+  onAddStars,
+  nextLabel
 }) => {
   const [activeMode, setActiveMode] = useState<'bubble_sound' | 'confusion_detective'>(mode);
   const [targetPhoneme, setTargetPhoneme] = useState<string>(initialPhonemeId);
@@ -85,7 +93,6 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
     if (specific && specific.length >= 3) {
       return specific.slice(0, 3);
     }
-    // Generic fallback
     const all = ['s', 'a', 't', 'i', 'p', 'n', 'b', 'd', 'm', 'c'].filter((x) => x !== target);
     return all.slice(0, 3);
   }, []);
@@ -98,7 +105,6 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
       ...distractors.map((d) => ({ char: d, phonemeId: d, isCorrect: false }))
     ];
 
-    // Shuffle pool
     const shuffled = [...pool].sort(() => Math.random() - 0.5);
 
     const generated: BubbleItem[] = shuffled.map((item, idx) => ({
@@ -107,7 +113,7 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
       phonemeId: item.phonemeId,
       isCorrect: item.isCorrect,
       color: BUBBLE_COLORS[idx % BUBBLE_COLORS.length],
-      size: 80 + Math.floor(Math.random() * 15) // 80-95px touch target
+      size: 80 + Math.floor(Math.random() * 15)
     }));
 
     setBubbles(generated);
@@ -121,7 +127,6 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
     setRound(roundNum);
     generateBubbles(targetPhoneme);
 
-    // Audio cue: play pure target phoneme sound
     setTimeout(() => {
       audioService.playPhoneme(targetPhoneme);
     }, 300);
@@ -140,7 +145,6 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
     if (isRoundWon || isGameOver) return;
 
     if (bubble.isCorrect) {
-      // Correct answer!
       setPoppedBubbleId(bubble.id);
       audioService.playPopSound(600);
       setIsRoundWon(true);
@@ -177,11 +181,9 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
         }
       }, 1400);
     } else {
-      // Distractor tapped: gentle feedback
       setShakingBubbleId(bubble.id);
       audioService.playGentleTryAgain();
 
-      // Play the sound of what child actually tapped, then remind of target sound!
       setTimeout(() => {
         audioService.playPhoneme(bubble.phonemeId);
       }, 200);
@@ -206,7 +208,6 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
   // Mode 2: Handle pair choice tap
   const handleSelectPairChoice = (choice: 'A' | 'B') => {
     if (choice === activeTargetInPair) {
-      // Correct!
       audioService.playPopSound(600);
       const soundId = choice === 'A' ? activePair.phonemeIdA : activePair.phonemeIdB;
       setTimeout(() => {
@@ -227,13 +228,11 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
         onAddStars(1);
       }
 
-      // Switch to other letter of pair or next pair
       setTimeout(() => {
         if (activeTargetInPair === 'A') {
           setActiveTargetInPair('B');
           audioService.playPhoneme(activePair.phonemeIdB);
         } else {
-          // Next pair
           const nextIdx = (selectedPairIndex + 1) % CONFUSION_PAIRS_CATALOG.length;
           setSelectedPairIndex(nextIdx);
           setActiveTargetInPair('A');
@@ -241,7 +240,6 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
         }
       }, 1200);
     } else {
-      // Incorrect choice
       audioService.playGentleTryAgain();
       const soundId = choice === 'A' ? activePair.phonemeIdA : activePair.phonemeIdB;
       setTimeout(() => {
@@ -251,10 +249,22 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
   };
 
   return (
-    <div className="w-full h-full flex flex-col justify-between select-none">
+    <div className="w-full h-full flex flex-col justify-between select-none relative">
       {/* Top Bar Mode Switcher & Round Progress */}
-      <div className="flex items-center justify-between px-2 py-1.5 bg-amber-50/90 rounded-2xl border border-amber-200 shadow-xs mb-2 shrink-0">
+      <div className="flex items-center justify-between px-2 py-1.5 bg-amber-50/90 rounded-2xl border border-amber-200 shadow-xs mb-1.5 shrink-0 flex-wrap gap-1">
         <div className="flex items-center space-x-1.5">
+          {/* Quick Prev Phoneme Button */}
+          {onPrevPhoneme && (
+            <button
+              onClick={onPrevPhoneme}
+              className="px-2 py-1 bg-white hover:bg-amber-100 rounded-xl border border-amber-300 text-xs font-bold text-amber-950 flex items-center space-x-0.5 cursor-pointer shadow-xs active:scale-95"
+              title="Âm trước đó"
+            >
+              <ChevronLeft className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Trước</span>
+            </button>
+          )}
+
           <button
             onClick={() => {
               setActiveMode('bubble_sound');
@@ -280,8 +290,20 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
                 : 'bg-white text-purple-900 hover:bg-purple-100 border border-purple-200'
             }`}
           >
-            🔍 Cặp Chữ Dễ Nhầm (b/d, p/q)
+            🔍 Cặp Chữ Dễ Nhầm
           </button>
+
+          {/* Quick Next Phoneme Button */}
+          {onNextPhoneme && (
+            <button
+              onClick={onNextPhoneme}
+              className="px-2.5 py-1 bg-gradient-to-r from-amber-400 to-orange-400 text-amber-950 font-black rounded-xl border border-amber-300 text-xs flex items-center space-x-1 cursor-pointer shadow-xs active:scale-95"
+              title="Sang âm tiếp theo"
+            >
+              <span>Tiếp {nextPhonemeChar ? `(${nextPhonemeChar.toUpperCase()})` : ''}</span>
+              <ChevronRight className="w-3.5 h-3.5 text-amber-950" />
+            </button>
+          )}
         </div>
 
         {/* Round Progress Stars */}
@@ -301,26 +323,47 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
       </div>
 
       {/* Main Interactive Arena */}
-      <div className="flex-1 min-h-0 relative flex flex-col items-center justify-center p-2">
+      <div className="flex-1 min-h-0 relative flex flex-col items-center justify-center p-1 sm:p-2">
+        {/* Floating Side Next / Prev Buttons */}
+        {onPrevPhoneme && (
+          <button
+            onClick={onPrevPhoneme}
+            className="absolute left-1 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-13 sm:h-13 rounded-full bg-white/95 hover:bg-amber-100 text-amber-900 border-3 border-amber-300 shadow-xl flex items-center justify-center font-black active:scale-90 transition-all cursor-pointer group"
+            title="Âm trước đó"
+          >
+            <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8 group-hover:-translate-x-0.5 transition-transform" />
+          </button>
+        )}
+
+        {onNextPhoneme && (
+          <button
+            onClick={onNextPhoneme}
+            className="absolute right-1 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-13 sm:h-13 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-amber-950 border-3 border-amber-200 shadow-xl flex items-center justify-center font-black active:scale-90 transition-all cursor-pointer group animate-pulse"
+            title={`Sang âm tiếp theo: ${nextPhonemeChar?.toUpperCase() || ''}`}
+          >
+            <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8 group-hover:translate-x-0.5 transition-transform" />
+          </button>
+        )}
+
         {activeMode === 'bubble_sound' ? (
           /* MODE 1: BUBBLE SOUND CATCH */
-          <div className="w-full max-w-xl h-full flex flex-col justify-between items-center bg-radial from-amber-50 to-orange-100/50 rounded-3xl border-4 md:border-6 border-amber-300 shadow-xl p-4 relative overflow-hidden">
+          <div className="w-full max-w-xl h-full flex flex-col justify-between items-center bg-radial from-amber-50 to-orange-100/50 rounded-3xl border-4 md:border-6 border-amber-300 shadow-xl p-3 sm:p-4 relative overflow-hidden">
             
             {/* Audio Prompt Button Banner */}
-            <div className="shrink-0 flex flex-col items-center mb-2 z-10">
+            <div className="shrink-0 flex flex-col items-center mb-1 z-10">
               <button
                 onClick={handlePlayPromptAudio}
-                className="flex items-center space-x-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-black px-6 py-3 rounded-full shadow-lg border-2 border-amber-200 active:scale-95 transition-transform cursor-pointer animate-bounce"
+                className="flex items-center space-x-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-black px-6 py-2.5 rounded-full shadow-lg border-2 border-amber-200 active:scale-95 transition-transform cursor-pointer animate-bounce"
               >
                 <Volume2 className="w-6 h-6" />
-                <span className="text-base sm:text-lg">Bấm để nghe âm thanh 🔊</span>
+                <span className="text-base sm:text-lg">Bấm nghe âm /{targetPhoneme}/ 🔊</span>
               </button>
               <p className="text-xs sm:text-sm font-bold text-amber-900 mt-1">
                 Bé hãy chạm vào bong bóng có âm vừa nghe nhé!
               </p>
             </div>
 
-            {/* Floating Bubbles Field (Grid layout for responsive child-friendly touch) */}
+            {/* Floating Bubbles Field */}
             <div className="w-full flex-1 flex items-center justify-center">
               <div className="grid grid-cols-2 gap-4 sm:gap-6 w-full max-w-sm place-items-center">
                 {bubbles.map((b) => {
@@ -346,7 +389,6 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
                         height: `${b.size}px`
                       }}
                     >
-                      {/* Bubble highlight sheen */}
                       <div className="absolute top-2 left-3 w-5 h-2.5 bg-white/60 rounded-full rotate-[-30deg] pointer-events-none" />
 
                       <span className="text-3xl sm:text-4xl drop-shadow-xs">
@@ -367,7 +409,7 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
               </div>
             )}
 
-            {/* Victory Modal */}
+            {/* Victory Modal with Seamless Continuous Action */}
             {isGameOver && (
               <div className="absolute inset-0 bg-amber-500/95 backdrop-blur-xs flex flex-col items-center justify-center text-white z-30 p-4 animate-fadeIn">
                 <Trophy className="w-16 h-16 text-yellow-300 animate-bounce mb-2" />
@@ -375,36 +417,52 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
                 <p className="text-sm font-bold text-amber-100 mb-4 text-center">
                   Bé đã nhận diện cực kỳ chuẩn xác âm /{targetPhoneme}/!
                 </p>
-                <div className="flex items-center space-x-3">
+
+                {/* Primary Seamless Forward Action Button */}
+                <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full max-w-sm justify-center">
+                  {(onNextPhoneme || onComplete) && (
+                    <button
+                      onClick={() => {
+                        setIsGameOver(false);
+                        if (onNextPhoneme) {
+                          onNextPhoneme();
+                        } else if (onComplete) {
+                          onComplete();
+                        }
+                      }}
+                      className="w-full py-3.5 px-6 bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-500 hover:to-teal-600 text-white font-black text-sm sm:text-base rounded-2xl shadow-xl border-2 border-white cursor-pointer active:scale-95 flex items-center justify-center space-x-2 animate-bounce"
+                    >
+                      <span>
+                        {nextLabel
+                          ? nextLabel
+                          : nextPhonemeChar
+                          ? `Khám Phá Âm Kế Tiếp: /${nextPhonemeChar}/ 🚀`
+                          : 'Khám Phá Âm Kế Tiếp 🚀'}
+                      </span>
+                      <ArrowRight className="w-5 h-5" />
+                    </button>
+                  )}
+
                   <button
                     onClick={() => {
                       setIsGameOver(false);
                       startNewRound(1);
                     }}
-                    className="bg-white/20 hover:bg-white/30 text-white font-bold px-4 py-2 rounded-2xl border border-white/40 cursor-pointer text-xs sm:text-sm active:scale-95 flex items-center space-x-1"
+                    className="w-full sm:w-auto py-2.5 px-4 bg-white/20 hover:bg-white/30 text-white font-bold rounded-2xl border border-white/40 cursor-pointer text-xs active:scale-95 flex items-center justify-center space-x-1"
                   >
                     <RotateCcw className="w-4 h-4" />
                     <span>Chơi Lại</span>
                   </button>
-                  {onComplete && (
-                    <button
-                      onClick={onComplete}
-                      className="bg-white hover:bg-amber-100 text-amber-900 font-black px-6 py-2.5 rounded-2xl shadow-lg cursor-pointer text-xs sm:text-sm active:scale-95 flex items-center space-x-1.5"
-                    >
-                      <span>Bước Kế Tiếp</span>
-                      <ArrowRight className="w-4 h-4 text-amber-600" />
-                    </button>
-                  )}
                 </div>
               </div>
             )}
           </div>
         ) : (
           /* MODE 2: CONFUSION PAIR DETECTIVE */
-          <div className="w-full max-w-xl h-full flex flex-col justify-between items-center bg-purple-50/70 rounded-3xl border-4 md:border-6 border-purple-300 shadow-xl p-4 relative overflow-hidden">
+          <div className="w-full max-w-xl h-full flex flex-col justify-between items-center bg-purple-50/70 rounded-3xl border-4 md:border-6 border-purple-300 shadow-xl p-3 sm:p-4 relative overflow-hidden">
             
             {/* Header: Distinction Rule Banner */}
-            <div className="shrink-0 w-full text-center mb-2">
+            <div className="shrink-0 w-full text-center mb-1">
               <div className="inline-flex items-center space-x-2 bg-purple-200/90 px-4 py-1.5 rounded-full border border-purple-300 text-purple-950 font-black text-xs sm:text-sm shadow-xs mb-1">
                 <span>{activePair.titleVi}</span>
               </div>
@@ -414,10 +472,10 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
             </div>
 
             {/* Audio Challenge Button */}
-            <div className="shrink-0 mb-3">
+            <div className="shrink-0 mb-2">
               <button
                 onClick={handlePlayPromptAudio}
-                className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-black px-5 py-2.5 rounded-full shadow-md border-2 border-purple-200 active:scale-95 transition-transform cursor-pointer animate-pulse"
+                className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-black px-5 py-2 rounded-full shadow-md border-2 border-purple-200 active:scale-95 transition-transform cursor-pointer animate-pulse"
               >
                 <Volume2 className="w-5 h-5" />
                 <span className="text-sm sm:text-base">
@@ -426,12 +484,12 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
               </button>
             </div>
 
-            {/* Two Side-by-Side Target Cards (Bat vs Ball / Drum vs Stick) */}
-            <div className="w-full flex-1 flex items-center justify-center space-x-4 sm:space-x-8 px-2">
+            {/* Two Side-by-Side Target Cards */}
+            <div className="w-full flex-1 flex items-center justify-center space-x-3 sm:space-x-8 px-2">
               {/* Option A */}
               <button
                 onClick={() => handleSelectPairChoice('A')}
-                className="flex-1 max-w-[170px] h-[190px] bg-white hover:bg-amber-50 rounded-3xl border-4 border-amber-300 shadow-lg flex flex-col items-center justify-between p-3 active:scale-95 transition-transform cursor-pointer group"
+                className="flex-1 max-w-[170px] h-[180px] bg-white hover:bg-amber-50 rounded-3xl border-4 border-amber-300 shadow-lg flex flex-col items-center justify-between p-3 active:scale-95 transition-transform cursor-pointer group"
               >
                 <span className="text-3xl sm:text-4xl">{activePair.mnemonicVisualA}</span>
                 <span className="text-5xl sm:text-6xl font-black text-amber-900 group-hover:scale-110 transition-transform">
@@ -450,7 +508,7 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
               {/* Option B */}
               <button
                 onClick={() => handleSelectPairChoice('B')}
-                className="flex-1 max-w-[170px] h-[190px] bg-white hover:bg-sky-50 rounded-3xl border-4 border-sky-300 shadow-lg flex flex-col items-center justify-between p-3 active:scale-95 transition-transform cursor-pointer group"
+                className="flex-1 max-w-[170px] h-[180px] bg-white hover:bg-sky-50 rounded-3xl border-4 border-sky-300 shadow-lg flex flex-col items-center justify-between p-3 active:scale-95 transition-transform cursor-pointer group"
               >
                 <span className="text-3xl sm:text-4xl">{activePair.mnemonicVisualB}</span>
                 <span className="text-5xl sm:text-6xl font-black text-sky-900 group-hover:scale-110 transition-transform">
@@ -463,7 +521,7 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
             </div>
 
             {/* Pair Switcher Footer */}
-            <div className="flex items-center space-x-2 pt-2 border-t border-purple-200 w-full justify-center shrink-0">
+            <div className="flex items-center space-x-1.5 pt-2 border-t border-purple-200 w-full justify-center shrink-0 flex-wrap">
               {CONFUSION_PAIRS_CATALOG.map((p, idx) => (
                 <button
                   key={p.id}
@@ -472,9 +530,9 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
                     setActiveTargetInPair('A');
                     audioService.playPhoneme(p.phonemeIdA);
                   }}
-                  className={`px-2.5 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     selectedPairIndex === idx
-                      ? 'bg-purple-600 text-white shadow-xs'
+                      ? 'bg-purple-600 text-white shadow-xs scale-105'
                       : 'bg-white text-purple-900 hover:bg-purple-100 border border-purple-200'
                   }`}
                 >
@@ -487,7 +545,7 @@ export const LetterRecognitionGame: React.FC<LetterRecognitionGameProps> = ({
       </div>
 
       {/* Pedagogical Safety Guidance */}
-      <div className="text-center text-[11px] font-bold text-amber-800/80 py-1 shrink-0">
+      <div className="text-center text-[11px] font-bold text-amber-800/80 py-0.5 shrink-0">
         💡 Giáo trình UFLI Foundations: Luyện phân biệt âm - chữ qua thính giác và thị giác giúp bé không bao giờ bị nhầm lẫn mặt chữ!
       </div>
     </div>

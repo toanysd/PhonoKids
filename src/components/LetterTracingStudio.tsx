@@ -1,14 +1,18 @@
 import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import { LetterStrokeData, StrokeGuide, getLetterStrokeData } from '../data/letterStrokes';
 import { audioService } from '../services/audioService';
-import { Sparkles, RotateCcw, Eye, Volume2, CheckCircle2, Star, ArrowRight } from 'lucide-react';
+import { Sparkles, RotateCcw, Eye, Volume2, CheckCircle2, Star, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface LetterTracingStudioProps {
   phonemeId: string;
   onComplete?: () => void;
+  onNextLetter?: () => void;
+  onPrevLetter?: () => void;
+  nextLetterChar?: string;
   onAddStars?: (amount: number) => void;
   showNextButton?: boolean;
+  nextLabel?: string;
 }
 
 interface PathCheckpoint {
@@ -20,8 +24,12 @@ interface PathCheckpoint {
 export const LetterTracingStudio: React.FC<LetterTracingStudioProps> = ({
   phonemeId,
   onComplete,
+  onNextLetter,
+  onPrevLetter,
+  nextLetterChar,
   onAddStars,
-  showNextButton = true
+  showNextButton = true,
+  nextLabel
 }) => {
   const strokeData: LetterStrokeData = getLetterStrokeData(phonemeId);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -269,7 +277,7 @@ export const LetterTracingStudio: React.FC<LetterTracingStudioProps> = ({
     if (progress < 0.90) {
       audioService.playGentleTryAgain();
       const percent = Math.round(progress * 100);
-      setGuideHint(`Bé đã tô được ${percent}%! Hãy chạm lại vào vệt vàng để tô hết chữ nhé! ✨`);
+      setGuideHint(`Bé đã tô được ${percent}%! Hãy chạm lại vào vệt vàng để tô tiếp theo mũi tên nhé! ✨`);
     }
   };
 
@@ -351,7 +359,6 @@ export const LetterTracingStudio: React.FC<LetterTracingStudioProps> = ({
     if (targetLength <= 5) {
       return strokeGeometry.startPoint;
     }
-    // Ahead by 15 units or next checkpoint
     const previewLen = Math.min(targetLength + 15, strokeGeometry.totalLength);
     const pt = strokeGeometry.pathEl.getPointAtLength(previewLen);
     return pt;
@@ -362,45 +369,70 @@ export const LetterTracingStudio: React.FC<LetterTracingStudioProps> = ({
     : 0;
 
   return (
-    <div className="w-full h-full flex flex-col justify-between select-none">
+    <div className="w-full h-full flex flex-col justify-between select-none relative">
       {/* Top Studio Controls Bar */}
-      <div className="flex items-center justify-between px-2 py-1 bg-amber-50/90 rounded-2xl border border-amber-200 shadow-xs mb-2 shrink-0">
-        <div className="flex items-center space-x-2">
+      <div className="flex items-center justify-between px-2 py-1 bg-amber-50/90 rounded-2xl border border-amber-200 shadow-xs mb-1.5 shrink-0 flex-wrap gap-1">
+        <div className="flex items-center space-x-1.5 sm:space-x-2">
+          {/* Quick Prev Letter Button */}
+          {onPrevLetter && (
+            <button
+              onClick={onPrevLetter}
+              className="flex items-center space-x-1 bg-white hover:bg-amber-100 text-amber-950 font-bold px-2.5 py-1.5 rounded-xl border border-amber-300 shadow-xs active:scale-95 transition-transform cursor-pointer text-xs"
+              title="Chữ trước đó"
+            >
+              <ChevronLeft className="w-4 h-4 text-amber-700" />
+              <span className="hidden sm:inline">Trước</span>
+            </button>
+          )}
+
+          {/* Sound button */}
           <button
             onClick={() => audioService.playPhoneme(phonemeId)}
-            className="flex items-center space-x-1.5 bg-amber-500 hover:bg-amber-600 text-white font-black px-3 py-1.5 rounded-xl shadow-xs active:scale-95 transition-transform cursor-pointer text-xs sm:text-sm"
+            className="flex items-center space-x-1 bg-amber-500 hover:bg-amber-600 text-white font-black px-3 py-1.5 rounded-xl shadow-xs active:scale-95 transition-transform cursor-pointer text-xs sm:text-sm"
           >
             <Volume2 className="w-4 h-4" />
-            <span>Nghe Âm /{phonemeId}/</span>
+            <span>Âm /{phonemeId}/</span>
           </button>
 
-          <span className="text-xs font-bold text-amber-900 bg-white/80 px-2.5 py-1 rounded-lg border border-amber-200">
-            Nét {Math.min(currentStrokeIndex + 1, totalStrokes)} / {totalStrokes}
+          {/* Quick Next Letter Button */}
+          {onNextLetter && (
+            <button
+              onClick={onNextLetter}
+              className="flex items-center space-x-1 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-amber-950 font-black px-2.5 py-1.5 rounded-xl border border-amber-300 shadow-xs active:scale-95 transition-transform cursor-pointer text-xs"
+              title="Sang chữ tiếp theo"
+            >
+              <span>Tiếp {nextLetterChar ? `(${nextLetterChar.toUpperCase()})` : ''}</span>
+              <ChevronRight className="w-4 h-4 text-amber-950" />
+            </button>
+          )}
+
+          <span className="text-xs font-bold text-amber-900 bg-white/80 px-2 py-1 rounded-lg border border-amber-200">
+            Nét {Math.min(currentStrokeIndex + 1, totalStrokes)}/{totalStrokes}
           </span>
 
           {/* Real-time Progressive Coverage Pill */}
-          <span className="text-xs font-extrabold text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-lg border border-emerald-300">
-            Tiến độ: {currentProgressPercent}%
+          <span className="text-xs font-extrabold text-emerald-800 bg-emerald-100 px-2 py-1 rounded-lg border border-emerald-300">
+            {currentProgressPercent}%
           </span>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-1.5 sm:space-x-2">
           <button
             onClick={handleDemonstration}
             disabled={isDemonstrating || isCompleted}
-            className={`flex items-center space-x-1 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold border transition-transform cursor-pointer ${
+            className={`flex items-center space-x-1 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold border transition-transform cursor-pointer ${
               isDemonstrating
                 ? 'bg-purple-200 text-purple-700 border-purple-300 animate-pulse'
                 : 'bg-white hover:bg-purple-50 text-purple-900 border-purple-200 shadow-xs active:scale-95'
             }`}
           >
             <Eye className="w-4 h-4 text-purple-600" />
-            <span>{isDemonstrating ? 'Đang viết mẫu...' : 'Xem Mẫu 👁️'}</span>
+            <span>{isDemonstrating ? 'Mẫu...' : 'Xem Mẫu 👁️'}</span>
           </button>
 
           <button
             onClick={clearCanvas}
-            className="flex items-center space-x-1 bg-white hover:bg-amber-100 text-amber-900 font-bold px-3 py-1.5 rounded-xl border border-amber-200 shadow-xs active:scale-95 transition-transform cursor-pointer text-xs sm:text-sm"
+            className="flex items-center space-x-1 bg-white hover:bg-amber-100 text-amber-900 font-bold px-2.5 sm:px-3 py-1.5 rounded-xl border border-amber-200 shadow-xs active:scale-95 transition-transform cursor-pointer text-xs sm:text-sm"
           >
             <RotateCcw className="w-4 h-4 text-amber-600" />
             <span>Tô Lại 🔄</span>
@@ -417,6 +449,27 @@ export const LetterTracingStudio: React.FC<LetterTracingStudioProps> = ({
 
       {/* Main Tracing Canvas Viewport (Zero Scroll, Large Child-Friendly Ratio) */}
       <div className="flex-1 min-h-0 relative flex items-center justify-center p-1 sm:p-2">
+        {/* Floating Side Next / Prev Arrows for Seamless Continuous Session */}
+        {onPrevLetter && (
+          <button
+            onClick={onPrevLetter}
+            className="absolute left-1 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-13 sm:h-13 rounded-full bg-white/95 hover:bg-amber-100 text-amber-900 border-3 border-amber-300 shadow-xl flex items-center justify-center font-black active:scale-90 transition-all cursor-pointer group"
+            title="Chữ cái trước đó"
+          >
+            <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8 group-hover:-translate-x-0.5 transition-transform" />
+          </button>
+        )}
+
+        {onNextLetter && (
+          <button
+            onClick={onNextLetter}
+            className="absolute right-1 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-13 sm:h-13 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-amber-950 border-3 border-amber-200 shadow-xl flex items-center justify-center font-black active:scale-90 transition-all cursor-pointer group animate-pulse"
+            title={`Sang chữ tiếp theo: ${nextLetterChar?.toUpperCase() || ''}`}
+          >
+            <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8 group-hover:translate-x-0.5 transition-transform" />
+          </button>
+        )}
+
         <div
           ref={containerRef}
           className="relative w-full max-w-[420px] aspect-square bg-white rounded-3xl border-4 md:border-6 border-amber-300 shadow-xl overflow-hidden touch-none"
@@ -598,30 +651,45 @@ export const LetterTracingStudio: React.FC<LetterTracingStudioProps> = ({
           {/* Mastered / Completed Overlay Modal */}
           {isCompleted && (
             <div className="absolute inset-0 bg-emerald-500/90 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-white animate-fadeIn z-20">
-              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-emerald-600 mb-2 shadow-lg animate-bounce">
-                <CheckCircle2 className="w-10 h-10" />
+              <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center text-emerald-600 mb-2 shadow-lg animate-bounce">
+                <CheckCircle2 className="w-9 h-9" />
               </div>
-              <h3 className="text-xl sm:text-2xl font-black mb-1 drop-shadow-sm">Bé Viết Rất Đẹp! 🎉</h3>
-              <p className="text-sm font-bold text-emerald-100 mb-3 text-center">
+              <h3 className="text-xl sm:text-2xl font-black mb-0.5 drop-shadow-sm">Bé Viết Rất Đẹp! 🎉</h3>
+              <p className="text-xs sm:text-sm font-bold text-emerald-100 mb-3 text-center">
                 Đã tô đủ 100% nét chữ /{phonemeId}/ xuất sắc!
               </p>
 
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={clearCanvas}
-                  className="bg-white/20 hover:bg-white/30 text-white font-bold px-4 py-2 rounded-2xl border border-white/40 cursor-pointer text-xs sm:text-sm active:scale-95"
-                >
-                  Tô lại 🔄
-                </button>
-                {showNextButton && onComplete && (
+              {/* Seamless Action Flow Buttons */}
+              <div className="flex flex-col sm:flex-row items-center gap-2 w-full max-w-xs justify-center">
+                {(onNextLetter || (showNextButton && onComplete)) && (
                   <button
-                    onClick={onComplete}
-                    className="bg-white hover:bg-amber-100 text-emerald-800 font-black px-5 py-2 rounded-2xl shadow-lg cursor-pointer text-xs sm:text-sm active:scale-95 flex items-center space-x-1"
+                    onClick={() => {
+                      if (onNextLetter) {
+                        onNextLetter();
+                      } else if (onComplete) {
+                        onComplete();
+                      }
+                    }}
+                    className="w-full py-3 px-4 bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-amber-950 font-black text-sm rounded-2xl shadow-xl border-2 border-white transform active:scale-95 transition-all flex items-center justify-center space-x-2 cursor-pointer animate-pulse"
                   >
-                    <span>Tiếp Tục</span>
-                    <Star className="w-4 h-4 fill-amber-400 text-amber-500" />
+                    <span>
+                      {nextLabel
+                        ? nextLabel
+                        : nextLetterChar
+                        ? `Học Chữ Kế Tiếp: /${nextLetterChar}/ 🚀`
+                        : 'Học Chữ Kế Tiếp 🚀'}
+                    </span>
+                    <ArrowRight className="w-4 h-4 text-amber-950" />
                   </button>
                 )}
+
+                <button
+                  onClick={clearCanvas}
+                  className="w-full sm:w-auto py-2.5 px-3 bg-white/20 hover:bg-white/30 text-white font-bold rounded-2xl border border-white/40 cursor-pointer text-xs active:scale-95 flex items-center justify-center space-x-1"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>Tô lại 🔄</span>
+                </button>
               </div>
             </div>
           )}

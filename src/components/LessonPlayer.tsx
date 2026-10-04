@@ -441,7 +441,9 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
             <div className="flex-1 min-h-0 w-full flex items-center justify-center">
               <LetterTracingStudio
                 phonemeId={phoneme.id}
-                showNextButton={false}
+                onComplete={handleNextStep}
+                showNextButton={true}
+                nextLabel="Bé Đã Tô Xong! Sang Bắt Bong Bóng 🎯"
               />
             </div>
           </div>
@@ -463,6 +465,8 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
               <LetterRecognitionGame
                 initialPhonemeId={phoneme.id}
                 mode="bubble_sound"
+                onComplete={handleNextStep}
+                nextLabel="Chính Xác! Khám Phá Tranh Ehon 🎨"
               />
             </div>
           </div>
@@ -597,12 +601,23 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                 );
               })}
             </div>
+
+            {/* Direct Continuous Next Step to Blending */}
+            <div className="w-full flex justify-center mt-3 mb-1">
+              <button
+                onClick={handleNextStep}
+                className="py-3 px-6 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black text-xs sm:text-sm md:text-base rounded-2xl shadow-xl border-2 border-white transform active:scale-95 transition-all flex items-center space-x-2 cursor-pointer animate-pulse"
+              >
+                <span>Bé Đã Nghe Xong! Sang Ghép Vần Phonics 🫧</span>
+                <ArrowRight className="w-5 h-5 text-white" />
+              </button>
+            </div>
           </div>
         )}
 
         {/* ================= STEP 6: BLENDING CHALLENGE ================= */}
         {currentStep === 6 && (
-          <div className="py-1 animate-fadeIn w-full">
+          <div className="py-1 animate-fadeIn w-full flex flex-col justify-between">
             <BubbleBlender
               activity={{
                 word: currentBlendItem.word,
@@ -620,6 +635,17 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                 audioService.playMagicChime();
               }}
             />
+
+            {/* Direct Continuous Next Step to Victory */}
+            <div className="w-full flex justify-center mt-3 mb-1">
+              <button
+                onClick={handleNextStep}
+                className="py-3 px-6 bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 hover:from-amber-500 hover:to-orange-600 text-amber-950 font-black text-xs sm:text-sm md:text-base rounded-2xl shadow-xl border-2 border-amber-200 transform active:scale-95 transition-all flex items-center space-x-2 cursor-pointer animate-pulse"
+              >
+                <span>Bé Đã Ghép Vần Xong! Nhận Thưởng 🏆</span>
+                <ArrowRight className="w-5 h-5 text-amber-950" />
+              </button>
+            </div>
           </div>
         )}
 

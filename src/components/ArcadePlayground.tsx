@@ -113,24 +113,52 @@ export const ArcadePlayground: React.FC<ArcadePlaygroundProps> = ({
 
           {/* Game Viewport Container */}
           <div className="flex-1 min-h-0 w-full relative p-2 flex items-center justify-center">
-            {activeGame === 'letter_tracing' && (
-              <div className="w-full max-w-2xl h-full flex items-center justify-center">
-                <LetterTracingStudio
-                  phonemeId={selectedLetter}
-                  onAddStars={onAddStars}
-                  showNextButton={false}
-                />
-              </div>
-            )}
+            {activeGame === 'letter_tracing' && (() => {
+              const curIdx = PRACTICE_LETTERS.indexOf(selectedLetter);
+              const nextChar = PRACTICE_LETTERS[(curIdx + 1) % PRACTICE_LETTERS.length];
+              const prevChar = PRACTICE_LETTERS[(curIdx - 1 + PRACTICE_LETTERS.length) % PRACTICE_LETTERS.length];
+              return (
+                <div className="w-full max-w-2xl h-full flex items-center justify-center">
+                  <LetterTracingStudio
+                    phonemeId={selectedLetter}
+                    onNextLetter={() => {
+                      setSelectedLetter(nextChar);
+                      audioService.playPopSound(540);
+                    }}
+                    onPrevLetter={() => {
+                      setSelectedLetter(prevChar);
+                      audioService.playPopSound(440);
+                    }}
+                    nextLetterChar={nextChar}
+                    onAddStars={onAddStars}
+                    showNextButton={true}
+                  />
+                </div>
+              );
+            })()}
 
-            {activeGame === 'letter_recognition' && (
-              <div className="w-full max-w-3xl h-full flex items-center justify-center">
-                <LetterRecognitionGame
-                  initialPhonemeId={selectedLetter}
-                  onAddStars={onAddStars}
-                />
-              </div>
-            )}
+            {activeGame === 'letter_recognition' && (() => {
+              const curIdx = PRACTICE_LETTERS.indexOf(selectedLetter);
+              const nextChar = PRACTICE_LETTERS[(curIdx + 1) % PRACTICE_LETTERS.length];
+              const prevChar = PRACTICE_LETTERS[(curIdx - 1 + PRACTICE_LETTERS.length) % PRACTICE_LETTERS.length];
+              return (
+                <div className="w-full max-w-3xl h-full flex items-center justify-center">
+                  <LetterRecognitionGame
+                    initialPhonemeId={selectedLetter}
+                    onNextPhoneme={() => {
+                      setSelectedLetter(nextChar);
+                      audioService.playPopSound(540);
+                    }}
+                    onPrevPhoneme={() => {
+                      setSelectedLetter(prevChar);
+                      audioService.playPopSound(440);
+                    }}
+                    nextPhonemeChar={nextChar}
+                    onAddStars={onAddStars}
+                  />
+                </div>
+              );
+            })()}
 
             {activeGame === 'phonics_ninja' && (
               <iframe

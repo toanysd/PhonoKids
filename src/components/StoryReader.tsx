@@ -13,7 +13,8 @@ import {
   Sparkles, 
   BookOpen,
   Home,
-  Info
+  Info,
+  ArrowRight
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -21,12 +22,16 @@ interface StoryReaderProps {
   story: DecodableStory;
   onBackToHome: () => void;
   onStoryFinished?: () => void;
+  onNextStory?: () => void;
+  nextStoryTitle?: string;
 }
 
 export const StoryReader: React.FC<StoryReaderProps> = ({
   story,
   onBackToHome,
-  onStoryFinished
+  onStoryFinished,
+  onNextStory,
+  nextStoryTitle
 }) => {
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
   const [activeWordIndex, setActiveWordIndex] = useState<number | null>(null);
@@ -37,6 +42,7 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
   const [micNotice, setMicNotice] = useState<string | null>(null);
   const [showLeoTip, setShowLeoTip] = useState<boolean>(false);
   const [leoTipText, setLeoTipText] = useState<string>('');
+  const [showFinishedModal, setShowFinishedModal] = useState<boolean>(false);
 
   const settings = storageService.getSettings();
   const currentPage: StoryPage = story.pages[currentPageIndex];
@@ -155,6 +161,7 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
       } catch {
         // Ignore
       }
+      setShowFinishedModal(true);
       onStoryFinished?.();
     }
   };
@@ -405,6 +412,46 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
         </div>
 
       </div>
+
+      {/* Story Finished Celebration Modal for Seamless Reading Session */}
+      {showFinishedModal && (
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="bg-white rounded-3xl p-5 sm:p-6 border-6 border-amber-300 shadow-2xl max-w-md w-full text-center flex flex-col items-center animate-scaleUp">
+            <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center text-3xl mb-2 animate-bounce">
+              🏆📖
+            </div>
+            <h3 className="text-xl sm:text-2xl font-black text-amber-950 mb-1">
+              Hoan Hô Bé Đã Đọc Xong!
+            </h3>
+            <p className="text-xs sm:text-sm font-bold text-amber-800 mb-4">
+              Bé đã hoàn thành cuốn sách &quot;{story.title}&quot; xuất sắc và nhận được +5 ⭐!
+            </p>
+
+            <div className="flex flex-col gap-2.5 w-full">
+              {onNextStory && (
+                <button
+                  onClick={() => {
+                    setShowFinishedModal(false);
+                    setCurrentPageIndex(0);
+                    onNextStory();
+                  }}
+                  className="w-full py-3.5 px-5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black text-sm sm:text-base rounded-2xl shadow-xl border-2 border-white transform active:scale-95 transition-all flex items-center justify-center space-x-2 cursor-pointer animate-pulse"
+                >
+                  <span className="truncate">Đọc Sách Tiếp {nextStoryTitle ? `: "${nextStoryTitle}"` : ''} 🚀</span>
+                  <ArrowRight className="w-5 h-5 shrink-0" />
+                </button>
+              )}
+
+              <button
+                onClick={onBackToHome}
+                className="w-full py-2.5 px-4 bg-amber-100 hover:bg-amber-200 text-amber-950 font-bold rounded-2xl border border-amber-300 text-xs sm:text-sm active:scale-95 transition-all cursor-pointer"
+              >
+                Quay Về Thư Viện Sách 📚
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

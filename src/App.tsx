@@ -16,6 +16,7 @@ import { ArcadePlayground } from './components/ArcadePlayground';
 import { PhonemeInfo } from './types/phonics';
 import { DecodableStory } from './types/story';
 import { ChildProfile, SessionSettings } from './types/user';
+import { DECODABLE_STORIES } from './data/stories';
 
 import { storageService } from './services/storageService';
 import { audioService } from './services/audioService';
@@ -164,13 +165,26 @@ export const App: React.FC = () => {
           />
         )}
 
-        {currentView === 'story_reader' && activeStory && (
-          <StoryReader
-            story={activeStory}
-            onBackToHome={() => setCurrentView('stories')}
-            onStoryFinished={handleFinishStory}
-          />
-        )}
+        {currentView === 'story_reader' && activeStory && (() => {
+          const sIdx = DECODABLE_STORIES.findIndex((s) => s.id === activeStory.id);
+          const nextStory = sIdx !== -1 && sIdx + 1 < DECODABLE_STORIES.length
+            ? DECODABLE_STORIES[sIdx + 1]
+            : DECODABLE_STORIES[0];
+          return (
+            <StoryReader
+              story={activeStory}
+              onBackToHome={() => setCurrentView('stories')}
+              onStoryFinished={handleFinishStory}
+              onNextStory={() => {
+                storageService.markStoryCompleted(activeStory.id);
+                storageService.addStars(5);
+                handleRefreshProfile();
+                setActiveStory(nextStory);
+              }}
+              nextStoryTitle={nextStory.title}
+            />
+          );
+        })()}
 
         {currentView === 'minimal_pairs' && (
           <MinimalPairsView onAddStars={handleAddStars} />
