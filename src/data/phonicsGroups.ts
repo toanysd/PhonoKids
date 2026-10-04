@@ -103,8 +103,10 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
     ],
     tprAction: {
       title: 'Uốn lượn như rắn',
-      descriptionVi: 'Đưa một bàn tay uốn lượn hình chữ S và xì hơi dài: sssss',
-      actionPrompt: 'Uốn tay như chú rắn và xì sssss nào!',
+      titleEn: 'Weave like a snake',
+      chantEn: 'The snake is in the grass!',
+      descriptionVi: 'Uốn lượn bàn tay theo hình chữ S như chú rắn trườn và xì hơi nhẹ nhàng: sssss!',
+      actionPrompt: 'The snake is in the grass!',
       icon: '🐍'
     },
     mouthGuide: {
@@ -128,9 +130,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'axe', meaningVi: 'cái rìu', emoji: '🪓' }
     ],
     tprAction: {
-      title: 'Kiến bò lên tay',
-      descriptionVi: 'Dùng ngón tay nhón nhón bò từ mu bàn tay lên cổ tay và nói: /æ/, /æ/, ants on my arm!',
-      actionPrompt: 'Giả vờ đàn kiến đang bò trên cánh tay nhé!',
+      title: 'Đàn kiến bò trên tay',
+      titleEn: 'Ants on my arm',
+      chantEn: 'Ants on my arm, brushing them away!',
+      descriptionVi: 'Dùng các đầu ngón tay nhón nhẹ trên cánh tay như đàn kiến nhỏ bò: a, a, a!',
+      actionPrompt: 'Ants on my arm, brushing them away!',
       icon: '🐜'
     },
     mouthGuide: {
@@ -154,9 +158,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'tap', meaningVi: 'vòi nước', emoji: '🚰' }
     ],
     tprAction: {
-      title: 'Đầu lắc xem bóng',
-      descriptionVi: 'Quay đầu sang trái rồi sang phải như theo dõi quả bóng tennis: t, t, t!',
-      actionPrompt: 'Lắc đầu theo bóng tennis nào: t, t, t!',
+      title: 'Xem trận đấu quần vợt',
+      titleEn: 'Watch the tennis game',
+      chantEn: 'Turn your head and watch the tennis game!',
+      descriptionVi: 'Nghiêng đầu qua lại theo dõi quả bóng tennis nảy: t, t, t!',
+      actionPrompt: 'Turn your head and watch the tennis game!',
       icon: '🎾'
     },
     mouthGuide: {
@@ -180,9 +186,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'igloo', meaningVi: 'lều tuyết', emoji: '🏕️' }
     ],
     tprAction: {
-      title: 'Chú chuột chùi râu',
-      descriptionVi: 'Dùng hai ngón tay vuốt nhẹ hai bên má giả làm râu chuột và kêu: i, i, inky mouse!',
-      actionPrompt: 'Vuốt râu chuột nhỏ nào: i, i, i!',
+      title: 'Chú chuột nhỏ chùi râu',
+      titleEn: 'Inky the little mouse',
+      chantEn: 'Inky the mouse is squeaking in her house!',
+      descriptionVi: 'Dùng hai ngón tay vuốt nhẹ hai bên má làm râu chuột kêu: i, i, i!',
+      actionPrompt: 'Inky the mouse is squeaking in her house!',
       icon: '🐭'
     },
     mouthGuide: {
@@ -207,8 +215,10 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
     ],
     tprAction: {
       title: 'Thổi nến sinh nhật',
-      descriptionVi: 'Giơ một ngón tay làm ngọn nến và thổi phù nhẹ: p, p, puff out the candle!',
-      actionPrompt: 'Cùng thổi nến bánh sinh nhật nào: p, p, p!',
+      titleEn: 'Puff out the candles',
+      chantEn: 'Puff out the candles on the pink pig cake!',
+      descriptionVi: 'Giơ một ngón tay làm ngọn nến sinh nhật và thổi phù nhẹ: p, p, p!',
+      actionPrompt: 'Puff out the candles on the pink pig cake!',
       icon: '🕯️'
     },
     mouthGuide: {
@@ -233,8 +243,10 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
     ],
     tprAction: {
       title: 'Máy bay sải cánh',
-      descriptionVi: 'Dang hai tay sang ngang nghiêng người như máy bay lượn và ngân: nnnnnn!',
-      actionPrompt: 'Dang cánh bay vút lên bầu trời nào: nnnnn!',
+      titleEn: 'Aeroplane in the sky',
+      chantEn: 'Hear the aeroplane flying high in the sky!',
+      descriptionVi: 'Dang hai tay sang ngang nghiêng người như máy bay sải cánh: nnnnn!',
+      actionPrompt: 'Hear the aeroplane flying high in the sky!',
       icon: '✈️'
     },
     mouthGuide: {
@@ -260,10 +272,12 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'kite', meaningVi: 'con diều', emoji: '🪁' }
     ],
     tprAction: {
-      title: 'Gõ phách lách cách',
-      descriptionVi: 'Hai tay gập mở ngón tay gõ lách cách như castanets: /k/, /k/, clicking castanets!',
-      actionPrompt: 'Lách cách đôi tay gõ phách: k, k, k!',
-      icon: '💃'
+      title: 'Gõ phách castanet',
+      titleEn: 'Click the castanets',
+      chantEn: 'Clicking castanets, click and clap!',
+      descriptionVi: 'Gõ nhẹ các đầu ngón tay như gõ phách castanet rộn rã: c, c, c!',
+      actionPrompt: 'Clicking castanets, click and clap!',
+      icon: '🪘'
     },
     mouthGuide: {
       mouthShape: 'open',
@@ -286,10 +300,12 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'elbow', meaningVi: 'khuỷu tay', emoji: '💪' }
     ],
     tprAction: {
-      title: 'Đập vỡ trứng rán',
-      descriptionVi: 'Giả vờ cầm quả trứng đập vào mép chảo rồi tách ra: e, e, eggs in the pan!',
-      actionPrompt: 'Cùng tách quả trứng vào chảo nào: e, e, e!',
-      icon: '🍳'
+      title: 'Đập vỏ trứng vào chảo',
+      titleEn: 'Crack the egg',
+      chantEn: 'Crack the egg into the pan!',
+      descriptionVi: 'Hai tay làm động tác gõ nhẹ quả trứng vào chảo rồi tách đôi: e, e, e!',
+      actionPrompt: 'Crack the egg into the pan!',
+      icon: '🥚'
     },
     mouthGuide: {
       mouthShape: 'wide',
@@ -312,9 +328,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'heart', meaningVi: 'trái tim', emoji: '❤️' }
     ],
     tprAction: {
-      title: 'Thở dốc sau khi chạy',
-      descriptionVi: 'Đưa một bàn tay lên trước miệng và thở gấp như vừa chạy mệt: h, h, h!',
-      actionPrompt: 'Thở hổn hển thật sâu nào: h, h, h!',
+      title: 'Nhảy nhót thở dốc',
+      titleEn: 'Hop and pant',
+      chantEn: 'Hop and hop, breathing out so fast!',
+      descriptionVi: 'Nhảy chân sáo rồi đặt tay trước miệng thở dốc nhẹ: h, h, h!',
+      actionPrompt: 'Hop and hop, breathing out so fast!',
       icon: '🏃'
     },
     mouthGuide: {
@@ -338,10 +356,12 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'rabbit', meaningVi: 'chú thỏ', emoji: '🐰' }
     ],
     tprAction: {
-      title: 'Cún con lắc đầu',
-      descriptionVi: 'Cắn chặt hai hàm và lắc đầu sang hai bên như cún kéo giẻ rách: rrrrrrr!',
-      actionPrompt: 'Lắc đầu gầm gừ như cún con: rrrrr!',
-      icon: '🐕'
+      title: 'Chú cún vờn giẻ',
+      titleEn: 'Puppy with a rag',
+      chantEn: 'See the puppy rip the rag!',
+      descriptionVi: 'Lắc nhẹ đầu sang hai bên như chú cún ngậm giẻ chơi đùa: rrrrr!',
+      actionPrompt: 'See the puppy rip the rag!',
+      icon: '🐶'
     },
     mouthGuide: {
       mouthShape: 'round',
@@ -365,8 +385,10 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
     ],
     tprAction: {
       title: 'Xoa bụng khen ngon',
-      descriptionVi: 'Lấy tay xoa tròn quanh bụng và mỉm cười: mmmmm, yummy food!',
-      actionPrompt: 'Xoa bụng khen món ăn ngon nào: mmmmm!',
+      titleEn: 'Rub tummy for yummy food',
+      chantEn: 'Rub your tummy, yummy food in my tummy!',
+      descriptionVi: 'Xoa xoa bụng vòng tròn khen đồ ăn ngon miệng: mmmmm!',
+      actionPrompt: 'Rub your tummy, yummy food in my tummy!',
       icon: '😋'
     },
     mouthGuide: {
@@ -391,8 +413,10 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
     ],
     tprAction: {
       title: 'Đánh trống rộn ràng',
-      descriptionVi: 'Hai tay cầm dùi trống tưởng tượng gõ bập bùng: d, d, beat the drum!',
-      actionPrompt: 'Gõ trống tùng tùng tùng: d, d, d!',
+      titleEn: 'Play the drum',
+      chantEn: 'Beat the drum, play and drum all day!',
+      descriptionVi: 'Hai tay cầm dùi gõ trống nhịp nhàng: d, d, d!',
+      actionPrompt: 'Beat the drum, play and drum all day!',
       icon: '🥁'
     },
     mouthGuide: {
@@ -418,9 +442,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'guitar', meaningVi: 'đàn ghita', emoji: '🎸' }
     ],
     tprAction: {
-      title: 'Nước xoáy trôi ùng ục',
-      descriptionVi: 'Đưa tay xoay tròn quanh họng giả tiếng nước xoáy: g, g, gurgle down the drain!',
-      actionPrompt: 'Xoay tay quanh họng ùng ục: g, g, g!',
+      title: 'Xoáy nước cuốn trôi',
+      titleEn: 'Water down the drain',
+      chantEn: 'Water gurgles down the drain, glug glug glug!',
+      descriptionVi: 'Xoay xoay bàn tay theo hình xoáy nước thoát xuống cống: g, g, g!',
+      actionPrompt: 'Water gurgles down the drain, glug glug glug!',
       icon: '🌀'
     },
     mouthGuide: {
@@ -444,9 +470,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'ox', meaningVi: 'con bò tót', emoji: '🐂' }
     ],
     tprAction: {
-      title: 'Bật tắt đèn on-off',
-      descriptionVi: 'Búng ngón tay như bấm công tắc: o, o, on and off!',
-      actionPrompt: 'Bật tắt công tắc đèn: o, o, o!',
+      title: 'Bật tắt công tắc đèn',
+      titleEn: 'Switch on the light',
+      chantEn: 'Time for bed, flick the switch on and off!',
+      descriptionVi: 'Bấm ngón tay như bật công tắc đèn phòng: o, o, o!',
+      actionPrompt: 'Time for bed, flick the switch on and off!',
       icon: '💡'
     },
     mouthGuide: {
@@ -470,9 +498,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'under', meaningVi: 'ở dưới', emoji: '👇' }
     ],
     tprAction: {
-      title: 'Bật ô che mưa',
-      descriptionVi: 'Hai tay giả vờ cầm cán ô bật lên: u, u, up umbrella!',
-      actionPrompt: 'Bật ô che mưa nào: u, u, u!',
+      title: 'Giương ô che mưa',
+      titleEn: 'Open the umbrella',
+      chantEn: 'Open up your umbrella in the rain!',
+      descriptionVi: 'Hai tay đưa lên cao mở chiếc ô xinh xắn che mưa: u, u, u!',
+      actionPrompt: 'Open up your umbrella in the rain!',
       icon: '☂️'
     },
     mouthGuide: {
@@ -496,9 +526,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'leaf', meaningVi: 'chiếc lá', emoji: '🍃' }
     ],
     tprAction: {
-      title: 'Liếm kẹo mút',
-      descriptionVi: 'Giả vờ cầm kẹo mút liếm từ dưới lên: l, l, lick a lollipop!',
-      actionPrompt: 'Liếm kẹo mút ngọt ngào: l, l, l!',
+      title: 'Liếm kẹo mút ngọt ngào',
+      titleEn: 'Lick the lollipop',
+      chantEn: 'Licking a sweet and juicy lollipop!',
+      descriptionVi: 'Giơ bàn tay cầm que kẹo mút và giả vờ liếm: l, l, l!',
+      actionPrompt: 'Licking a sweet and juicy lollipop!',
       icon: '🍭'
     },
     mouthGuide: {
@@ -522,9 +554,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'frog', meaningVi: 'chú ếch', emoji: '🐸' }
     ],
     tprAction: {
-      title: 'Phao bơi xì hơi',
-      descriptionVi: 'Hai tay từ từ xẹp xuống như quả bóng xì hơi: f, f, flat fish!',
-      actionPrompt: 'Xẹp người như bóng xì hơi: ffff!',
+      title: 'Xì hơi bóng bay cá',
+      titleEn: 'Deflate the fish balloon',
+      chantEn: 'Floating fish balloon is deflating softly!',
+      descriptionVi: 'Hai lòng bàn tay từ từ chụm lại như quả bóng cá đang xì hơi: fffff!',
+      actionPrompt: 'Floating fish balloon is deflating softly!',
       icon: '🎈'
     },
     mouthGuide: {
@@ -548,10 +582,12 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'bear', meaningVi: 'chú gấu', emoji: '🐻' }
     ],
     tprAction: {
-      title: 'Đập bóng nảy tưng',
-      descriptionVi: 'Hai tay cầm gậy đập bóng: b, b, bounce the ball!',
-      actionPrompt: 'Vung gậy đập bóng nào: b, b, b!',
-      icon: '⚽'
+      title: 'Vung gậy đánh bóng chày',
+      titleEn: 'Hit the baseball',
+      chantEn: 'Swing the bat and hit the ball!',
+      descriptionVi: 'Hai tay cầm gậy bóng chày vung mạnh đón bóng: b, b, b!',
+      actionPrompt: 'Swing the bat and hit the ball!',
+      icon: '⚾'
     },
     mouthGuide: {
       mouthShape: 'closed',
@@ -576,9 +612,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'train', meaningVi: 'đoàn tàu', emoji: '🚂' }
     ],
     tprAction: {
-      title: 'Vểnh tai lắng nghe',
-      descriptionVi: 'Khum tay đặt sau vành tai như nghe không rõ: ai? ai? did you hear?',
-      actionPrompt: 'Khum tay vểnh tai nghe: ai, ai, ai!',
+      title: 'Khum tay lắng nghe',
+      titleEn: 'Cup hand to ear',
+      chantEn: 'Cup your ear, what did you say?',
+      descriptionVi: 'Khum bàn tay áp vào vành tai lắng nghe bạn nói: ai? ai?',
+      actionPrompt: 'Cup your ear, what did you say?',
       icon: '👂'
     },
     mouthGuide: {
@@ -602,9 +640,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'jug', meaningVi: 'cái bình nước', emoji: '🏺' }
     ],
     tprAction: {
-      title: 'Lắc lư như đĩa thạch',
-      descriptionVi: 'Lắc lư hai bờ vai như đĩa thạch rung rinh: j, j, jelly on a plate!',
-      actionPrompt: 'Lắc lư vai như đĩa thạch nào: j, j, j!',
+      title: 'Lắc lư đĩa thạch',
+      titleEn: 'Jelly on a plate',
+      chantEn: 'Jelly on a plate, wobble and shake!',
+      descriptionVi: 'Lắc lư đôi vai bập bùng như miếng thạch rau câu: j, j, j!',
+      actionPrompt: 'Jelly on a plate, wobble and shake!',
       icon: '🍮'
     },
     mouthGuide: {
@@ -628,10 +668,12 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'coat', meaningVi: 'áo khoác ấm', emoji: '🧥' }
     ],
     tprAction: {
-      title: 'Ngạc nhiên đưa tay lên miệng',
-      descriptionVi: 'Đưa một bàn tay che miệng ngạc nhiên: oh! oh! I saw a goat on a boat!',
-      actionPrompt: 'Đưa tay che miệng ngạc nhiên: oa, oa, oa!',
-      icon: '😮'
+      title: 'Ngạc nhiên nhìn thuyền trôi',
+      titleEn: 'Look at the goat in a boat',
+      chantEn: 'Oh, look at the goat in a floating boat!',
+      descriptionVi: 'Đưa tay ôm miệng ngạc nhiên thốt lên: oa! oa!',
+      actionPrompt: 'Oh, look at the goat in a floating boat!',
+      icon: '⛵'
     },
     mouthGuide: {
       mouthShape: 'round',
@@ -654,9 +696,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'lie', meaningVi: 'nằm nghỉ', emoji: '🛏️' }
     ],
     tprAction: {
-      title: 'Giơ tay chào hải quân',
-      descriptionVi: 'Đưa tay lên thái dương chào kiểu hải quân: ie, ie, captain!',
-      actionPrompt: 'Đưa tay chào nghiêm trang: ie, ie, captain!',
+      title: 'Chào kiểu thuyền trưởng',
+      titleEn: 'Salute the captain',
+      chantEn: 'Stand up straight and salute the captain: Aye-aye, Captain!',
+      descriptionVi: 'Đứng nghiêm giơ tay chào kiểu hải quân: ie, ie!',
+      actionPrompt: 'Stand up straight and salute the captain: Aye-aye, Captain!',
       icon: '🫡'
     },
     mouthGuide: {
@@ -680,10 +724,12 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'feet', meaningVi: 'đôi bàn chân', emoji: '🦶' }
     ],
     tprAction: {
-      title: 'Tai lừa vểnh lên',
-      descriptionVi: 'Đưa hai bàn tay lên đầu làm tai lừa vẫy vẫy: e-or, e-or, ee-ee-ee!',
-      actionPrompt: 'Vẫy tai lừa và cười toe toét: ee, ee, ee!',
-      icon: '🫏'
+      title: 'Vẫy tai chú lừa',
+      titleEn: 'Donkey ears',
+      chantEn: 'See the donkey flap his ears: Eeyore, eeyore!',
+      descriptionVi: 'Đặt hai bàn tay lên đầu vẫy như tai chú lừa: ee, or, ee, or!',
+      actionPrompt: 'See the donkey flap his ears: Eeyore, eeyore!',
+      icon: '🐴'
     },
     mouthGuide: {
       mouthShape: 'wide',
@@ -706,10 +752,12 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'horse', meaningVi: 'chú ngựa phi', emoji: '🐎' }
     ],
     tprAction: {
-      title: 'Tai lừa cụp xuống',
-      descriptionVi: 'Cụp hai tay làm tai lừa xuống: or, or, or!',
-      actionPrompt: 'Cụp tai lừa xuống nào: or, or, or!',
-      icon: '🐎'
+      title: 'Tiếng lừa gọi bạn',
+      titleEn: 'Donkey calls across the meadow',
+      chantEn: 'Hear the little donkey call across the meadow!',
+      descriptionVi: 'Cụp xòe hai tay vẫy làm tai lừa kêu: or, or, or!',
+      actionPrompt: 'Hear the little donkey call across the meadow!',
+      icon: '🌾'
     },
     mouthGuide: {
       mouthShape: 'round',
@@ -734,9 +782,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'zip', meaningVi: 'khóa kéo', emoji: '🤐' }
     ],
     tprAction: {
-      title: 'Chú ong vỗ cánh',
-      descriptionVi: 'Kẹp hai cùi chỏ vỗ cánh ong bay: zzzzz, buzz goes the bee!',
-      actionPrompt: 'Vỗ cánh vo ve như chú ong: zzzzz!',
+      title: 'Chú ong chăm chỉ bay',
+      titleEn: 'Buzz like a bee',
+      chantEn: 'Busy buzzing bee, buzzing in the garden!',
+      descriptionVi: 'Đưa hai cánh tay vỗ nhẹ như ong thợ bay lượn: zzzzz!',
+      actionPrompt: 'Busy buzzing bee, buzzing in the garden!',
       icon: '🐝'
     },
     mouthGuide: {
@@ -760,10 +810,12 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'web', meaningVi: 'mạng nhện', emoji: '🕸️' }
     ],
     tprAction: {
-      title: 'Thổi gió mát lành',
-      descriptionVi: 'Đưa bàn tay lên trước miệng thổi luồng gió mát: w, w, blowing wind!',
-      actionPrompt: 'Thổi luồng gió mát lành: w, w, w!',
-      icon: '🌬️'
+      title: 'Cơn gió đông thổi',
+      titleEn: 'Blowing wind',
+      chantEn: 'Blowing wind, hear the wind blow through the trees!',
+      descriptionVi: 'Thổi hơi qua đôi môi chu tròn như gió đông: w, w, w!',
+      actionPrompt: 'Blowing wind, hear the wind blow through the trees!',
+      icon: '💨'
     },
     mouthGuide: {
       mouthShape: 'round',
@@ -786,9 +838,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'wing', meaningVi: 'đôi cánh chim', emoji: '🪽' }
     ],
     tprAction: {
-      title: 'Lực sĩ nâng tạ',
-      descriptionVi: 'Hai tay gồng cơ bắp nâng tạ nặng lên cao: ng, ng, strong weightlifter!',
-      actionPrompt: 'Gồng cơ bắp nâng tạ: ng, ng, ng!',
+      title: 'Lực sĩ nâng tạ nặng',
+      titleEn: 'Lift the heavy weight',
+      chantEn: 'Lift the heavy barbell with all your might!',
+      descriptionVi: 'Gồng hai cánh tay giả nâng quả tạ nặng lên: nnnnng!',
+      actionPrompt: 'Lift the heavy barbell with all your might!',
       icon: '🏋️'
     },
     mouthGuide: {
@@ -812,9 +866,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'vase', meaningVi: 'bình cắm hoa', emoji: '🏺' }
     ],
     tprAction: {
-      title: 'Lái xe van rồ ga',
-      descriptionVi: 'Hai tay xoay vô lăng tưởng tượng: v, v, drive the van!',
-      actionPrompt: 'Cầm vô lăng lái xe van: v, v, v!',
+      title: 'Lái xe van bon bon',
+      titleEn: 'Drive the van',
+      chantEn: 'Hold the wheel and drive the van around the town!',
+      descriptionVi: 'Hai tay cầm vô lăng lái xe van bon bon: vvvvv!',
+      actionPrompt: 'Hold the wheel and drive the van around the town!',
       icon: '🚐'
     },
     mouthGuide: {
@@ -839,8 +895,10 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
     ],
     tprAction: {
       title: 'Chim cúc cu gật đầu',
-      descriptionVi: 'Gật đầu nhẹ như chú chim cúc cu nhô ra: oo, oo, cuckoo clock!',
-      actionPrompt: 'Gật đầu nhô ra như chim cúc cu: oo, oo!',
+      titleEn: 'Cuckoo clock',
+      chantEn: 'Cuckoo clock, nodding head right on time!',
+      descriptionVi: 'Gật đầu ngắn dứt khoát như chú chim cúc cu nhô ra: oo, oo!',
+      actionPrompt: 'Cuckoo clock, nodding head right on time!',
       icon: '🕰️'
     },
     mouthGuide: {
@@ -864,9 +922,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'zoo', meaningVi: 'vườn bách thú', emoji: '🦁' }
     ],
     tprAction: {
-      title: 'Hú trăng đêm dài',
-      descriptionVi: 'Ngửa cổ nhìn trăng ngân dài: ooooo, howling moon!',
-      actionPrompt: 'Ngắm vầng trăng tròn ngân dài: ooooo!',
+      title: 'Ngắm vầng trăng sáng',
+      titleEn: 'Wolf howling at the moon',
+      chantEn: 'Howling at the big silver moon up in the sky!',
+      descriptionVi: 'Ngửa cổ ngắm vầng trăng tròn ngân dài: ooooo!',
+      actionPrompt: 'Howling at the big silver moon up in the sky!',
       icon: '🌕'
     },
     mouthGuide: {
@@ -893,8 +953,10 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
     ],
     tprAction: {
       title: 'Múc sữa chua ăn',
-      descriptionVi: 'Giả vờ cầm thìa xúc sữa chua đưa vào miệng: y, y, yummy yogurt!',
-      actionPrompt: 'Múc thìa sữa chua nào: y, y, y!',
+      titleEn: 'Yummy yogurt',
+      chantEn: 'Eat your yummy yogurt, so delicious!',
+      descriptionVi: 'Cầm thìa múc sữa chua ăn ngon lành: y, y, y!',
+      actionPrompt: 'Eat your yummy yogurt, so delicious!',
       icon: '🥛'
     },
     mouthGuide: {
@@ -918,9 +980,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'six', meaningVi: 'số 6', emoji: '6️⃣' }
     ],
     tprAction: {
-      title: 'Bấm máy ảnh tách tách',
-      descriptionVi: 'Giơ hai tay giả làm máy ảnh bấm tách tách: ks, ks, take a picture!',
-      actionPrompt: 'Bấm ngón tay chụp ảnh: ks, ks, ks!',
+      title: 'Bấm máy ảnh chụp hình',
+      titleEn: 'Take a picture',
+      chantEn: 'Click the camera, take a lovely photo!',
+      descriptionVi: 'Giơ hai tay giả làm máy ảnh bấm tách tách: ks, ks, ks!',
+      actionPrompt: 'Click the camera, take a lovely photo!',
       icon: '📸'
     },
     mouthGuide: {
@@ -945,8 +1009,10 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
     ],
     tprAction: {
       title: 'Đoàn tàu lăn bánh',
-      descriptionVi: 'Quay vòng hai cánh tay như bánh xe lửa xình xịch: ch, ch, choo-choo train!',
-      actionPrompt: 'Quay tay làm đoàn tàu lăn bánh: ch, ch, ch!',
+      titleEn: 'Choo-choo train',
+      chantEn: 'Choo-choo goes the train down the track!',
+      descriptionVi: 'Hai tay quay vòng tròn quanh sườn như bánh xe lửa: ch, ch, ch!',
+      actionPrompt: 'Choo-choo goes the train down the track!',
       icon: '🚂'
     },
     mouthGuide: {
@@ -970,9 +1036,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'fish', meaningVi: 'chú cá bơi', emoji: '🐟' }
     ],
     tprAction: {
-      title: 'Suỵt ngón tay giữ im lặng',
-      descriptionVi: 'Đặt một ngón tay lên trước môi suỵt khẽ: sh, sh, quiet baby sleeping!',
-      actionPrompt: 'Đặt ngón tay lên môi suỵt khẽ: shhhhh!',
+      title: 'Suỵt ngón tay khẽ',
+      titleEn: 'Shh, baby is asleep',
+      chantEn: 'Shh, be very quiet, sweet baby is asleep!',
+      descriptionVi: 'Đặt một ngón tay lên trước môi suỵt khẽ: shhhhh!',
+      actionPrompt: 'Shh, be very quiet, sweet baby is asleep!',
       icon: '🤫'
     },
     mouthGuide: {
@@ -996,9 +1064,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'three', meaningVi: 'số 3', emoji: '3️⃣' }
     ],
     tprAction: {
-      title: 'Thè lưỡi như chú hề tinh nghịch',
-      descriptionVi: 'Đưa đầu lưỡi ra giữa hai hàm răng và thổi hơi: th, th, thank you!',
-      actionPrompt: 'Kẹp nhẹ đầu lưỡi thổi hơi gió: th, th, th!',
+      title: 'Chú hề lè lưỡi tinh nghịch',
+      titleEn: 'Funny clown breathing out',
+      chantEn: 'Funny clowns, sticking out tongues and breathing out!',
+      descriptionVi: 'Đặt nhẹ đầu lưỡi giữa răng thổi hơi gió vô thanh: th, th, th!',
+      actionPrompt: 'Funny clowns, sticking out tongues and breathing out!',
       icon: '👅'
     },
     mouthGuide: {
@@ -1023,8 +1093,10 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
     ],
     tprAction: {
       title: 'Đầu lưỡi rung ve ve',
-      descriptionVi: 'Đặt đầu lưỡi giữa răng và ngân rung: th, th, this and that!',
-      actionPrompt: 'Kẹp đầu lưỡi và rung cổ họng: th, th, th!',
+      titleEn: 'Buzzing tongue',
+      chantEn: 'This and that, feel the gentle buzz on your tongue!',
+      descriptionVi: 'Đặt đầu lưỡi giữa răng và rung thanh quản nhẹ: th, th, th!',
+      actionPrompt: 'This and that, feel the gentle buzz on your tongue!',
       icon: '👉'
     },
     mouthGuide: {
@@ -1051,8 +1123,10 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
     ],
     tprAction: {
       title: 'Mỏ vịt quàng quạc',
-      descriptionVi: 'Chụm các ngón tay mở ra gập vào làm mỏ vịt: qu, qu, quack goes the duck!',
-      actionPrompt: 'Mở mỏ vịt quàng quạc: qu, qu, qu!',
+      titleEn: 'Quack like a duck',
+      chantEn: 'Quack, quack goes the happy duck in the pond!',
+      descriptionVi: 'Chụm các ngón tay đóng mở như mỏ vịt kêu: qu, qu, qu!',
+      actionPrompt: 'Quack, quack goes the happy duck in the pond!',
       icon: '🦆'
     },
     mouthGuide: {
@@ -1077,8 +1151,10 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
     ],
     tprAction: {
       title: 'Bị kim châm kêu ouch',
-      descriptionVi: 'Giả vờ bị kim châm vào ngón tay và thốt lên: ou, ou, ouch!',
-      actionPrompt: 'Nhón ngón tay kêu ouch: ou, ou, ou!',
+      titleEn: 'Ouch, pricked my finger',
+      chantEn: 'Ouch, ouch, prick your finger on a sewing needle!',
+      descriptionVi: 'Giơ ngón tay nhỏ xíu bị kim châm kêu: ou, ou, ouch!',
+      actionPrompt: 'Ouch, ouch, prick your finger on a sewing needle!',
       icon: '🪡'
     },
     mouthGuide: {
@@ -1103,8 +1179,10 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
     ],
     tprAction: {
       title: 'Thủy thủ vẫy gọi tàu',
+      titleEn: 'Ship ahoy',
+      chantEn: 'Ship ahoy, sailors waving at the ship!',
       descriptionVi: 'Khum hai tay quanh miệng gọi to: oi! oi! ship ahoy!',
-      actionPrompt: 'Khum tay gọi to: oi, oi, oi!',
+      actionPrompt: 'Ship ahoy, sailors waving at the ship!',
       icon: '🪙'
     },
     mouthGuide: {
@@ -1129,8 +1207,10 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
     ],
     tprAction: {
       title: 'Chỉ tay khen bạn',
-      descriptionVi: 'Chỉ tay về phía trước khen bạn: ue, ue, you did it!',
-      actionPrompt: 'Chỉ tay khen ngợi bạn: you, you, you!',
+      titleEn: 'Point to you',
+      chantEn: 'Pointing at my friend, yes, it was you!',
+      descriptionVi: 'Chỉ tay về phía trước khen bạn: ue, ue, you!',
+      actionPrompt: 'Pointing at my friend, yes, it was you!',
       icon: '👉'
     },
     mouthGuide: {
@@ -1154,9 +1234,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'winter', meaningVi: 'mùa đông', emoji: '❄️' }
     ],
     tprAction: {
-      title: 'Máy xay sinh tố quay',
-      descriptionVi: 'Hai tay xoay tròn trước bụng như cánh quạt máy xay: er, er, mixer spins!',
-      actionPrompt: 'Xoay tròn hai tay như máy xay: er, er, er!',
+      title: 'Máy trộn bột quay',
+      titleEn: 'Mixer spinning',
+      chantEn: 'Mixer spins around and blends the cake!',
+      descriptionVi: 'Hai bàn tay xoay tròn trước bụng như que trộn bột: er, er, er!',
+      actionPrompt: 'Mixer spins around and blends the cake!',
       icon: '🌪️'
     },
     mouthGuide: {
@@ -1180,9 +1262,11 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
       { word: 'park', meaningVi: 'công viên xanh', emoji: '🌳' }
     ],
     tprAction: {
-      title: 'Há to miệng cho bác sĩ xem họng',
-      descriptionVi: 'Há miệng thật to và nói: ar, ar, open wide for the doctor!',
-      actionPrompt: 'Há to miệng khám họng nào: aarrrr!',
+      title: 'Há to miệng khám họng',
+      titleEn: 'Open wide for the doctor',
+      chantEn: 'Open your mouth wide for the kind doctor: Ahh!',
+      descriptionVi: 'Há miệng thật to cho bác sĩ xem họng: aarrrr!',
+      actionPrompt: 'Open your mouth wide for the kind doctor: Ahh!',
       icon: '🩺'
     },
     mouthGuide: {

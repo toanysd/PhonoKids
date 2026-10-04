@@ -170,7 +170,7 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
     if (currentStep === 0 || currentStep === 1) {
       audioService.speakPhoneme(phoneme.id, phoneme.ipa);
     } else if (currentStep === 2) {
-      audioService.speakEnglish(primaryWord, 0.85);
+      audioService.playTprAction(phoneme.id, phoneme.tprAction.chantEn);
     } else if (currentStep === 3) {
       const activeWord = currentVocabSlice[0]?.word || primaryWord;
       audioService.speakEnglish(activeWord, 0.85);
@@ -339,19 +339,19 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
 
         {/* ================= STEP 2: TPR ACTION ================= */}
         {currentStep === 2 && (
-          <div className="text-center py-2 animate-fadeIn flex flex-col items-center">
+          <div className="text-center py-1 sm:py-2 animate-fadeIn flex flex-col items-center">
             <span className="text-xs font-black text-orange-800 bg-orange-100 px-3.5 py-1 rounded-full uppercase tracking-wider">
               {stepsTitle[2]}
             </span>
-            <h2 className="text-2xl md:text-3xl font-black text-amber-950 mt-1 mb-1">
+            <h2 className="text-2xl sm:text-3xl font-black text-amber-950 mt-1 mb-0.5">
               Cùng Vận Động: {phoneme.tprAction.title}
             </h2>
-            <p className="text-xs md:text-sm font-bold text-amber-800 mb-3 max-w-xl mx-auto">
+            <p className="text-xs sm:text-sm font-bold text-amber-800 mb-2 max-w-xl mx-auto">
               Phương pháp TPR (Total Physical Response) giúp tạo phản xạ thần kinh tự nhiên thông qua chuyển động cơ thể!
             </p>
 
-            <div className="w-full max-w-lg bg-gradient-to-br from-amber-100 to-orange-100 rounded-3xl p-4 md:p-6 border-4 border-amber-300 shadow-xl mb-2 text-center">
-              <div className="relative w-36 h-36 md:w-44 md:h-44 mx-auto rounded-3xl overflow-hidden border-4 border-white shadow-lg mb-3 bg-amber-50">
+            <div className="w-full max-w-lg bg-gradient-to-br from-amber-100 via-orange-100 to-amber-100 rounded-3xl p-3.5 sm:p-5 border-4 border-amber-300 shadow-xl mb-1 text-center">
+              <div className="relative w-32 h-32 sm:w-40 sm:h-40 mx-auto rounded-2xl overflow-hidden border-4 border-white shadow-md mb-2.5 bg-amber-50">
                 <img
                   src={primaryVisual.url}
                   alt={primaryVisual.alt}
@@ -361,16 +361,59 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                   🎨 {phoneme.tprAction.title}
                 </div>
               </div>
-              <div className="bg-white/95 rounded-2xl p-3 border border-amber-200 text-base md:text-lg font-black text-amber-950 mb-3 shadow-xs">
-                "{phoneme.tprAction.actionPrompt}"
+
+              {/* Native English Action Chant Box */}
+              <div className="bg-white/95 rounded-2xl p-3 border-2 border-amber-300 shadow-sm mb-2.5">
+                <div className="text-[10px] uppercase font-black tracking-wider text-amber-700 mb-0.5 flex items-center justify-center space-x-1">
+                  <Sparkles className="w-3 h-3 text-amber-600" />
+                  <span>Action Chant (Tiếng Anh Bản Ngữ)</span>
+                </div>
+                <div className="text-base sm:text-lg font-black text-amber-950 mb-1.5">
+                  "{phoneme.tprAction.chantEn}"
+                </div>
+
+                {/* 3 Pure Phoneme Sound Chips */}
+                <div className="flex items-center justify-center space-x-2 pt-1 border-t border-amber-100">
+                  <span className="text-[10px] font-extrabold text-amber-800 uppercase">Âm vị mục tiêu:</span>
+                  {[1, 2, 3].map((idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => audioService.playPhoneme(phoneme.id)}
+                      className="px-2.5 py-0.5 bg-amber-100 hover:bg-amber-200 border border-amber-400 rounded-lg text-amber-950 font-black text-xs active:scale-90 transition-transform cursor-pointer shadow-2xs flex items-center space-x-1"
+                      title={`Bấm để nghe âm pure /${phoneme.id}/`}
+                    >
+                      <span>/{phoneme.id}/</span>
+                      <Volume2 className="w-3 h-3 text-amber-700" />
+                    </button>
+                  ))}
+                </div>
               </div>
+
+              {/* Primary Action Button */}
               <KidButton
                 variant="warning"
                 size="md"
-                onClick={() => audioService.speakEnglish(phoneme.tprAction.actionPrompt, 0.9)}
+                onClick={() => audioService.playTprAction(phoneme.id, phoneme.tprAction.chantEn)}
+                className="w-full py-3 text-sm sm:text-base font-black shadow-lg"
               >
-                🔊 Nghe Hướng Dẫn Vận Động
+                <Volume2 className="w-5 h-5 mr-1.5 animate-pulse" />
+                <span>Nghe & Vận Động Cùng Bé 🔊</span>
               </KidButton>
+
+              {/* Vietnamese Parent Guidance Box */}
+              <div className="mt-2.5 bg-white/80 rounded-xl p-2.5 border border-amber-200 text-left text-xs font-bold text-amber-950 flex items-start space-x-2 shadow-2xs">
+                <div className="text-xl shrink-0 mt-0.5">
+                  {phoneme.tprAction.icon || '🏃'}
+                </div>
+                <div>
+                  <div className="font-black text-amber-900 text-[10px] uppercase tracking-wider mb-0.5">
+                    Hướng dẫn động tác cho bé:
+                  </div>
+                  <p className="text-[11px] sm:text-xs leading-relaxed text-amber-900 font-semibold">
+                    {phoneme.tprAction.descriptionVi}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         )}

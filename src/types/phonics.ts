@@ -12,8 +12,10 @@ export interface PhonemeInfo {
   }[];
   tprAction: {
     title: string;
+    titleEn?: string;
     descriptionVi: string;
-    actionPrompt: string;
+    actionPrompt?: string;
+    chantEn: string;
     icon: string;
   };
   mouthGuide: {

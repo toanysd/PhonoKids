@@ -190,6 +190,14 @@ class AudioService {
         return;
       }
 
+      // Strict Architecture Guard: Never pass Vietnamese text into English TTS engine
+      // This prevents the engine from pronouncing letters like 'p' as Vietnamese letter name 'pê'!
+      if (/[à-ỹ]/i.test(text)) {
+        console.warn("[audioService] Vietnamese text rejected by speakEnglish to protect pronunciation:", text);
+        resolve();
+        return;
+      }
+
       window.speechSynthesis.cancel(); // Stop previous utterance
 
       const utterance = new SpeechSynthesisUtterance(text);
@@ -213,6 +221,26 @@ class AudioService {
 
       window.speechSynthesis.speak(utterance);
     });
+  }
+
+  /**
+   * Play authentic native TPR action: speaks natural English chant,
+   * followed by pure native sound clips of the target phoneme repeated 3 times.
+   */
+  public async playTprAction(phonemeId: string, chantEn: string): Promise<void> {
+    if (!this.soundEnabled) return;
+    try {
+      // 1. Speak natural English action chant
+      await this.speakEnglish(chantEn, 0.9);
+      await new Promise((r) => setTimeout(r, 220));
+      // 2. Play pure authentic phoneme sound 3 times (/p/ ... /p/ ... /p/)
+      for (let i = 0; i < 3; i++) {
+        await this.playPhoneme(phonemeId);
+        await new Promise((r) => setTimeout(r, 180));
+      }
+    } catch {
+      // Ignore
+    }
   }
 
   private phonemeAudioCache: Record<string, HTMLAudioElement> = {};
