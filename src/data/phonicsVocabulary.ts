@@ -311,7 +311,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "a",
       "n"
     ],
-    "meaningVi": "một (vật)",
+    "meaningVi": "một",
     "emoji": "☝️",
     "sampleSentence": "An orange is round.",
     "sampleSentenceVi": "Một quả cam tròn xoe."
@@ -327,7 +327,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "a",
       "p"
     ],
-    "meaningVi": "vòi nước / gõ nhẹ",
+    "meaningVi": "gõ nhịp nhẹ",
     "emoji": "🚰",
     "sampleSentence": "Tap the little drum.",
     "sampleSentenceVi": "Gõ nhẹ lên chiếc trống con."
@@ -359,7 +359,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "o",
       "p"
     ],
-    "meaningVi": "đỉnh / con quay",
+    "meaningVi": "con quay sắc màu",
     "emoji": "🪀",
     "sampleSentence": "Spin the colorful top.",
     "sampleSentenceVi": "Xoay tít con quay sắc màu."
@@ -407,7 +407,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "a",
       "g"
     ],
-    "meaningVi": "thẻ nhãn / trò đuổi bắt",
+    "meaningVi": "trò chơi đuổi bắt",
     "emoji": "🏷️",
     "sampleSentence": "We play tag together.",
     "sampleSentenceVi": "Các bạn nhỏ chơi đuổi bắt."
@@ -550,7 +550,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "i",
       "t"
     ],
-    "meaningVi": "nó / điều đó",
+    "meaningVi": "điều đó",
     "emoji": "👉",
     "sampleSentence": "It is a happy day.",
     "sampleSentenceVi": "Đó là một ngày vui."
@@ -599,7 +599,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "i",
       "z"
     ],
-    "meaningVi": "thì / là",
+    "meaningVi": "là",
     "emoji": "✨",
     "sampleSentence": "The kitten is cute.",
     "sampleSentenceVi": "Chú mèo con thật đáng yêu."
@@ -1955,7 +1955,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "a",
       "s"
     ],
-    "meaningVi": "khí đốt / hơi",
+    "meaningVi": "bình khí gas",
     "emoji": "💨",
     "sampleSentence": "Gas powers the stove.",
     "sampleSentenceVi": "Bếp gas nấu bữa cơm ấm."
@@ -2147,7 +2147,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "o",
       "d"
     ],
-    "meaningVi": "kỳ lạ / số lẻ",
+    "meaningVi": "lạ kỳ ngộ nghĩnh",
     "emoji": "🎲",
     "sampleSentence": "An odd little beetle.",
     "sampleSentenceVi": "Một chú bọ ngộ nghĩnh lạ kỳ."
@@ -2233,10 +2233,10 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "o",
       "t"
     ],
-    "meaningVi": "chiếc chậu hoa",
+    "meaningVi": "cái nồi nấu súp",
     "emoji": "🪴",
-    "sampleSentence": "Flowers bloom in the pot.",
-    "sampleSentenceVi": "Hoa nở rực rỡ trong chiếc chậu xinh."
+    "sampleSentence": "Soup in the cooking pot.",
+    "sampleSentenceVi": "Nồi súp nóng hổi thơm ngon."
   },
   {
     "id": "v_o_fox_139",
@@ -2333,7 +2333,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "c",
       "l"
     ],
-    "meaningVi": "chú / bác yêu quý",
+    "meaningVi": "người chú yêu quý",
     "emoji": "👨",
     "sampleSentence": "Visit my funny uncle.",
     "sampleSentenceVi": "Đến thăm người chú vui tính."
@@ -2756,7 +2756,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "a",
       "t"
     ],
-    "meaningVi": "chú dơi / gậy bóng chày",
+    "meaningVi": "chú dơi con",
     "emoji": "🦇",
     "sampleSentence": "A night flying bat.",
     "sampleSentenceVi": "Chú dơi bay đêm lượn vòng."
@@ -3418,7 +3418,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "t",
       "ie"
     ],
-    "meaningVi": "cà vạt / buộc dây",
+    "meaningVi": "buộc thắt nơ",
     "emoji": "👔",
     "sampleSentence": "Tie shoelaces in a bow.",
     "sampleSentenceVi": "Buộc dây giày thành nơ xinh."
@@ -3744,10 +3744,10 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "or",
       "n"
     ],
-    "meaningVi": "chiếc sừng hươu",
+    "meaningVi": "chiếc kèn sừng đồ chơi",
     "emoji": "📯",
     "sampleSentence": "Blow the toy horn.",
-    "sampleSentenceVi": "Thổi chiếc kèn sừng vang xa."
+    "sampleSentenceVi": "Thổi chiếc kèn sừng đồ chơi vang xa."
   },
   {
     "id": "v_or_corn_232",
@@ -4226,7 +4226,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "i",
       "ng"
     ],
-    "meaningVi": "chiếc nhẫn vàng / chuông reo",
+    "meaningVi": "chiếc nhẫn vàng",
     "emoji": "💍",
     "sampleSentence": "A shiny gold ring.",
     "sampleSentenceVi": "Chiếc nhẫn vàng xinh xắn."
@@ -4908,7 +4908,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "e",
       "s"
     ],
-    "meaningVi": "vâng ạ / đồng ý",
+    "meaningVi": "vâng ạ",
     "emoji": "👍",
     "sampleSentence": "Say yes with a smile.",
     "sampleSentenceVi": "Mỉm cười dạ vâng ngoan ngoãn."
@@ -5153,7 +5153,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "a",
       "x"
     ],
-    "meaningVi": "thuế / tính toán",
+    "meaningVi": "tính tiền thuế",
     "emoji": "🪙",
     "sampleSentence": "Count coins carefully.",
     "sampleSentenceVi": "Đếm từng đồng tiền xu cẩn thận."
@@ -5183,10 +5183,10 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "o",
       "x"
     ],
-    "meaningVi": "chú trâu hiền",
+    "meaningVi": "chú bò đực kéo cày",
     "emoji": "🐂",
     "sampleSentence": "The sturdy ox plows.",
-    "sampleSentenceVi": "Chú trâu hiền hòa cày ruộng."
+    "sampleSentenceVi": "Chú bò đực cần mẫn cày ruộng."
   },
   {
     "id": "v_x_flax_319",
@@ -5751,7 +5751,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "e",
       "m"
     ],
-    "meaningVi": "chúng nó / các bạn ấy",
+    "meaningVi": "các bạn ấy",
     "emoji": "👥",
     "sampleSentence": "Give them sweet red berries.",
     "sampleSentenceVi": "Chia cho các bạn những quả mọng ngọt."
@@ -5782,7 +5782,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "th",
       "ey"
     ],
-    "meaningVi": "họ / các bạn ấy",
+    "meaningVi": "các bạn ấy",
     "emoji": "🧑‍🤝‍🧑",
     "sampleSentence": "They dance around the flower bed.",
     "sampleSentenceVi": "Các bạn nhỏ nhảy múa quanh luống hoa."
@@ -6295,7 +6295,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "oi",
       "l"
     ],
-    "meaningVi": "nuông chiều / giữ gìn",
+    "meaningVi": "nuông chiều yêu thương",
     "emoji": "🎁",
     "sampleSentence": "Grandma treats with love.",
     "sampleSentenceVi": "Bà yêu thương chăm sóc từng li từng tí."
@@ -6410,7 +6410,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "r",
       "ue"
     ],
-    "meaningVi": "sự thật / chân thành",
+    "meaningVi": "chân thật tốt bụng",
     "emoji": "⭐",
     "sampleSentence": "A true and loyal friend.",
     "sampleSentenceVi": "Một người bạn chân thành tốt bụng."
@@ -6567,7 +6567,7 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
       "t",
       "er"
     ],
-    "meaningVi": "lá thư tay / chữ cái",
+    "meaningVi": "lá thư tay",
     "emoji": "✉️",
     "sampleSentence": "Send a loving letter.",
     "sampleSentenceVi": "Gửi lá thư tay chan chứa yêu thương."
@@ -6860,7 +6860,8 @@ export const PHONICS_VOCABULARY: VocabularyItem[] = [
  * Helper to get all vocabulary words belonging to a specific phoneme
  */
 export const getVocabularyByPhoneme = (phonemeId: string): VocabularyItem[] => {
-  return PHONICS_VOCABULARY.filter(item => item.phonemeId === phonemeId);
+  const targetId = phonemeId === 'c' ? 'c_k' : phonemeId;
+  return PHONICS_VOCABULARY.filter(item => item.phonemeId === targetId || (targetId === 'c_k' && item.phonemeId === 'c'));
 };
 
 /**

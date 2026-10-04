@@ -247,7 +247,13 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
     return 'text-xl md:text-2xl font-bold tracking-tight';
   };
 
-  const primaryWord = vocabList[0]?.word || phoneme.sampleWords[0]?.word || 'cat';
+  // Derive primary item strictly from vocabList[0] or fallback to phoneme.sampleWords[0]
+  const primaryItem = vocabList[0] || (phoneme.sampleWords[0] ? {
+    word: phoneme.sampleWords[0].word,
+    meaningVi: phoneme.sampleWords[0].meaningVi
+  } : null);
+  const primaryWord = primaryItem?.word || 'cat';
+  const primaryMeaningVi = primaryItem?.meaningVi || phoneme.sampleWords[0]?.meaningVi || '';
   const primaryVisual = getWordVisual(primaryWord);
 
   const stepsTitle = [
@@ -413,7 +419,7 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                     {primaryWord}
                   </div>
                   <div className="text-xs md:text-sm font-bold text-amber-700">
-                    {phoneme.sampleWords[0]?.meaningVi} • <span className="underline">Chạm để nghe đọc</span> 🔊
+                    {primaryMeaningVi} • <span className="underline">Chạm để nghe đọc</span> 🔊
                   </div>
                 </div>
               </div>

@@ -467,7 +467,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "n"
     ],
     "theme": "actions",
-    "meaningVi": "một (vật)",
+    "meaningVi": "một",
     "emoji": "☝️",
     "sampleSentence": "An orange is round.",
     "sampleSentenceVi": "Một quả cam tròn xoe.",
@@ -489,7 +489,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "p"
     ],
     "theme": "nature",
-    "meaningVi": "vòi nước / gõ nhẹ",
+    "meaningVi": "vòi nước nhỏ",
     "emoji": "🚰",
     "sampleSentence": "Tap the little drum.",
     "sampleSentenceVi": "Gõ nhẹ lên chiếc trống con.",
@@ -533,7 +533,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "p"
     ],
     "theme": "objects_food",
-    "meaningVi": "đỉnh / con quay",
+    "meaningVi": "con quay gỗ",
     "emoji": "🪀",
     "sampleSentence": "Spin the colorful top.",
     "sampleSentenceVi": "Xoay tít con quay sắc màu.",
@@ -599,7 +599,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "g"
     ],
     "theme": "objects_food",
-    "meaningVi": "thẻ nhãn / trò đuổi bắt",
+    "meaningVi": "trò chơi đuổi bắt",
     "emoji": "🏷️",
     "sampleSentence": "We play tag together.",
     "sampleSentenceVi": "Các bạn nhỏ chơi đuổi bắt.",
@@ -796,7 +796,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "t"
     ],
     "theme": "actions",
-    "meaningVi": "nó / điều đó",
+    "meaningVi": "điều đó",
     "emoji": "👉",
     "sampleSentence": "It is a happy day.",
     "sampleSentenceVi": "Đó là một ngày vui.",
@@ -863,7 +863,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "z"
     ],
     "theme": "actions",
-    "meaningVi": "thì / là",
+    "meaningVi": "là",
     "emoji": "✨",
     "sampleSentence": "The kitten is cute.",
     "sampleSentenceVi": "Chú mèo con thật đáng yêu.",
@@ -2723,7 +2723,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "s"
     ],
     "theme": "actions",
-    "meaningVi": "khí đốt / hơi",
+    "meaningVi": "bình khí gas",
     "emoji": "💨",
     "sampleSentence": "Gas powers the stove.",
     "sampleSentenceVi": "Bếp gas nấu bữa cơm ấm.",
@@ -2987,7 +2987,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "d"
     ],
     "theme": "objects_food",
-    "meaningVi": "kỳ lạ / số lẻ",
+    "meaningVi": "lạ kỳ ngộ nghĩnh",
     "emoji": "🎲",
     "sampleSentence": "An odd little beetle.",
     "sampleSentenceVi": "Một chú bọ ngộ nghĩnh lạ kỳ.",
@@ -3103,10 +3103,10 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "t"
     ],
     "theme": "nature",
-    "meaningVi": "chiếc chậu hoa",
+    "meaningVi": "cái nồi nấu súp",
     "emoji": "🪴",
-    "sampleSentence": "Flowers bloom in the pot.",
-    "sampleSentenceVi": "Hoa nở rực rỡ trong chiếc chậu xinh.",
+    "sampleSentence": "Soup in the cooking pot.",
+    "sampleSentenceVi": "Nồi súp nóng hổi thơm ngon.",
     "visual": {
       "url": "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80",
       "type": "photo",
@@ -3239,7 +3239,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "l"
     ],
     "theme": "actions",
-    "meaningVi": "chú / bác yêu quý",
+    "meaningVi": "người chú yêu quý",
     "emoji": "👨",
     "sampleSentence": "Visit my funny uncle.",
     "sampleSentenceVi": "Đến thăm người chú vui tính.",
@@ -3818,7 +3818,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "t"
     ],
     "theme": "actions",
-    "meaningVi": "chú dơi / gậy bóng chày",
+    "meaningVi": "chú dơi con",
     "emoji": "🦇",
     "sampleSentence": "A night flying bat.",
     "sampleSentenceVi": "Chú dơi bay đêm lượn vòng.",
@@ -4726,7 +4726,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "ie"
     ],
     "theme": "objects_food",
-    "meaningVi": "cà vạt / buộc dây",
+    "meaningVi": "chiếc cà vạt",
     "emoji": "👔",
     "sampleSentence": "Tie shoelaces in a bow.",
     "sampleSentenceVi": "Buộc dây giày thành nơ xinh.",
@@ -5172,14 +5172,14 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "n"
     ],
     "theme": "animals",
-    "meaningVi": "chiếc sừng hươu",
+    "meaningVi": "chiếc kèn sừng đồ chơi",
     "emoji": "📯",
     "sampleSentence": "Blow the toy horn.",
-    "sampleSentenceVi": "Thổi chiếc kèn sừng vang xa.",
+    "sampleSentenceVi": "Thổi chiếc kèn sừng đồ chơi vang xa.",
     "visual": {
       "url": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=800&q=80",
       "type": "photo",
-      "alt": "Chiếc kèn đồng vang lên khúc nhạc vui"
+      "alt": "Chiếc kèn sừng đồ chơi vang lên khúc nhạc vui"
     }
   },
   {
@@ -5828,7 +5828,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "ng"
     ],
     "theme": "objects_food",
-    "meaningVi": "chiếc nhẫn vàng / chuông reo",
+    "meaningVi": "chiếc nhẫn vàng",
     "emoji": "💍",
     "sampleSentence": "A shiny gold ring.",
     "sampleSentenceVi": "Chiếc nhẫn vàng xinh xắn.",
@@ -6756,7 +6756,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "s"
     ],
     "theme": "actions",
-    "meaningVi": "vâng ạ / đồng ý",
+    "meaningVi": "vâng ạ",
     "emoji": "👍",
     "sampleSentence": "Say yes with a smile.",
     "sampleSentenceVi": "Mỉm cười dạ vâng ngoan ngoãn.",
@@ -7091,7 +7091,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "x"
     ],
     "theme": "actions",
-    "meaningVi": "thuế / tính toán",
+    "meaningVi": "tính tiền thuế",
     "emoji": "🪙",
     "sampleSentence": "Count coins carefully.",
     "sampleSentenceVi": "Đếm từng đồng tiền xu cẩn thận.",
@@ -7133,10 +7133,10 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "x"
     ],
     "theme": "actions",
-    "meaningVi": "chú trâu hiền",
+    "meaningVi": "chú bò đực kéo cày",
     "emoji": "🐂",
     "sampleSentence": "The sturdy ox plows.",
-    "sampleSentenceVi": "Chú trâu hiền hòa cày ruộng.",
+    "sampleSentenceVi": "Chú bò đực cần mẫn cày ruộng.",
     "visual": {
       "url": "https://images.unsplash.com/photo-1546445317-29f4545e9d53?auto=format&fit=crop&w=800&q=80",
       "type": "photo",
@@ -7911,7 +7911,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "m"
     ],
     "theme": "animals",
-    "meaningVi": "chúng nó / các bạn ấy",
+    "meaningVi": "các bạn ấy",
     "emoji": "👥",
     "sampleSentence": "Give them sweet red berries.",
     "sampleSentenceVi": "Chia cho các bạn những quả mọng ngọt.",
@@ -7954,7 +7954,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "ey"
     ],
     "theme": "animals",
-    "meaningVi": "họ / các bạn ấy",
+    "meaningVi": "các bạn ấy",
     "emoji": "🧑‍🤝‍🧑",
     "sampleSentence": "They dance around the flower bed.",
     "sampleSentenceVi": "Các bạn nhỏ nhảy múa quanh luống hoa.",
@@ -8653,7 +8653,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "l"
     ],
     "theme": "actions",
-    "meaningVi": "nuông chiều / giữ gìn",
+    "meaningVi": "nuông chiều yêu thương",
     "emoji": "🎁",
     "sampleSentence": "Grandma treats with love.",
     "sampleSentenceVi": "Bà yêu thương chăm sóc từng li từng tí.",
@@ -8810,7 +8810,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "ue"
     ],
     "theme": "actions",
-    "meaningVi": "sự thật / chân thành",
+    "meaningVi": "chân thật tốt bụng",
     "emoji": "⭐",
     "sampleSentence": "A true and loyal friend.",
     "sampleSentenceVi": "Một người bạn chân thành tốt bụng.",
@@ -9021,7 +9021,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "er"
     ],
     "theme": "animals",
-    "meaningVi": "lá thư tay / chữ cái",
+    "meaningVi": "lá thư tay",
     "emoji": "✉️",
     "sampleSentence": "Send a loving letter.",
     "sampleSentenceVi": "Gửi lá thư tay chan chứa yêu thương.",
@@ -10644,7 +10644,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "n"
     ],
     "theme": "actions",
-    "meaningVi": "xoay người / đến lượt",
+    "meaningVi": "xoay tròn",
     "emoji": "🔄",
     "sampleSentence": "Turn around and take your turn.",
     "sampleSentenceVi": "Xoay người lại và đến lượt bé chơi.",
@@ -11480,7 +11480,7 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
       "t"
     ],
     "theme": "objects_food",
-    "meaningVi": "nốt nhạc / lá thư nhỏ",
+    "meaningVi": "nốt nhạc vui",
     "emoji": "🎵",
     "sampleSentence": "Write a sweet note to your friend.",
     "sampleSentenceVi": "Viết lời nhắn nhủ ngọt ngào cho bạn.",
@@ -18139,7 +18139,8 @@ export const PHONICS_WORD_BANK: PhonicsWordBankItem[] = [
 
 // Helper selectors
 export function getWordBankByPhoneme(phonemeId: string): PhonicsWordBankItem[] {
-  return PHONICS_WORD_BANK.filter(item => item.phonemeId === phonemeId);
+  const targetId = phonemeId === 'c' ? 'c_k' : phonemeId;
+  return PHONICS_WORD_BANK.filter(item => item.phonemeId === targetId || (targetId === 'c_k' && item.phonemeId === 'c'));
 }
 
 export function getWordBankByGroup(group: number): PhonicsWordBankItem[] {
@@ -18147,14 +18148,16 @@ export function getWordBankByGroup(group: number): PhonicsWordBankItem[] {
 }
 
 export function getWordBankByTheme(theme: WordBankTheme, phonemeId?: string): PhonicsWordBankItem[] {
+  const targetId = phonemeId === 'c' ? 'c_k' : phonemeId;
   return PHONICS_WORD_BANK.filter(item => {
-    if (phonemeId && item.phonemeId !== phonemeId) return false;
+    if (targetId && item.phonemeId !== targetId && item.phonemeId !== phonemeId) return false;
     return item.theme === theme;
   });
 }
 
 export function getPhonemeWordCount(phonemeId: string): number {
-  return PHONICS_WORD_BANK.filter(item => item.phonemeId === phonemeId).length;
+  const targetId = phonemeId === 'c' ? 'c_k' : phonemeId;
+  return PHONICS_WORD_BANK.filter(item => item.phonemeId === targetId || (targetId === 'c_k' && item.phonemeId === 'c')).length;
 }
 
 export function getGroupWordCount(group: number): number {

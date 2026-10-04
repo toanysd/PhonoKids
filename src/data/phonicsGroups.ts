@@ -209,9 +209,9 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
     stage: 1,
     soundDescription: 'Âm bật môi thổi nến sinh nhật',
     sampleWords: [
-      { word: 'pan', meaningVi: 'cái chảo', emoji: '🍳' },
-      { word: 'pig', meaningVi: 'chú lợn', emoji: '🐷' },
-      { word: 'popcorn', meaningVi: 'bắp rang bơ', emoji: '🍿' }
+      { word: 'pat', meaningVi: 'vỗ nhẹ thân mật', emoji: '👋' },
+      { word: 'pan', meaningVi: 'cái chảo rán', emoji: '🍳' },
+      { word: 'pig', meaningVi: 'chú lợn con', emoji: '🐷' }
     ],
     tprAction: {
       title: 'Thổi nến sinh nhật',
@@ -351,7 +351,7 @@ export const PHONEMES_DATA: Record<string, PhonemeInfo> = {
     stage: 1,
     soundDescription: 'Âm gầm gừ như chú cún ngậm giẻ kéo',
     sampleWords: [
-      { word: 'rat', meaningVi: 'chuột cống', emoji: '🐀' },
+      { word: 'rat', meaningVi: 'chú chuột con', emoji: '🐭' },
       { word: 'red', meaningVi: 'màu đỏ', emoji: '🔴' },
       { word: 'rabbit', meaningVi: 'chú thỏ', emoji: '🐰' }
     ],
