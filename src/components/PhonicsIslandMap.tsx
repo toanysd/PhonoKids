@@ -13,7 +13,8 @@ import {
   ArrowRight, 
   CheckCircle2, 
   ChevronRight,
-  Award
+  Award,
+  Layers
 } from 'lucide-react';
 import { audioService } from '../services/audioService';
 import { getIslandVisual } from '../services/imageService';
@@ -38,6 +39,7 @@ export const PhonicsIslandMap: React.FC<PhonicsIslandMapProps> = ({
   const [isWordBankOpen, setIsWordBankOpen] = useState(false);
   const [wordBankTargetGroup, setWordBankTargetGroup] = useState<number | undefined>(undefined);
   const [wordBankTargetPhoneme, setWordBankTargetPhoneme] = useState<string | undefined>(undefined);
+  const [wordBankInitialMode, setWordBankInitialMode] = useState<'grid' | 'flashcard'>('grid');
 
   const effectiveProfile = profile || storageService.getProfile();
   const effectiveMastered = masteredPhonemes || effectiveProfile.masteredPhonemes || [];
@@ -203,19 +205,34 @@ export const PhonicsIslandMap: React.FC<PhonicsIslandMapProps> = ({
           </div>
         </div>
 
-        {/* Master Word Bank Glow Trigger */}
-        <div className="flex items-center justify-center mt-2.5">
+        {/* Master Word Bank & Continuous Flashcard Dual Triggers */}
+        <div className="flex flex-wrap items-center justify-center mt-2.5 gap-2.5">
           <button
             onClick={() => {
               audioService.playPopSound(540);
               setWordBankTargetGroup(undefined);
               setWordBankTargetPhoneme(undefined);
+              setWordBankInitialMode('grid');
               setIsWordBankOpen(true);
             }}
-            className="flex items-center space-x-2 bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 hover:from-amber-500 hover:to-orange-600 text-amber-950 font-black px-5 py-2 rounded-2xl shadow-md border-2 border-amber-300 transform active:scale-95 transition-all cursor-pointer text-xs md:text-sm"
+            className="flex items-center space-x-2 bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 hover:from-amber-500 hover:to-orange-600 text-amber-950 font-black px-4 sm:px-5 py-2 rounded-2xl shadow-md border-2 border-amber-300 transform active:scale-95 transition-all cursor-pointer text-xs md:text-sm"
           >
             <Sparkles className="w-4 h-4 text-amber-950 animate-spin" />
-            <span>Kho Báu Từ Vựng Âm Vị ({PHONICS_WORD_BANK.length} Từ Chuẩn Ehon) 💎</span>
+            <span>Kho Báu Từ Vựng ({PHONICS_WORD_BANK.length} Từ) 💎</span>
+          </button>
+
+          <button
+            onClick={() => {
+              audioService.playPopSound(540);
+              setWordBankTargetGroup(undefined);
+              setWordBankTargetPhoneme(undefined);
+              setWordBankInitialMode('flashcard');
+              setIsWordBankOpen(true);
+            }}
+            className="flex items-center space-x-2 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black px-4 sm:px-5 py-2 rounded-2xl shadow-md border-2 border-emerald-300 transform active:scale-95 transition-all cursor-pointer text-xs md:text-sm shadow-emerald-400/30"
+          >
+            <Layers className="w-4 h-4 text-emerald-100 animate-pulse" />
+            <span>🗂️ Học Thẻ Flashcard Liên Tục</span>
           </button>
         </div>
 
@@ -482,6 +499,7 @@ export const PhonicsIslandMap: React.FC<PhonicsIslandMapProps> = ({
         onClose={() => setIsWordBankOpen(false)}
         initialGroupNumber={wordBankTargetGroup}
         initialPhonemeId={wordBankTargetPhoneme}
+        initialViewMode={wordBankInitialMode}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PhonemeInfo, PhonicsGroup } from '../types/phonics';
 import { PHONICS_GROUPS, PHONEMES_DATA } from '../data/phonicsGroups';
 import { SoundVisemeGuide } from './SoundVisemeGuide';
@@ -21,7 +21,12 @@ import {
   Trophy,
   Sparkles,
   Palette,
-  BookOpen
+  BookOpen,
+  Layers,
+  LayoutGrid,
+  Repeat,
+  Play,
+  Pause
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -44,6 +49,10 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
   const [showLeoTip, setShowLeoTip] = useState<boolean>(false);
   const [leoTipText, setLeoTipText] = useState<string>('');
   const [vocabPage, setVocabPage] = useState<number>(0);
+  const [vocabViewMode, setVocabViewMode] = useState<'grid' | 'flashcard'>('flashcard');
+  const [lessonFlashcardIdx, setLessonFlashcardIdx] = useState<number>(0);
+  const [isLessonAutoPlay, setIsLessonAutoPlay] = useState<boolean>(false);
+  const lessonAutoPlayTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [blendingWordIndex, setBlendingWordIndex] = useState<number>(0);
   const [isWordBankModalOpen, setIsWordBankModalOpen] = useState<boolean>(false);
 
@@ -52,6 +61,9 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
     setCurrentStep(0);
     setSelectedCards([]);
     setVocabPage(0);
+    setLessonFlashcardIdx(0);
+    setIsLessonAutoPlay(false);
+    if (lessonAutoPlayTimeoutRef.current) clearTimeout(lessonAutoPlayTimeoutRef.current);
     setBlendingWordIndex(0);
     setShowLeoTip(false);
   }, [phoneme.id]);
@@ -145,6 +157,86 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
       setSelectedCards([...selectedCards, word]);
     }
   };
+
+  // Step 5 Continuous Flashcard navigation
+  const handleNextLessonFlashcard = () => {
+    const currentItem = vocabList[lessonFlashcardIdx];
+    if (currentItem && !selectedCards.includes(currentItem.word)) {
+      setSelectedCards(prev => [...prev, currentItem.word]);
+    }
+
+    if (lessonFlashcardIdx < vocabList.length - 1) {
+      const nextIdx = lessonFlashcardIdx + 1;
+      setLessonFlashcardIdx(nextIdx);
+      audioService.playPopSound(540);
+      const nextItem = vocabList[nextIdx];
+      if (nextItem) {
+        audioService.speakEnglish(nextItem.word, 0.85);
+      }
+    } else {
+      // Finished all cards in lesson -> advance to Step 6 (Blending)
+      audioService.playSuccessJingle();
+      handleNextStep();
+    }
+  };
+
+  const handlePrevLessonFlashcard = () => {
+    if (lessonFlashcardIdx > 0) {
+      const prevIdx = lessonFlashcardIdx - 1;
+      setLessonFlashcardIdx(prevIdx);
+      audioService.playPopSound(480);
+      const prevItem = vocabList[prevIdx];
+      if (prevItem) {
+        audioService.speakEnglish(prevItem.word, 0.85);
+      }
+    }
+  };
+
+  // Step 5 Auto-Play loop for hands-free learning
+  useEffect(() => {
+    if (currentStep !== 5 || vocabViewMode !== 'flashcard' || !isLessonAutoPlay || vocabList.length === 0) {
+      if (lessonAutoPlayTimeoutRef.current) clearTimeout(lessonAutoPlayTimeoutRef.current);
+      return;
+    }
+
+    const currentItem = vocabList[lessonFlashcardIdx];
+    if (!currentItem) return;
+
+    let cancelled = false;
+    audioService.speakEnglish(currentItem.word, 0.85);
+    if (!selectedCards.includes(currentItem.word)) {
+      setSelectedCards(prev => [...prev, currentItem.word]);
+    }
+
+    lessonAutoPlayTimeoutRef.current = setTimeout(() => {
+      if (cancelled) return;
+      if (currentItem.sampleSentence) {
+        audioService.speakEnglish(currentItem.sampleSentence, 0.85);
+        lessonAutoPlayTimeoutRef.current = setTimeout(() => {
+          if (cancelled) return;
+          if (lessonFlashcardIdx < vocabList.length - 1) {
+            setLessonFlashcardIdx(prev => prev + 1);
+          } else {
+            setIsLessonAutoPlay(false);
+          }
+        }, 2400);
+      } else {
+        lessonAutoPlayTimeoutRef.current = setTimeout(() => {
+          if (cancelled) return;
+          if (lessonFlashcardIdx < vocabList.length - 1) {
+            setLessonFlashcardIdx(prev => prev + 1);
+          } else {
+            setIsLessonAutoPlay(false);
+          }
+        }, 1800);
+      }
+    }, 1600);
+
+    return () => {
+      cancelled = true;
+      if (lessonAutoPlayTimeoutRef.current) clearTimeout(lessonAutoPlayTimeoutRef.current);
+    };
+  }, [currentStep, vocabViewMode, isLessonAutoPlay, lessonFlashcardIdx, vocabList, selectedCards]);
 
   // Safe dynamic font sizing for grapheme letters
   const getGraphemeFontClass = (text: string) => {
@@ -472,10 +564,11 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
           </div>
         )}
 
-        {/* ================= STEP 5: VOCABULARY (BIG EHON GALLERY) ================= */}
+        {/* ================= STEP 5: VOCABULARY (FLASHCARD & EHON GALLERY) ================= */}
         {currentStep === 5 && (
           <div className="py-1 animate-fadeIn text-center flex flex-col items-center w-full">
-            <div className="flex items-center justify-between w-full max-w-5xl mb-1 px-1 flex-wrap gap-1.5">
+            {/* Top Toolbar */}
+            <div className="flex items-center justify-between w-full max-w-5xl mb-1 px-1 flex-wrap gap-2">
               <div className="flex items-center space-x-2">
                 <span className="text-xs font-black text-emerald-800 bg-emerald-100 px-3.5 py-1 rounded-full uppercase tracking-wider">
                   {stepsTitle[5]} • {vocabList.length} Từ Cốt Lõi
@@ -493,125 +586,333 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                 </button>
               </div>
 
-              {totalVocabPages > 1 && (
-                <div className="flex items-center space-x-2 bg-white/95 px-3 py-1 rounded-full border border-amber-200 shadow-xs">
+              {/* View Switcher: Flashcard vs Grid */}
+              <div className="flex items-center space-x-2">
+                <div className="flex items-center bg-amber-100 p-0.5 rounded-xl border border-amber-300">
                   <button
                     onClick={() => {
-                      audioService.playPopSound(440);
-                      setVocabPage(prev => Math.max(0, prev - 1));
+                      audioService.playPopSound(480);
+                      setVocabViewMode('flashcard');
                     }}
-                    disabled={vocabPage === 0}
-                    className="p-1 rounded-full hover:bg-amber-100 disabled:opacity-30 cursor-pointer font-bold"
-                    title="Trang từ vựng trước"
+                    className={`flex items-center space-x-1 px-2.5 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
+                      vocabViewMode === 'flashcard'
+                        ? 'bg-amber-400 text-amber-950 shadow-xs'
+                        : 'text-amber-900 hover:bg-amber-200/60'
+                    }`}
                   >
-                    <ChevronLeft className="w-4 h-4 text-amber-900" />
+                    <Layers className="w-3.5 h-3.5" />
+                    <span>Thẻ Flashcard</span>
                   </button>
-                  <span className="text-xs font-black text-amber-900">
-                    Trang {vocabPage + 1} / {totalVocabPages}
-                  </span>
                   <button
                     onClick={() => {
-                      audioService.playPopSound(440);
-                      setVocabPage(prev => Math.min(totalVocabPages - 1, prev + 1));
+                      audioService.playPopSound(460);
+                      setVocabViewMode('grid');
                     }}
-                    disabled={vocabPage === totalVocabPages - 1}
-                    className="p-1 rounded-full hover:bg-amber-100 disabled:opacity-30 cursor-pointer font-bold"
-                    title="Trang từ vựng tiếp theo"
+                    className={`flex items-center space-x-1 px-2.5 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
+                      vocabViewMode === 'grid'
+                        ? 'bg-amber-400 text-amber-950 shadow-xs'
+                        : 'text-amber-900 hover:bg-amber-200/60'
+                    }`}
                   >
-                    <ChevronRight className="w-4 h-4 text-amber-900" />
+                    <LayoutGrid className="w-3.5 h-3.5" />
+                    <span>Lưới Tranh</span>
                   </button>
                 </div>
-              )}
-            </div>
 
+                {vocabViewMode === 'grid' && totalVocabPages > 1 && (
+                  <div className="flex items-center space-x-2 bg-white/95 px-3 py-1 rounded-full border border-amber-200 shadow-xs">
+                    <button
+                      onClick={() => {
+                        audioService.playPopSound(440);
+                        setVocabPage(prev => Math.max(0, prev - 1));
+                      }}
+                      disabled={vocabPage === 0}
+                      className="p-1 rounded-full hover:bg-amber-100 disabled:opacity-30 cursor-pointer font-bold"
+                      title="Trang từ vựng trước"
+                    >
+                      <ChevronLeft className="w-4 h-4 text-amber-900" />
+                    </button>
+                    <span className="text-xs font-black text-amber-900">
+                      Trang {vocabPage + 1} / {totalVocabPages}
+                    </span>
+                    <button
+                      onClick={() => {
+                        audioService.playPopSound(440);
+                        setVocabPage(prev => Math.min(totalVocabPages - 1, prev + 1));
+                      }}
+                      disabled={vocabPage === totalVocabPages - 1}
+                      className="p-1 rounded-full hover:bg-amber-100 disabled:opacity-30 cursor-pointer font-bold"
+                      title="Trang từ vựng tiếp theo"
+                    >
+                      <ChevronRight className="w-4 h-4 text-amber-900" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
 
             <h2 className="text-xl md:text-3xl font-black text-amber-950 mb-0.5">
               Từ Vựng Chứa Âm /{phoneme.id}/ 🎨
             </h2>
             <p className="text-[11px] md:text-xs font-bold text-amber-800 mb-2">
-              Chạm vào từng tranh lớn để nghe từ vựng và chiêm ngưỡng màu vẽ Ehon sinh động!
+              {vocabViewMode === 'flashcard' 
+                ? 'Bấm sang thẻ tiếp theo để học liên tục từng từ với giọng bản xứ chuẩn xác!' 
+                : 'Chạm vào từng tranh lớn để nghe từ vựng và chiêm ngưỡng màu vẽ Ehon sinh động!'}
             </p>
 
-            {/* Widescreen 3-Column Large Art Gallery */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 w-full max-w-5xl mx-auto my-1">
-              {currentVocabSlice.map((item) => {
-                const visual = getWordVisual(item.word);
-                const isSelected = selectedCards.includes(item.word);
+            {vocabViewMode === 'flashcard' ? (
+              /* ================= FLASHCARD MODE ================= */
+              (() => {
+                const currentCard = vocabList[lessonFlashcardIdx] || vocabList[0];
+                const cardVisual = getWordVisual(currentCard.word);
+                const isCardSelected = selectedCards.includes(currentCard.word);
+                const isLastCard = lessonFlashcardIdx === vocabList.length - 1;
+
                 return (
-                  <div
-                    key={item.word}
-                    onClick={() => handleTapSampleWord(item.word)}
-                    className={`rounded-2xl border-4 transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer shadow-lg transform active:scale-95 ${
-                      isSelected
-                        ? 'bg-amber-50 border-amber-400 ring-4 ring-amber-200 scale-102 shadow-xl'
-                        : 'bg-white border-amber-200 hover:border-amber-300 hover:shadow-xl'
-                    }`}
-                  >
-                    {/* Big Painting Area */}
-                    <div className="w-full h-32 md:h-40 relative overflow-hidden bg-amber-50 flex items-center justify-center p-1.5 border-b border-amber-100">
-                      <img
-                        src={visual.url}
-                        alt={visual.alt}
-                        className="w-full h-full object-cover rounded-xl filter drop-shadow hover:scale-105 transition-transform duration-300"
-                        loading="lazy"
-                      />
-                      
-                      {/* Badge Style */}
-                      <div className="absolute top-2 left-2 bg-amber-400/90 text-amber-950 text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-md backdrop-blur-xs">
-                        {visual.type === 'ehon' ? '🎨 Tranh Ehon' : '📷 Hình Chân Thực'}
+                  <div className="w-full max-w-xl mx-auto bg-white rounded-3xl border-4 border-amber-300 shadow-2xl p-3 sm:p-5 flex flex-col justify-between my-1">
+                    {/* Top Progress Bar & Auto-Play */}
+                    <div className="flex items-center justify-between pb-2 border-b border-amber-100 gap-2 shrink-0">
+                      <div className="flex items-center space-x-2">
+                        <span className="bg-amber-400 text-amber-950 text-xs font-black px-2.5 py-0.5 rounded-xl shadow-xs">
+                          Thẻ {lessonFlashcardIdx + 1} / {vocabList.length}
+                        </span>
+                        <div className="w-24 sm:w-36 bg-amber-100 h-2.5 rounded-full overflow-hidden border border-amber-200">
+                          <div
+                            className="bg-emerald-500 h-full rounded-full transition-all duration-300"
+                            style={{ width: `${((lessonFlashcardIdx + 1) / vocabList.length) * 100}%` }}
+                          />
+                        </div>
                       </div>
 
-                      {/* Speaker icon hint */}
-                      <div className="absolute bottom-2 right-2 bg-white/90 p-1.5 rounded-full shadow-md text-amber-900">
-                        <Volume2 className="w-4 h-4 animate-pulse" />
+                      <button
+                        onClick={() => {
+                          audioService.playPopSound(520);
+                          setIsLessonAutoPlay(prev => !prev);
+                        }}
+                        className={`flex items-center space-x-1 px-2.5 py-1 rounded-xl text-xs font-black transition-all cursor-pointer shadow-xs ${
+                          isLessonAutoPlay
+                            ? 'bg-rose-500 text-white animate-pulse'
+                            : 'bg-amber-100 text-amber-900 hover:bg-amber-200'
+                        }`}
+                        title={isLessonAutoPlay ? 'Tạm dừng đọc tự động' : 'Tự động đọc lần lượt tất cả thẻ'}
+                      >
+                        {isLessonAutoPlay ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+                        <span>{isLessonAutoPlay ? 'Tạm Dừng' : 'Tự Động Đọc'}</span>
+                      </button>
+                    </div>
+
+                    {/* Artwork + Typography */}
+                    <div className="flex flex-col items-center justify-center py-2">
+                      <div
+                        onClick={() => handleTapSampleWord(currentCard.word)}
+                        className="relative w-full max-w-sm h-36 sm:h-44 md:h-48 rounded-2xl overflow-hidden border-3 border-amber-300 shadow-md bg-amber-50 group cursor-pointer shrink-0"
+                      >
+                        <img
+                          src={cardVisual.url}
+                          alt={cardVisual.alt}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute top-2 left-2 bg-amber-400 text-amber-950 text-[10px] font-black px-2.5 py-0.5 rounded-full shadow">
+                          {cardVisual.type === 'ehon' ? '🎨 Tranh Ehon' : '📷 Ảnh Thật'}
+                        </div>
+                        <div className="absolute bottom-2 left-2 bg-white/95 text-amber-800 p-1.5 rounded-full shadow">
+                          <Volume2 className="w-4 h-4 animate-pulse" />
+                        </div>
+                        {isCardSelected && (
+                          <div className="absolute top-2 right-2 bg-emerald-500 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full shadow flex items-center space-x-1">
+                            <CheckCircle2 className="w-3 h-3" />
+                            <span>Đã nghe</span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="text-center mt-2.5 w-full max-w-md">
+                        <div className="flex items-center justify-center space-x-2">
+                          <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-amber-950 uppercase tracking-wider">
+                            {currentCard.word}
+                          </h3>
+                          <button
+                            onClick={() => handleTapSampleWord(currentCard.word)}
+                            className="p-1.5 bg-amber-400 hover:bg-amber-500 text-amber-950 rounded-full shadow-xs cursor-pointer active:scale-95 transition-transform"
+                            title="Phát âm từ"
+                          >
+                            <Volume2 className="w-5 h-5" />
+                          </button>
+                        </div>
+
+                        <p className="text-sm sm:text-base font-bold text-amber-800 mt-0.5">
+                          {currentCard.meaningVi}
+                        </p>
+
+                        {/* Phoneme breakdown chips */}
+                        <div className="flex items-center justify-center gap-1.5 mt-2 flex-wrap">
+                          {currentCard.phonemes.map((ph, idx) => (
+                            <button
+                              key={idx}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                audioService.speakPhoneme(ph);
+                              }}
+                              className="px-2.5 py-0.5 bg-amber-100 hover:bg-amber-200 text-amber-950 font-black rounded-lg border border-amber-300 text-xs shadow-2xs cursor-pointer active:scale-90 transition-transform"
+                              title={`Nghe âm /${ph}/`}
+                            >
+                              /{ph}/
+                            </button>
+                          ))}
+                          <button
+                            onClick={async (e) => {
+                              e.stopPropagation();
+                              await audioService.blendPhonemes(currentCard.phonemes, 110);
+                              audioService.speakEnglish(currentCard.word, 0.85);
+                            }}
+                            className="px-2.5 py-0.5 bg-amber-400 hover:bg-amber-500 text-amber-950 font-black rounded-lg text-xs shadow-2xs cursor-pointer active:scale-90 transition-transform flex items-center space-x-1"
+                            title="Đánh vần từng âm rồi đọc từ"
+                          >
+                            <Repeat className="w-3 h-3 text-amber-950" />
+                            <span>Đánh Vần</span>
+                          </button>
+                        </div>
+
+                        {/* Sample sentence */}
+                        {currentCard.sampleSentence && (
+                          <div
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              audioService.speakEnglish(currentCard.sampleSentence!, 0.85);
+                            }}
+                            className="mt-2 bg-amber-50/90 hover:bg-amber-100/90 border border-amber-200 rounded-xl px-3 py-1 text-center cursor-pointer transition-colors max-w-md mx-auto"
+                            title="Chạm để nghe câu mẫu"
+                          >
+                            <div className="text-xs font-black text-amber-950 flex items-center justify-center space-x-1">
+                              <Volume2 className="w-3 h-3 text-amber-700 shrink-0" />
+                              <span className="italic truncate">&quot;{currentCard.sampleSentence}&quot;</span>
+                            </div>
+                            {currentCard.sampleSentenceVi && (
+                              <div className="text-[11px] font-bold text-amber-700 truncate mt-0.5">
+                                {currentCard.sampleSentenceVi}
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
 
-                    {/* Word Details */}
-                    <div className="p-2.5 text-center bg-white flex flex-col items-center justify-center">
-                      <div className="text-2xl md:text-3xl font-black text-amber-950 uppercase tracking-wide">
-                        {item.word}
-                      </div>
-                      <div className="text-xs md:text-sm font-bold text-amber-700 mt-0.5">
-                        {item.meaningVi}
-                      </div>
+                    {/* Continuous Action Ribbon */}
+                    <div className="pt-2 border-t border-amber-100 flex items-center justify-between gap-2 shrink-0">
+                      <button
+                        onClick={handlePrevLessonFlashcard}
+                        disabled={lessonFlashcardIdx === 0}
+                        className="flex-1 py-2 sm:py-2.5 px-3 bg-amber-100 hover:bg-amber-200 disabled:opacity-30 disabled:cursor-not-allowed text-amber-950 font-black rounded-2xl border border-amber-300 shadow-xs cursor-pointer flex items-center justify-center space-x-1.5 active:scale-95 transition-transform text-xs sm:text-sm"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                        <span>Thẻ Trước</span>
+                      </button>
 
-                      {item.sampleSentence && (
-                        <div
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            audioService.speakEnglish(item.sampleSentence!, 0.85);
-                          }}
-                          className="mt-1.5 px-2 py-1 bg-amber-50 hover:bg-amber-100 rounded-lg border border-amber-200 text-[11px] font-bold text-amber-900 flex items-center space-x-1 transition-colors cursor-pointer w-full justify-center"
-                          title="Chạm để nghe đọc câu mẫu decodable"
-                        >
-                          <Volume2 className="w-3 h-3 text-amber-700 shrink-0" />
-                          <span className="truncate italic">&quot;{item.sampleSentence}&quot;</span>
-                        </div>
-                      )}
+                      <button
+                        onClick={() => handleTapSampleWord(currentCard.word)}
+                        className="p-2 sm:p-2.5 bg-amber-400 hover:bg-amber-500 text-amber-950 font-black rounded-2xl border-2 border-amber-300 shadow-md cursor-pointer flex items-center justify-center active:scale-95 transition-transform shrink-0"
+                        title="Nghe lại phát âm từ"
+                      >
+                        <Volume2 className="w-5 h-5 text-amber-950" />
+                      </button>
 
-                      {isSelected && (
-                        <div className="mt-1 text-[11px] font-black text-emerald-600 flex items-center space-x-1 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                          <CheckCircle2 className="w-3.5 h-3.5" />
-                          <span>Đã phát âm!</span>
-                        </div>
-                      )}
+                      <button
+                        onClick={handleNextLessonFlashcard}
+                        className={`flex-2 py-2 sm:py-2.5 px-4 font-black rounded-2xl shadow-lg border-2 cursor-pointer flex items-center justify-center space-x-2 active:scale-95 transition-transform text-xs sm:text-sm ${
+                          isLastCard
+                            ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-700 text-white border-amber-300 shadow-orange-400/40 animate-bounce'
+                            : 'bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-700 text-white border-emerald-300 shadow-emerald-400/30'
+                        }`}
+                      >
+                        <span>{isLastCard ? 'Hoàn Thành! Sang Ghép Vần ➔ 🚀' : 'Thẻ Kế Tiếp ➔'}</span>
+                        <ArrowRight className="w-4 h-4 text-white" />
+                      </button>
                     </div>
                   </div>
                 );
-              })}
-            </div>
+              })()
+            ) : (
+              /* ================= GRID MODE ================= */
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 w-full max-w-5xl mx-auto my-1">
+                  {currentVocabSlice.map((item) => {
+                    const visual = getWordVisual(item.word);
+                    const isSelected = selectedCards.includes(item.word);
+                    return (
+                      <div
+                        key={item.word}
+                        onClick={() => handleTapSampleWord(item.word)}
+                        className={`rounded-2xl border-4 transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer shadow-lg transform active:scale-95 ${
+                          isSelected
+                            ? 'bg-amber-50 border-amber-400 ring-4 ring-amber-200 scale-102 shadow-xl'
+                            : 'bg-white border-amber-200 hover:border-amber-300 hover:shadow-xl'
+                        }`}
+                      >
+                        {/* Big Painting Area */}
+                        <div className="w-full h-32 md:h-40 relative overflow-hidden bg-amber-50 flex items-center justify-center p-1.5 border-b border-amber-100">
+                          <img
+                            src={visual.url}
+                            alt={visual.alt}
+                            className="w-full h-full object-cover rounded-xl filter drop-shadow hover:scale-105 transition-transform duration-300"
+                            loading="lazy"
+                          />
+                          
+                          <div className="absolute top-2 left-2 bg-amber-400/90 text-amber-950 text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-md backdrop-blur-xs">
+                            {visual.type === 'ehon' ? '🎨 Tranh Ehon' : '📷 Hình Chân Thực'}
+                          </div>
 
-            {/* Direct Continuous Next Step to Blending */}
-            <div className="w-full flex justify-center mt-3 mb-1">
-              <button
-                onClick={handleNextStep}
-                className="py-3 px-6 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black text-xs sm:text-sm md:text-base rounded-2xl shadow-xl border-2 border-white transform active:scale-95 transition-all flex items-center space-x-2 cursor-pointer animate-pulse"
-              >
-                <span>Bé Đã Nghe Xong! Sang Ghép Vần Phonics 🫧</span>
-                <ArrowRight className="w-5 h-5 text-white" />
-              </button>
-            </div>
+                          <div className="absolute bottom-2 right-2 bg-white/90 p-1.5 rounded-full shadow-md text-amber-900">
+                            <Volume2 className="w-4 h-4 animate-pulse" />
+                          </div>
+                        </div>
+
+                        {/* Word Details */}
+                        <div className="p-2.5 text-center bg-white flex flex-col items-center justify-center">
+                          <div className="text-2xl md:text-3xl font-black text-amber-950 uppercase tracking-wide">
+                            {item.word}
+                          </div>
+                          <div className="text-xs md:text-sm font-bold text-amber-700 mt-0.5">
+                            {item.meaningVi}
+                          </div>
+
+                          {item.sampleSentence && (
+                            <div
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                audioService.speakEnglish(item.sampleSentence!, 0.85);
+                              }}
+                              className="mt-1.5 px-2 py-1 bg-amber-50 hover:bg-amber-100 rounded-lg border border-amber-200 text-[11px] font-bold text-amber-900 flex items-center space-x-1 transition-colors cursor-pointer w-full justify-center"
+                              title="Chạm để nghe đọc câu mẫu decodable"
+                            >
+                              <Volume2 className="w-3 h-3 text-amber-700 shrink-0" />
+                              <span className="truncate italic">&quot;{item.sampleSentence}&quot;</span>
+                            </div>
+                          )}
+
+                          {isSelected && (
+                            <div className="mt-1 text-[11px] font-black text-emerald-600 flex items-center space-x-1 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>Đã phát âm!</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Direct Continuous Next Step to Blending */}
+                <div className="w-full flex justify-center mt-3 mb-1">
+                  <button
+                    onClick={handleNextStep}
+                    className="py-3 px-6 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black text-xs sm:text-sm md:text-base rounded-2xl shadow-xl border-2 border-white transform active:scale-95 transition-all flex items-center space-x-2 cursor-pointer animate-pulse"
+                  >
+                    <span>Bé Đã Nghe Xong! Sang Ghép Vần Phonics 🫧</span>
+                    <ArrowRight className="w-5 h-5 text-white" />
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         )}
 
