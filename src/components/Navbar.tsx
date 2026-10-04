@@ -33,13 +33,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="w-10 h-10 md:w-11 md:h-11 rounded-full overflow-hidden border-2 border-amber-400 shadow-md group-hover:scale-105 transition-transform bg-amber-100 shrink-0">
             <img
               src="/assets/ehon/star.jpg"
-              alt="Biểu trưng LittleLingo Ehon"
+              alt="Biểu trưng PhonoKids Ehon"
               className="w-full h-full object-cover"
             />
           </div>
           <div>
             <h1 className="text-xl md:text-2xl font-black text-amber-950 tracking-tight leading-none group-hover:text-amber-700 transition-colors">
-              Little<span className="text-amber-500">Lingo</span>
+              Phono<span className="text-amber-500">Kids</span>
             </h1>
             <p className="text-[10px] font-black text-amber-700 tracking-wider">
               EHON PHONICS • 3–8 TUỔI

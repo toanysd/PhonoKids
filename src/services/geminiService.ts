@@ -11,7 +11,7 @@ export interface ChatMessage {
   timestamp: number;
 }
 
-const LEO_SYSTEM_INSTRUCTION = `You are Leo the Lion, a warm, joyful, and patient English-learning companion for children aged 3 to 8 years old in the LittleLingo Ehon Phonics app.
+const LEO_SYSTEM_INSTRUCTION = `You are Leo the Lion, a warm, joyful, and patient English-learning companion for children aged 3 to 8 years old in the PhonoKids Ehon Phonics app.
 
 RULES FOR TALKING TO KIDS:
 1. Tone: Cheerful, enthusiastic, kind, gentle, like a big friendly brother lion!
@@ -99,7 +99,7 @@ class GeminiService {
             contents: [
               {
                 role: 'user',
-                parts: [{ text: 'Hello, this is a test connection from LittleLingo kids app.' }]
+                parts: [{ text: 'Hello, this is a test connection from PhonoKids kids app.' }]
               }
             ],
             generationConfig: {

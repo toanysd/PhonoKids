@@ -1,7 +1,8 @@
 {
-  "name": "little-lingo-playground",
+  "name": "phonokids",
   "private": true,
   "version": "1.0.0",
+  "description": "PhonoKids — Ehon Phonics & Interactive Multi-Sensory Language Playground for Children (3–8 Years)",
   "type": "module",
   "scripts": {
     "dev": "vite",

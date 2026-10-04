@@ -1,118 +1,139 @@
-# 🌟 LittleLingo Playground — Ứng Dụng Học Tiếng Anh Tương Tác Trẻ 3–5 Tuổi
+# 🌟 PhonoKids — Ehon Phonics & Interactive Language Playground
 
-Ứng dụng học tiếng Anh tương tác mầm non chuẩn sư phạm quốc tế, kết hợp **Synthetic Phonics (7 nhóm Jolly Phonics)**, **TPR (Total Physical Response)**, **Comprehensible Input (Stephen Krashen)**, và **Tranh truyện tương tác theo nhịp (Interactive Leveled Readers)**.
+[![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7.2-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-6.0.7-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4.17-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![PWA](https://img.shields.io/badge/PWA-Ready-f59e0b?logo=pwa&logoColor=white)](https://web.dev/progressive-web-apps/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-Dự án được tư vấn thiết kế và nghiệm thu độc lập bởi **Kiến trúc sư trưởng PE (Claude Sonnet 5 Thinking qua Perplexity Pro)** và thi công bởi **Kỹ sư AN (Antigravity)** dưới sự chỉ đạo của **Minh Chủ Thoan**.
+> **PhonoKids** là ứng dụng giáo dục sớm và học ngữ âm tương tác đa giác quan dành riêng cho trẻ em từ 3 đến 8 tuổi. Kết hợp phương pháp **Synthetic Phonics** chuẩn quốc tế (Jolly Phonics, Oxford Phonics World) cùng triết lý thẩm mỹ và hội hoạ **Ehon Nhật Bản**, PhonoKids mang lại môi trường học tập tự nhiên, êm dịu và không áp lực cho bé.
 
 ---
 
-## 🚀 Hướng Dẫn Cài Đặt & Khởi Động
+## 🎨 Điểm Nhấn Sư Phạm & Tính Năng Đột Phá
 
-### Yêu cầu hệ thống:
-- Node.js ≥ 18 (Đã kiểm thử tốt trên Node v26)
-- npm ≥ 9
+### 1. 🔤 42 Âm Vị Phonics Qua 7 Nhóm Tiến Trình
+- Lộ trình khoa học từ âm đơn dễ bật hơi (`s, a, t, i, p, n`) đến các nguyên âm đôi, tổ hợp phụ âm (`ch, sh, th, ng, ai, ee, igh, oa, oo`).
+- Mỗi âm vị đi kèm:
+  - **Mô tả âm học & Viseme khẩu hình**: Hướng dẫn hình dạng môi, lưỡi và luồng hơi.
+  - **Vận động phản xạ TPR (Total Physical Response)**: Động tác cơ thể mô phỏng âm điệu giúp ghi nhớ qua xúc giác và vận động.
+  - **Bản thu âm bản xứ thuần khiết**: 100% không bị chêm âm đệm (loại bỏ hoàn toàn lỗi phát âm schwa /ə/ như "pơ", "pê" thường gặp).
 
-### Khởi chạy:
+### 2. 👂 Phòng Lỗi Phát Âm • Cặp Tối Thiểu (Minimal Pairs)
+- Rèn luyện độ nhạy đôi tai để phân biệt các âm dễ gây nhầm lẫn (`/p/` vs `/b/`, `/s/` vs `/ʃ/`, `/t/` vs `/d/`, `/f/` vs `/v/`).
+- **4 Chế độ tự động đọc thông minh**:
+  - 🔊 *Chỉ Từ*: Đọc nhanh từ mục tiêu cần phân biệt.
+  - 🎯 *Âm Vị & Từ*: Đọc âm vị chuẩn rồi phát âm từ mục tiêu.
+  - 🔤 *Đánh Vần*: Tách từng âm vị ghép từ rồi đọc từ hoàn chỉnh.
+  - 🌟 *Toàn Bộ*: Đọc câu gợi ý bằng tiếng Anh tự nhiên và từ mẫu.
+- Tự động phát âm khi mở thẻ, Next, Back hoặc chuyển bài tự động khi chọn đúng.
+- Cơ chế phản hồi tâm lý nhẹ nhàng (*Gentle Error Feedback*), động viên bé nghe lại mà không tạo cảm giác thất bại.
+
+### 3. ✍️ Xưởng Tập Tô & Nhận Diện Ký Tự (Tracing Studio & Recognition)
+- Tô theo nét chữ với thuật toán phân tích điểm chạm, tính toán độ phủ nét chính xác.
+- Tự động chuyển chữ tiếp theo tạo phiên học liền mạch, kèm pháo hoa và âm thanh chúc mừng sinh động.
+- Trò chơi phân biệt chữ cái tương đồng (`b` vs `d`, `p` vs `q`, `m` vs `w`).
+
+### 4. 📚 Thư Viện Truyện Ehon Giải Mã (Decodable Story Readers)
+- Truyện tranh ngắn được viết theo nguyên tắc Decodable: Chỉ sử dụng các từ vựng bé đã học theo từng nhóm âm.
+- 100% tranh minh hoạ Ehon vẽ tay ấm áp, loại bỏ hoàn toàn clipart vector công nghiệp vô cảm.
+- Chạm vào từng từ để nghe phát âm, có câu hỏi thấu cảm rèn luyện tư duy ngôn ngữ cho bé.
+
+### 5. 🎴 Ngân Hàng 796 Từ Vựng Flashcard Đa Tương Tác
+- Phân loại theo 4 chủ đề gần gũi: *Động vật*, *Thiên nhiên*, *Đồ vật & Món ăn*, *Vận động*.
+- Chế độ lật thẻ Flashcard liên tục, tích hợp bộ đọc mẫu 4 chế độ và tự động chuyển thẻ.
+
+### 6. 📱 Thiết Kế Zero-Scroll Locked Viewport
+- Giao diện được tối ưu hoá theo chiều cao màn hình cố định, loại bỏ hoàn toàn thanh cuộn khó chịu trên iPad và máy tính bảng.
+- Màu sắc pastel bảo vệ mắt trẻ nhỏ, các nút bấm to, phản hồi nảy 3D thân thiện với bàn tay bé.
+
+---
+
+## 🛠️ Công Nghệ & Kiến Trúc Kỹ Thuật
+
+- **Frontend Core**: React 18 / 19 + TypeScript (Strict Mode).
+- **Build Tool**: Vite 6 (HMR tức thì, đóng gói siêu tốc).
+- **Styling**: Tailwind CSS với bảng màu pastel thân thiện và font chữ tròn trẻ em Nunito.
+- **Audio Engine**: Web Audio API (Synthesized acoustic jingles) + Native SpeechSynthesis Engine + HTML5 Audio Preload.
+- **Micro-Interactions**: Canvas-confetti, Lucide Icons, Touch Event Handlers.
+- **PWA Ready**: Web App Manifest, Service Worker caching, tối ưu hóa toàn màn hình cho iPad & Tablet.
+
+---
+
+## 🚀 Hướng Dẫn Khởi Chạy Cục Bộ (Local Development)
+
+### Yêu cầu môi trường
+- [Node.js](https://nodejs.org/) (phiên bản 18 trở lên).
+- Trình quản lý gói `npm` (đi kèm Node.js).
+
+### Các bước cài đặt
 ```bash
-# 1. Cài đặt thư viện phụ thuộc (nếu chưa cài)
+# 1. Sao chép mã nguồn từ GitHub
+git clone https://github.com/toanysd/PhonoKids.git
+
+# 2. Di chuyển vào thư mục dự án
+cd PhonoKids
+
+# 3. Cài đặt các gói phụ thuộc
 npm install
 
-# 2. Khởi chạy Development Server (Cổng 5180, tự động nâng port + 1 nếu bận)
+# 4. Khởi động môi trường phát triển (Dev Server)
 npm run dev
+```
+Trình duyệt sẽ tự động mở tại địa chỉ `http://localhost:5173` (hoặc cổng động được cấp phát).
 
-# 3. Hoặc đóng gói & chạy bản Production Preview:
+### Kiểm tra và đóng gói bản phát hành
+```bash
+# Kiểm tra toàn bộ kiểu TypeScript và build production
 npm run build
+
+# Xem thử bản build trước khi deploy
 npm run preview
 ```
 
-> **Quy định quản lý cổng mạng:** Máy chủ được cấu hình tại cổng `5180` với thuộc tính `strictPort: false`. Nếu cổng `5180` bị chiếm dụng, hệ thống sẽ tự động chuyển tiếp sang cổng kế tiếp (`5181`, `5182`...) mà không gây lỗi xung đột cổng.
+---
+
+## 🌐 Triển Khai Trực Tuyến (Deploy Online Trong 1 Phút)
+
+### Cách 1: Triển khai qua Vercel (Khuyến nghị)
+1. Truy cập [Vercel](https://vercel.com/) và đăng nhập bằng tài khoản GitHub.
+2. Bấm **Add New Project** ➔ Chọn repository **`toanysd/PhonoKids`**.
+3. Giữ nguyên cấu hình mặc định:
+   - **Framework Preset**: `Vite`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+4. Bấm **Deploy**. Sau 45 giây, ứng dụng sẽ có link online toàn cầu với HTTPS bảo mật tự động.
+
+### Cách 2: Triển khai qua Cloudflare Pages
+1. Đăng nhập [Cloudflare Dashboard](https://dash.cloudflare.com/) ➔ Chọn **Workers & Pages**.
+2. Kết nối repo **`toanysd/PhonoKids`**, chọn preset **Vite**.
+3. Bấm **Save and Deploy**.
 
 ---
 
-## 🎨 Trụ Cột Tính Năng Hoàn Chỉnh
-
-### 1. Bản Đồ Thám Hiểm 7 Quần Đảo Âm Thanh (`PhonicsIslandMap.tsx`)
-- Phân nhóm 42 âm vị tiếng Anh theo **7 nhóm Jolly Phonics** quốc tế:
-  - **Nhóm 1:** `s, a, t, i, p, n` (Đảo Mặt Trời & Rừng Rậm) — Trẻ học xong nhóm này đã có thể tự đọc và ghép hàng chục từ tiếng Anh có nghĩa.
-  - **Nhóm 2:** `c/k, e, h, r, m, d` (Đảo Nông Trại Vui Vẻ)
-  - **Nhóm 3:** `g, o, u, l, f, b` (Đảo Hải Tặc Thân Thiện)
-  - **Nhóm 4:** `ai, j, oa, ie, ee, or` (Đảo Cầu Vồng Thần Tiên)
-  - **Nhóm 5:** `z, w, ng, v, oo (ngắn/dài)` (Đảo Rừng Nhiệt Đới)
-  - **Nhóm 6:** `y, x, ch, sh, th (vô thanh/hữu thanh)` (Đảo Phép Thuật)
-  - **Nhóm 7:** `qu, ou, oi, ue, er, ar` (Đảo Vương Quốc Vàng)
-
-### 2. Micro-Lesson Player 6 Bước Không Áp Lực (`LessonPlayer.tsx`)
-1. **Làm quen âm thanh:** Chữ cái to bản, hoạt ảnh nhấp nháy, âm chuẩn người bản xứ.
-2. **Khẩu hình chuẩn 2D (`SoundVisemeGuide.tsx`):** Mô phỏng vị trí răng, lưỡi, môi và luồng hơi thở (puff/continuous), hướng dẫn tiếng Việt dễ hiểu.
-3. **Vận động toàn thân (TPR):** Mỗi âm vị đi kèm một động tác hình tượng (ví dụ: uốn tay như rắn `sssss`, thổi nến `p-p-p`).
-4. **Từ vựng cốt lõi:** Nghe và nhận diện âm qua các thẻ hình ảnh trực quan.
-5. **Cỗ máy ghép vần bong bóng (`BubbleBlender.tsx`):** Chạm từng bong bóng âm thanh rồi bấm nút thần kỳ để ghép thành từ hoàn chỉnh (`s` + `a` + `t` = `sat`).
-6. **Chiến thắng & Ngôi sao:** Pháo hoa chúc mừng, không điểm số, không trừ phạt.
-
-### 3. Phòng Ngừa Lỗi Phát Âm — Trò Chơi Lắng Nghe Phân Biệt Âm (`MinimalPairsView.tsx`)
-- Luyện tập phân biệt các cặp âm then chốt dễ gây mất gốc cho người Việt:
-  - `/p/` (thổi hơi gió) vs `/b/` (rung cổ họng)
-  - `/s/` (cười hé răng) vs `/ʃ/` (chu môi suỵt shhh)
-  - `/t/` (gõ tích tắc) vs `/d/` (gõ trầm có rung)
-  - `/f/` (cắn môi thổi gió) vs `/v/` (cắn môi rung kèn)
-- Có nút "Bỏ qua bài này", tuyệt đối không gây áp lực điểm số.
-
-### 4. Tranh Truyện Đọc Tương Tác Theo Nhịp (`StoryReader.tsx` & `StoryLibrary.tsx`)
-- Thư viện Decodable Readers theo từng cấp độ (Level 1, Level 2).
-- **Karaoke Word Timing:** Tô sáng từng từ đồng bộ theo giọng đọc chuẩn.
-- **Interactive Hotspots:** Chạm vào nhân vật, đồ vật để xem chuyển động nhảy múa, phát tiếng kêu sinh động (meow, bark, chime).
-- **Touch-to-Answer:** Câu hỏi tương tác chạm hình ảnh, không đòi hỏi trẻ phải biết đọc chữ.
-- **Thử thách nói thân thiện:** Tự chọn 100%, không bắt buộc.
-
-### 5. Tuân Thủ Nghiêm Ngặt COPPA & Bảo Mật Trẻ Em
-- **Microphone:** Mặc định **TẮT**. Chỉ được kích hoạt khi phụ huynh chủ động bật trong Góc Phụ Huynh.
-- **Xử lý âm thanh:** 100% tạm thời (transient) trên bộ nhớ RAM thiết bị, **không lưu trữ file ghi âm**, **không gửi dữ liệu lên máy chủ**.
-- **Không quảng cáo, không mã theo dõi hành vi**.
-- Cung cấp tính năng **Xóa Toàn Bộ Dữ Liệu (Right to Deletion)** một chạm.
-
-### 6. Bảo Vệ Mắt & Sức Khỏe Mầm Non (`RestBreakModal.tsx`)
-- Hẹn giờ tự động nhắc nghỉ ngơi sau 5–8 phút (chuẩn khuyến cáo y khoa trẻ 3-5 tuổi).
-- Tích hợp bài tập vận động vươn vai hươu cao cổ (TPR Giraffe Stretch) để trẻ rời mắt khỏi màn hình.
-- Chế độ **Giảm chuyển động (Reduced Motion)** cho mắt nhạy cảm.
-
-### 7. Góc Phụ Huynh Bảo Mật (`ParentDashboard.tsx`)
-- Khóa bằng phép tính người lớn ngẫu nhiên (Math Gate).
-- Bảng phân tích tiến độ nhận thức âm vị.
-- Cài đặt thời lượng phiên chơi, giọng US/UK.
-- 3 Thẻ bài gợi ý tương tác Co-play 1 phút ngoài đời thực giữa bố mẹ và con.
+## 📲 Cài Đặt Ứng Dụng Trên iPad / Điện Thoại (PWA)
+1. Mở link ứng dụng trên trình duyệt **Safari** (iOS / iPadOS) hoặc **Chrome** (Android).
+2. Bấm vào nút **Chia sẻ (Share)** trên Safari ➔ Chọn **"Thêm vào Màn hình chính" (Add to Home Screen)**.
+3. Biểu tượng **PhonoKids 🌟** sẽ xuất hiện trên màn hình như một ứng dụng gốc, chạy toàn màn hình và lưu cache âm thanh để học ngay cả khi mất mạng.
 
 ---
 
-## 📂 Cấu Trúc Mã Nguồn
+## 🗺️ Lộ Trình Phát Triển Tiếp Theo (Roadmap)
 
-```text
-src/
-├── types/
-│   ├── phonics.ts          # Định nghĩa kiểu dữ liệu Phonics, Viseme, Minimal Pairs
-│   ├── story.ts            # Định nghĩa Decodable Story, Timing, Hotspot
-│   └── user.ts             # Định nghĩa Profile, SessionSettings (COPPA, Health)
-├── data/
-│   ├── phonicsGroups.ts    # Dữ liệu 7 nhóm Jolly Phonics (42 âm vị) & Đảo âm thanh
-│   ├── minimalPairs.ts     # Dữ liệu các cặp âm tối thiểu phân biệt
-│   └── stories.ts          # Thư viện truyện tranh giải mã tương tác có timing
-├── services/
-│   ├── audioService.ts     # Web Audio API Synthesizer (SFX) & SpeechSynthesis
-│   ├── speechRecognition.ts# Child Speech Coach (Transient, No-fail, COPPA opt-in)
-│   └── storageService.ts   # Local-first persistence & Right to Deletion
-├── components/
-│   ├── Navbar.tsx          # Thanh điều hướng, bộ đếm sao, toggle âm thanh, nút phụ huynh
-│   ├── KidButton.tsx       # Nút bấm nảy xúc giác to bản kèm âm pop
-│   ├── CharacterCompanion.tsx # Chú sư tử Leo đồng hành tương tác
-│   ├── SoundVisemeGuide.tsx# Mô phỏng khẩu hình răng-lưỡi-hơi thở 2D
-│   ├── BubbleBlender.tsx   # Ghép âm bong bóng
-│   ├── MinimalPairDrill.tsx# Bài tập nghe phân biệt âm
-│   ├── StoryReader.tsx     # Đọc truyện tương tác karaoke + hotspots
-│   ├── StoryLibrary.tsx    # Thư viện truyện decodable
-│   ├── PhonicsIslandMap.tsx# Bản đồ 7 đảo âm thanh
-│   ├── LessonPlayer.tsx    # Trình học micro-lesson 6 bước
-│   ├── ParentDashboard.tsx # Cổng phụ huynh có khóa tính nhẩm & COPPA
-│   └── RestBreakModal.tsx  # Cảnh báo nghỉ mắt & bài tập TPR
-├── App.tsx                 # Điều phối luồng ứng dụng chính
-├── main.tsx                # Entry point
-└── index.css               # Tailwind CSS & hoạt ảnh trẻ thơ
-```
+- [x] Hoàn thiện 42 âm vị Synthetic Phonics & 7 nhóm bài học.
+- [x] Xưởng tập tô chữ (Letter Tracing) & Game nhận diện.
+- [x] Phòng luyện phân biệt âm (Minimal Pairs) với 4 chế độ đọc tự động.
+- [x] Ngân hàng 796 từ vựng tranh Ehon đa chủ đề.
+- [ ] **Mở rộng Module Tiếng Nhật (KanaPhonics)**:
+  - 50 âm cơ bản (Gojūon 五十音): *a-ka-sa-ta-na-ha-ma-ya-ra-wa*.
+  - Biến âm đục (Dakuon) và bán đục (Handakuon).
+  - Luyện âm ngắt (Sokuon) và trường âm (Chōon) theo giáo trình *Kodomo Challenge*, *Kumon Kokugo* và *Gakken*.
+- [ ] Đóng gói phiên bản ứng dụng độc lập `.exe` cho máy tính Windows (Tauri v2).
+
+---
+
+## 📄 Bản Quyền & Giấy Phép
+
+Phát triển bởi đội ngũ kỹ thuật tự trị **PE - THOAN - AN**.  
+Phát hành theo giấy phép mã nguồn mở [MIT License](LICENSE).
