@@ -12,10 +12,12 @@ import { RestBreakModal } from './components/RestBreakModal';
 import { AiBuddyChat } from './components/AiBuddyChat';
 import { StickerAlbumModal } from './components/StickerAlbumModal';
 import { ArcadePlayground } from './components/ArcadePlayground';
-import { JapaneseGojuonView } from './components/JapaneseGojuonView';
+import { GojuonIslandMap } from './components/GojuonIslandMap';
+import { KanaLessonPlayer } from './components/KanaLessonPlayer';
 
 import { PhonemeInfo } from './types/phonics';
 import { DecodableStory } from './types/story';
+import { KanaItem } from './types/japanese';
 import { ChildProfile, SessionSettings } from './types/user';
 import { DECODABLE_STORIES } from './data/stories';
 
@@ -39,6 +41,13 @@ export const App: React.FC = () => {
 
   // Active selections
   const [activePhoneme, setActivePhoneme] = useState<PhonemeInfo | null>(null);
+  const [activeKana, setActiveKana] = useState<KanaItem | null>(null);
+  const [japaneseMasteredKana, setJapaneseMasteredKana] = useState<string[]>(() =>
+    storageService.getJapaneseMasteredKana()
+  );
+  const [japaneseUnlockedGroups, setJapaneseUnlockedGroups] = useState<number[]>(() =>
+    storageService.getJapaneseUnlockedGroups()
+  );
   const [activeStory, setActiveStory] = useState<DecodableStory | null>(null);
   const [isParentGateOpen, setIsParentGateOpen] = useState<boolean>(false);
   const [isStickerAlbumOpen, setIsStickerAlbumOpen] = useState<boolean>(false);
@@ -101,6 +110,29 @@ export const App: React.FC = () => {
     setActivePhoneme(nextPhInfo);
   };
 
+  const handleSelectKana = (kanaItem: KanaItem) => {
+    setActiveKana(kanaItem);
+    setCurrentView('lesson');
+  };
+
+  const handleFinishKanaLesson = (kanaId: string) => {
+    storageService.recordKanaMastery(kanaId);
+    storageService.addStars(3);
+    setJapaneseMasteredKana(storageService.getJapaneseMasteredKana());
+    handleRefreshProfile();
+    setCurrentView('island_map');
+  };
+
+  const handleNextKana = (nextKanaItem: KanaItem) => {
+    if (activeKana) {
+      storageService.recordKanaMastery(activeKana.id);
+      storageService.addStars(3);
+      setJapaneseMasteredKana(storageService.getJapaneseMasteredKana());
+      handleRefreshProfile();
+    }
+    setActiveKana(nextKanaItem);
+  };
+
   const handleSelectStory = (story: DecodableStory) => {
     setActiveStory(story);
     setCurrentView('story_reader');
@@ -129,7 +161,6 @@ export const App: React.FC = () => {
   };
 
   const isViewportLockedView = 
-    currentLanguage === 'ja' ||
     currentView === 'story_reader' || 
     currentView === 'lesson' || 
     currentView === 'ai_chat' ||
@@ -157,85 +188,101 @@ export const App: React.FC = () => {
         />
       </div>
 
-      {/* Main Content Area */}
+      {/* Main Content Area: 100% Symmetrical Between English & Japanese */}
       <main className={`flex-1 min-h-0 ${isViewportLockedView ? 'overflow-hidden flex flex-col' : 'overflow-y-auto pb-16'}`}>
-        {currentLanguage === 'ja' ? (
-          <JapaneseGojuonView onAddStars={handleAddStars} />
-        ) : (
-          <>
-            {currentView === 'island_map' && (
-              <PhonicsIslandMap
-                unlockedGroups={profile.unlockedGroups}
-                masteredPhonemes={profile.masteredPhonemes}
-                profile={profile}
-                onSelectPhoneme={handleSelectPhoneme}
-              />
-            )}
+        {currentView === 'island_map' && (
+          currentLanguage === 'ja' ? (
+            <GojuonIslandMap
+              unlockedGroups={japaneseUnlockedGroups}
+              masteredKana={japaneseMasteredKana}
+              onSelectKana={handleSelectKana}
+              onAddStars={handleAddStars}
+            />
+          ) : (
+            <PhonicsIslandMap
+              unlockedGroups={profile.unlockedGroups}
+              masteredPhonemes={profile.masteredPhonemes}
+              profile={profile}
+              onSelectPhoneme={handleSelectPhoneme}
+            />
+          )
+        )}
 
-            {currentView === 'lesson' && activePhoneme && (
+        {currentView === 'lesson' && (
+          currentLanguage === 'ja' ? (
+            activeKana ? (
+              <KanaLessonPlayer
+                kana={activeKana}
+                onFinishLesson={handleFinishKanaLesson}
+                onNextKana={handleNextKana}
+                onBack={() => setCurrentView('island_map')}
+              />
+            ) : null
+          ) : (
+            activePhoneme ? (
               <LessonPlayer
                 phoneme={activePhoneme}
                 onFinishLesson={handleFinishLesson}
                 onNextPhoneme={handleNextPhoneme}
                 onBack={() => setCurrentView('island_map')}
               />
-            )}
+            ) : null
+          )
+        )}
 
-            {currentView === 'stories' && (
-              <StoryLibrary
-                completedStories={profile.completedStories}
-                onSelectStory={handleSelectStory}
-              />
-            )}
+        {currentView === 'stories' && (
+          <StoryLibrary
+            completedStories={profile.completedStories}
+            onSelectStory={handleSelectStory}
+          />
+        )}
 
-            {currentView === 'story_reader' && activeStory && (() => {
-              const sIdx = DECODABLE_STORIES.findIndex((s) => s.id === activeStory.id);
-              const nextStory = sIdx !== -1 && sIdx + 1 < DECODABLE_STORIES.length
-                ? DECODABLE_STORIES[sIdx + 1]
-                : DECODABLE_STORIES[0];
-              return (
-                <StoryReader
-                  story={activeStory}
-                  onBackToHome={() => setCurrentView('stories')}
-                  onStoryFinished={handleFinishStory}
-                  onNextStory={() => {
-                    storageService.markStoryCompleted(activeStory.id);
-                    storageService.addStars(5);
-                    handleRefreshProfile();
-                    setActiveStory(nextStory);
-                  }}
-                  nextStoryTitle={nextStory.title}
-                />
-              );
-            })()}
+        {currentView === 'story_reader' && activeStory && (() => {
+          const sIdx = DECODABLE_STORIES.findIndex((s) => s.id === activeStory.id);
+          const nextStory = sIdx !== -1 && sIdx + 1 < DECODABLE_STORIES.length
+            ? DECODABLE_STORIES[sIdx + 1]
+            : DECODABLE_STORIES[0];
+          return (
+            <StoryReader
+              story={activeStory}
+              onBackToHome={() => setCurrentView('stories')}
+              onStoryFinished={handleFinishStory}
+              onNextStory={() => {
+                storageService.markStoryCompleted(activeStory.id);
+                storageService.addStars(5);
+                handleRefreshProfile();
+                setActiveStory(nextStory);
+              }}
+              nextStoryTitle={nextStory.title}
+            />
+          );
+        })()}
 
-            {currentView === 'minimal_pairs' && (
-              <MinimalPairsView onAddStars={handleAddStars} />
-            )}
+        {currentView === 'minimal_pairs' && (
+          <MinimalPairsView onAddStars={handleAddStars} />
+        )}
 
-            {currentView === 'blending' && (
-              <BlendingPlayground onAddStars={handleAddStars} />
-            )}
+        {currentView === 'blending' && (
+          <BlendingPlayground onAddStars={handleAddStars} />
+        )}
 
-            {currentView === 'arcade' && (
-              <ArcadePlayground
-                onAddStars={handleAddStars}
-                onBackToHome={() => setCurrentView('island_map')}
-              />
-            )}
+        {currentView === 'arcade' && (
+          <ArcadePlayground
+            onAddStars={handleAddStars}
+            onBackToHome={() => setCurrentView('island_map')}
+          />
+        )}
 
-            {currentView === 'ai_chat' && (
-              <AiBuddyChat
-                onAddStars={handleAddStars}
-                onOpenParentSettings={() => setIsParentGateOpen(true)}
-              />
-            )}
-          </>
+        {currentView === 'ai_chat' && (
+          <AiBuddyChat
+            onAddStars={handleAddStars}
+            onOpenParentSettings={() => setIsParentGateOpen(true)}
+          />
         )}
       </main>
 
-      {/* Interactive Mascot Companion - Only shown on exploration map and story bookshelf in English mode */}
-      {currentLanguage === 'en' && (currentView === 'island_map' || currentView === 'stories') && (
+      {/* Interactive Mascot Companion - Shown on exploration map and story bookshelf in both languages */}
+      {(currentView === 'island_map' || currentView === 'stories') && (
         <CharacterCompanion />
       )}
 

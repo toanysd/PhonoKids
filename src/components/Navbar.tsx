@@ -62,19 +62,19 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             <Map className="w-4 h-4 text-amber-800" />
-            <span>Đảo Phonics</span>
+            <span>{currentLanguage === 'ja' ? 'Đảo Kana' : 'Đảo Phonics'}</span>
           </button>
 
           <button
             onClick={() => onNavigate('stories')}
             className={`flex items-center space-x-1.5 px-4 py-2 rounded-xl font-black text-sm transition-all cursor-pointer ${
-              currentView === 'stories'
+              currentView === 'stories' || currentView === 'story_reader'
                 ? 'bg-amber-400 text-amber-950 shadow-sm'
                 : 'text-amber-900 hover:bg-amber-200/60'
             }`}
           >
             <BookOpen className="w-4 h-4 text-amber-800" />
-            <span>Tranh Truyện Ehon</span>
+            <span>{currentLanguage === 'ja' ? 'Truyện Ehon' : 'Tranh Truyện Ehon'}</span>
           </button>
 
           <button
@@ -86,7 +86,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             <Sparkles className="w-4 h-4 text-amber-800" />
-            <span>Luyện Phát Âm</span>
+            <span>{currentLanguage === 'ja' ? 'Luyện Âm Chuẩn' : 'Luyện Phát Âm'}</span>
           </button>
 
           <button
@@ -98,7 +98,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             <Wand2 className="w-4 h-4 text-amber-800" />
-            <span>Ghép Vần Tranh Vẽ</span>
+            <span>{currentLanguage === 'ja' ? 'Ghép Chữ Ehon' : 'Ghép Vần Tranh Vẽ'}</span>
           </button>
 
           <button
@@ -199,7 +199,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             currentView === 'island_map' ? 'bg-amber-400 text-amber-950 shadow-xs' : 'text-amber-800'
           }`}
         >
-          Đảo Âm
+          {currentLanguage === 'ja' ? 'Đảo Kana' : 'Đảo Âm'}
         </button>
         <button
           onClick={() => onNavigate('stories')}
@@ -215,7 +215,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             currentView === 'minimal_pairs' ? 'bg-amber-400 text-amber-950 shadow-xs' : 'text-amber-800'
           }`}
         >
-          Phát Âm
+          {currentLanguage === 'ja' ? 'Luyện Âm' : 'Phát Âm'}
         </button>
         <button
           onClick={() => onNavigate('blending')}
@@ -223,7 +223,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             currentView === 'blending' ? 'bg-amber-400 text-amber-950 shadow-xs' : 'text-amber-800'
           }`}
         >
-          Ghép Vần
+          {currentLanguage === 'ja' ? 'Ghép Chữ' : 'Ghép Vần'}
         </button>
         <button
           onClick={() => onNavigate('arcade')}

@@ -290,12 +290,55 @@ class StorageService {
     }
   }
 
+  // --- Japanese Kana Storage Helpers ---
+  public getJapaneseMasteredKana(): string[] {
+    try {
+      const data = localStorage.getItem('phonokids_mastered_kana');
+      if (data) return JSON.parse(data);
+    } catch {}
+    return [];
+  }
+
+  public recordKanaMastery(kanaId: string) {
+    const mastered = this.getJapaneseMasteredKana();
+    if (!mastered.includes(kanaId)) {
+      mastered.push(kanaId);
+      try {
+        localStorage.setItem('phonokids_mastered_kana', JSON.stringify(mastered));
+      } catch {}
+    }
+  }
+
+  public getJapaneseUnlockedGroups(): number[] {
+    try {
+      const data = localStorage.getItem('phonokids_unlocked_kana_groups');
+      if (data) {
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return [1]; // Row A is unlocked by default
+  }
+
+  public unlockJapaneseGroup(groupNumber: number) {
+    const unlocked = this.getJapaneseUnlockedGroups();
+    if (!unlocked.includes(groupNumber)) {
+      unlocked.push(groupNumber);
+      unlocked.sort((a, b) => a - b);
+      try {
+        localStorage.setItem('phonokids_unlocked_kana_groups', JSON.stringify(unlocked));
+      } catch {}
+    }
+  }
+
   // COPPA Data Erasure: complete wipe of all local child data
   public eraseAllData() {
     try {
       localStorage.removeItem(PROFILE_KEY);
       localStorage.removeItem(SETTINGS_KEY);
       localStorage.removeItem(RECORDS_KEY);
+      localStorage.removeItem('phonokids_mastered_kana');
+      localStorage.removeItem('phonokids_unlocked_kana_groups');
     } catch {
       // Ignore
     }
