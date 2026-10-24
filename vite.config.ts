@@ -3,11 +3,15 @@ import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: './',
   plugins: [react()],
   server: {
     port: 5180,
     strictPort: false, // Automatically fallback to port + 1 if EADDRINUSE
     host: true,
+    watch: {
+      ignored: ['**/PhonoKids_Portable_Windows/**', '**/dist/**']
+    }
   },
   preview: {
     port: 5181,

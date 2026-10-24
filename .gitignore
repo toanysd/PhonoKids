@@ -25,3 +25,7 @@ dist-ssr
 
 # TypeScript build info
 *.tsbuildinfo
+
+# Portable Windows Package
+PhonoKids_Portable_Windows/
+*.zip

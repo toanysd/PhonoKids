@@ -1,0 +1,24 @@
+# Smart Memory Palace 2.5 - Default Ignore Rules
+node_modules/
+.venv/
+venv/
+__pycache__/
+.next/
+dist/
+build/
+out/
+.turbo/
+.cache/
+coverage/
+temp_ai/
+temp_workspace/
+*.min.js
+*.min.css
+*.map
+*.log
+*.lock
+*.rar
+*.zip
+*.7z
+*.sqlite
+*.db
