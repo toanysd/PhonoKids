@@ -24,19 +24,16 @@ export const TrainingDojoHub: React.FC<TrainingDojoHubProps> = ({
   const [activeTab, setActiveTab] = useState<DojoTab>('islands');
 
   const tabs: { id: DojoTab; label: string; icon: React.ReactNode }[] = [
-    { id: 'islands', label: '42 Âm & Khẩu Hình Thật', icon: <Map className="w-4 h-4" /> },
-    { id: 'blending', label: 'Cỗ Máy Ghép Vần', icon: <Wand2 className="w-4 h-4" /> },
-    { id: 'minimal_pairs', label: 'Tai Tinh Phân Biệt Âm', icon: <Headphones className="w-4 h-4" /> },
-    { id: 'arcade', label: 'Tô Chữ & Trò Chơi Bổ Trợ', icon: <Gamepad2 className="w-4 h-4" /> },
+    { id: 'islands', label: '7 Đảo Âm', icon: <Map className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /> },
+    { id: 'blending', label: 'Ghép Vần', icon: <Wand2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /> },
+    { id: 'minimal_pairs', label: 'Nghe Âm', icon: <Headphones className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /> },
+    { id: 'arcade', label: 'Trò Chơi', icon: <Gamepad2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /> },
   ];
 
   return (
     <div className="w-full h-full flex flex-col overflow-hidden">
       {/* Sub-navigation bar inside Training Dojo */}
-      <div className="bg-white/95 border-b-2 border-amber-200 px-3 sm:px-6 py-2 flex items-center gap-2 overflow-x-auto shrink-0">
-        <span className="text-xs font-black text-amber-900 uppercase tracking-wider shrink-0 mr-1">
-          🥋 Phòng Luyện Âm Chuẩn:
-        </span>
+      <div className="bg-white/95 border-b-2 border-amber-200 px-2 sm:px-6 py-1.5 grid grid-cols-4 gap-1 sm:flex sm:items-center sm:gap-2 shrink-0">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           return (
@@ -47,21 +44,21 @@ export const TrainingDojoHub: React.FC<TrainingDojoHubProps> = ({
                 audioService.playPopSound(500);
                 setActiveTab(tab.id);
               }}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-2xl text-xs font-extrabold transition-all shrink-0 cursor-pointer ${
+              className={`min-h-[42px] inline-flex items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-4 py-1.5 rounded-2xl text-[11px] sm:text-sm font-black whitespace-nowrap transition-all cursor-pointer ${
                 isActive
                   ? 'bg-amber-400 text-slate-950 shadow-sm'
                   : 'bg-amber-50 text-amber-900 hover:bg-amber-100 border border-amber-200'
               }`}
             >
               {tab.icon}
-              <span>{tab.label}</span>
+              <span className="truncate">{tab.label}</span>
             </button>
           );
         })}
       </div>
 
-      {/* Dojo Content Viewport */}
-      <div className={`flex-1 min-h-0 ${activeTab === 'islands' ? 'overflow-y-auto pb-10' : 'overflow-hidden flex flex-col'}`}>
+      {/* Dojo Content Viewport (100% Zero-Scroll Paged Stage) */}
+      <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
         {activeTab === 'islands' && (
           <PhonicsIslandMap
             unlockedGroups={profile.unlockedGroups}

@@ -59,8 +59,8 @@ export const QaDuelStageCard: React.FC<QaDuelStageCardProps> = ({
         </div>
       </div>
 
-      {/* 3 Visual Answer Cards */}
-      <div className="grid grid-cols-3 gap-1.5 sm:gap-2.5">
+      {/* 3 Visual Answer Cards (Stacked full-width on Mobile portrait, 3 cols on sm+) */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5">
         {choices.map((choice) => {
           const isSelected = selectedChoiceId === choice.id;
           const isWrong = wrongChoiceId === choice.id;
@@ -74,7 +74,7 @@ export const QaDuelStageCard: React.FC<QaDuelStageCardProps> = ({
               data-qa-correct={choice.isCorrect ? 'true' : 'false'}
               data-qa-selected={isSelected ? 'true' : 'false'}
               onClick={() => onSelectChoice(choice)}
-              className={`relative text-left rounded-2xl p-2 sm:p-3 border-2 transition-all shadow-md cursor-pointer active:scale-95 flex flex-col justify-between ${
+              className={`relative min-h-[50px] text-left rounded-2xl px-3 py-2 sm:p-3 border-2 transition-all shadow-md cursor-pointer active:scale-95 flex flex-col justify-between ${
                 isSelected
                   ? 'bg-emerald-50 border-emerald-500 ring-4 ring-emerald-400/50 shadow-emerald-500/30 -translate-y-0.5'
                   : isWrong
@@ -88,13 +88,13 @@ export const QaDuelStageCard: React.FC<QaDuelStageCardProps> = ({
                 </div>
               )}
 
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                <span className="text-xl sm:text-3xl leading-none shrink-0">{choice.emoji}</span>
+              <div className="flex items-center gap-2.5 sm:gap-2">
+                <span className="text-2xl sm:text-3xl leading-none shrink-0">{choice.emoji}</span>
                 <div className="min-w-0">
-                  <div className="font-display text-xs sm:text-sm font-extrabold text-slate-950 leading-tight break-words">
+                  <div className="font-display text-sm sm:text-base font-extrabold text-slate-950 leading-tight break-words">
                     {choice.answerEn}
                   </div>
-                  <div className="text-[10px] sm:text-xs font-medium text-slate-600 leading-tight mt-0.5">
+                  <div className="text-[11px] sm:text-xs font-medium text-slate-600 leading-tight mt-0.5">
                     {choice.answerVi}
                   </div>
                 </div>

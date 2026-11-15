@@ -1,6 +1,6 @@
 # HeroSpeak Kids — Đặc Tả Kỹ Thuật & Giáo Trình Hệ Thống
 
-> Cập nhật: `2026-11-15` • Kiến trúc mô-đun cho ứng dụng `englishStudy` (React 18 + TypeScript + Tailwind CSS + Vite)
+> Cập nhật: `2026-11-16` • Kiến trúc mô-đun cho ứng dụng `englishStudy` (React 18 + TypeScript + Tailwind CSS + Vite)
 
 ## 1. Tổng Quan Kiến Trúc & Lộ Trình Sư Phạm Kép (3–8 Tuổi)
 **HeroSpeak Kids** chuyển đổi nền tảng học ngữ âm thành Game Nhập Vai Hoạt Cảnh Chiến Đấu điều khiển bằng tương tác chạm/phím và giọng nói tiếng Anh trực tiếp cho trẻ từ 3 tuổi:
@@ -42,4 +42,6 @@
 - **Chuỗi Tự Chạy Toàn Tuyến & Giao Diện Mobile-First `100dvh`:**
   1. **Video Hoạt Cảnh Mở Đầu (`VideoLessonCutscene.tsx`):** Tự đọc mẫu ➔ mở Mic 3.8s ➔ tự lật sang thẻ tiếp theo và đếm ngược `3..2..1` vào trận (có nút tạm dừng).
   2. **Sân Khấu Chiến Đấu (`BattleStageArena.tsx`, `BattleStageViewport.tsx`, `BattleHudOverlay.tsx`, `useArenaMovement.ts`):** Toàn màn hình `100dvh` ẩn thanh điều hướng tổng; tự chuyển bố cục **Trục Dọc (Trên–Dưới)** trên Mobile `<768px` và **Đấu Trường Ngang 16:9** trên Desktop, kèm đếm ngược `6s` tự sang bài mới sau khi thắng.
+  3. **Bố Cục Phân Trang 1 Màn Hình Không Cuộn (`390×844` Zero-Scroll Paged Screens):** Các màn nhiều mục (`HeroAdventureHub`, `HeroRosterDrawer`, `TrainingDojoHub` gồm `7 Đảo Âm` / `Ghép Vần` / `Nghe Âm` / `Trò Chơi`, `StoryLibrary`, `StickerAlbumModal`) hiển thị đúng 1 thẻ trọng tâm vừa khít khung hình (`scrollHeight === clientHeight`), chuyển trang qua nút `◀`/`▶` hoặc vuốt ngang `40px`, thanh tab con `grid-cols-4` vừa khít di động; thẻ Hỏi–Đáp (`QaDuelStageCard.tsx`) xếp dọc toàn chiều ngang (`grid-cols-1 sm:grid-cols-3`) và giữ gợi ý thử lại `1800ms`.
+  4. **Bộ Đếm Nghỉ Mắt Thông Minh (`App.tsx`, `RestBreakModal.tsx`):** Chỉ tính giờ khi bé ở màn học/chơi thực sự (tạm dừng ở `hero_hub`, `document.hidden`, `ParentDashboard`, `isSessionResting`); bấm **"Nghỉ Ngơi Hôm Nay"** đặt lại `sessionSecondsRef = 0`, bật `isSessionResting` và đưa về `hero_hub` không bật lặp lại; bấm **"Chơi Thêm 3 Phút Nữa"** đặt `breakLimitSecondsRef = 180` (`3` phút).
 - **Tài liệu & Âm thanh giữ nguyên:** 42 file âm thuần `/assets/audio/phonemes/*.mp3`, kho tranh Ehon `/assets/ehon/*.jpg`, và `TrainingDojoHub.tsx` (Phòng Luyện Âm, Ghép Vần, Tai Tinh, Tô Chữ, Truyện Tranh Ehon, Bạn Leo AI). Chế độ Tiếng Nhật (`ja`) được ẩn khỏi UI.

@@ -43,7 +43,10 @@ export const App: React.FC = () => {
 
   // Health: Session Rest Break Countdown (useRef avoids 1s state re-renders interrupting active TTS)
   const sessionSecondsRef = useRef<number>(0);
+  const breakLimitSecondsRef = useRef<number>(settings.sessionMinutes * 60);
+  const isSnoozedRef = useRef<boolean>(false);
   const [showRestBreak, setShowRestBreak] = useState<boolean>(false);
+  const [isSessionResting, setIsSessionResting] = useState<boolean>(false);
 
   const activeHero = resolveActiveHero(heroSave);
   const activeRival = resolveActiveRival(heroSave, activeHero);
@@ -55,14 +58,29 @@ export const App: React.FC = () => {
   }, [settings, soundEnabled]);
 
   useEffect(() => {
+    if (!isSnoozedRef.current) {
+      breakLimitSecondsRef.current = settings.sessionMinutes * 60;
+    }
+  }, [settings.sessionMinutes]);
+
+  useEffect(() => {
     const timer = setInterval(() => {
+      if (
+        document.hidden ||
+        showRestBreak ||
+        isParentGateOpen ||
+        isSessionResting ||
+        currentView === 'hero_hub'
+      ) {
+        return;
+      }
       sessionSecondsRef.current += 1;
-      if (sessionSecondsRef.current >= settings.sessionMinutes * 60 && !showRestBreak) {
+      if (sessionSecondsRef.current >= breakLimitSecondsRef.current) {
         setShowRestBreak(true);
       }
     }, 1000);
     return () => clearInterval(timer);
-  }, [settings.sessionMinutes, showRestBreak]);
+  }, [settings.sessionMinutes, showRestBreak, isParentGateOpen, isSessionResting, currentView]);
 
   useEffect(() => {
     const onVisibilityChange = () => {
@@ -92,6 +110,7 @@ export const App: React.FC = () => {
   };
 
   const handleSelectPhoneme = (phInfo: PhonemeInfo) => {
+    setIsSessionResting(false);
     setActivePhoneme(phInfo);
     setCurrentView('lesson');
   };
@@ -113,8 +132,18 @@ export const App: React.FC = () => {
   };
 
   const handleSelectStory = (story: DecodableStory) => {
+    setIsSessionResting(false);
     setActiveStory(story);
     setCurrentView('story_reader');
+  };
+
+  const handleNavigateView = (view: 'hero_hub' | 'dojo' | 'stories' | 'ai_chat') => {
+    audioService.playPopSound(500);
+    voiceCombatService.releaseSession();
+    if (view !== 'hero_hub') {
+      setIsSessionResting(false);
+    }
+    setCurrentView(view);
   };
 
   const handleFinishStory = () => {
@@ -180,9 +209,6 @@ export const App: React.FC = () => {
     currentView === 'lesson' ||
     currentView === 'story_reader';
 
-  const isViewportLockedView =
-    isImmersiveFullscreen || currentView === 'dojo' || currentView === 'ai_chat';
-
   const isOverlayPaused =
     isRosterOpen || showRestBreak || isParentGateOpen || isStickerAlbumOpen;
 
@@ -197,11 +223,7 @@ export const App: React.FC = () => {
           <Navbar
             currentView={currentView}
             activeHeroName={activeHero.nameEn}
-            onNavigate={(view) => {
-              audioService.playPopSound(500);
-              voiceCombatService.releaseSession();
-              setCurrentView(view);
-            }}
+            onNavigate={handleNavigateView}
             onOpenRoster={() => setIsRosterOpen(true)}
             stars={profile.stars}
             soundEnabled={soundEnabled}
@@ -212,11 +234,7 @@ export const App: React.FC = () => {
         </div>
       )}
 
-      <main
-        className={`flex-1 min-h-0 ${
-          isViewportLockedView ? 'overflow-hidden flex flex-col' : 'overflow-y-auto pb-6 lg:pb-12'
-        }`}
-      >
+      <main className="flex-1 min-h-0 overflow-hidden flex flex-col">
         {currentView === 'hero_hub' && (
           <HeroAdventureHub
             saveState={heroSave}
@@ -227,11 +245,13 @@ export const App: React.FC = () => {
             }
             onOpenRoster={() => setIsRosterOpen(true)}
             onStartUnitCutscene={(unit) => {
+              setIsSessionResting(false);
               voiceCombatService.warmUpSession();
               setActiveUnit(unit);
               setCurrentView('hero_cutscene');
             }}
             onStartUnitBattle={(unit) => {
+              setIsSessionResting(false);
               voiceCombatService.warmUpSession();
               setActiveUnit(unit);
               setCurrentView('hero_battle');
@@ -328,11 +348,7 @@ export const App: React.FC = () => {
       {!isImmersiveFullscreen && (
         <MobileBottomNav
           currentView={currentView}
-          onNavigate={(view) => {
-            audioService.playPopSound(500);
-            voiceCombatService.releaseSession();
-            setCurrentView(view);
-          }}
+          onNavigate={handleNavigateView}
           onOpenRoster={() => setIsRosterOpen(true)}
         />
       )}
@@ -355,12 +371,20 @@ export const App: React.FC = () => {
       {showRestBreak && (
         <RestBreakModal
           onContinue={() => {
-            setShowRestBreak(false);
+            isSnoozedRef.current = true;
             sessionSecondsRef.current = 0;
+            breakLimitSecondsRef.current = 3 * 60;
+            setIsSessionResting(false);
+            setShowRestBreak(false);
           }}
           onFinishSession={() => {
+            isSnoozedRef.current = false;
+            sessionSecondsRef.current = 0;
+            breakLimitSecondsRef.current = settings.sessionMinutes * 60;
+            setIsSessionResting(true);
             setShowRestBreak(false);
             voiceCombatService.releaseSession();
+            audioService.stopSpeaking();
             setCurrentView('hero_hub');
           }}
         />

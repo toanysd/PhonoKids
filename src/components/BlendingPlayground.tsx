@@ -40,15 +40,13 @@ export const BlendingPlayground: React.FC<BlendingPlaygroundProps> = ({
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-3 sm:px-4 py-2 h-[calc(100vh-4.6rem)] flex flex-col justify-between overflow-hidden">
+    <div className="w-full max-w-5xl mx-auto px-2.5 sm:px-4 py-1.5 h-full flex-1 min-h-0 flex flex-col justify-between overflow-hidden">
       {/* Sleek Single-Line Header Bar */}
-      <div className="flex items-center justify-between mb-2 shrink-0">
-        <div className="flex items-center space-x-2 bg-sky-200/90 px-3.5 py-1.5 rounded-full border border-sky-300 text-sky-950 font-black text-xs md:text-sm shadow-xs">
-          <Wand2 className="w-4 h-4 text-sky-700" />
-          <span>
-            {language === 'ja'
-              ? 'Ghép Chữ Tranh Vẽ Ehon (ことば あそび)'
-              : 'Ghép Vần Phonics (C-V-C Blending)'}
+      <div className="flex items-center justify-between gap-2 mb-1.5 shrink-0">
+        <div className="flex items-center space-x-1.5 bg-sky-200/90 px-3 py-1 rounded-full border border-sky-300 text-sky-950 font-black text-xs md:text-sm shadow-xs truncate">
+          <Wand2 className="w-4 h-4 text-sky-700 shrink-0" />
+          <span className="truncate">
+            {language === 'ja' ? 'Ghép Chữ Ehon' : 'Ghép Vần C-V-C'}
           </span>
         </div>
 

@@ -389,7 +389,7 @@ export const BattleStageArena: React.FC<BattleStageArenaProps> = ({
       audioService.playGentleTryAgain();
       audioService.speakEnglish(choice.answerEn, 0.92);
       setManualFeedback(`"${choice.answerEn}" (${choice.answerVi}) chưa khớp câu hỏi rồi! Bé chọn thẻ khác nhé!`);
-      window.setTimeout(() => setWrongQaChoiceId((prev) => (prev === choice.id ? null : prev)), 900);
+      window.setTimeout(() => setWrongQaChoiceId((prev) => (prev === choice.id ? null : prev)), 1800);
       return;
     }
 
