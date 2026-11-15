@@ -1,85 +1,79 @@
-import React, { useState, useEffect } from 'react';
-import { Navbar } from './components/Navbar';
-import { PhonicsIslandMap } from './components/PhonicsIslandMap';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { AppViewMode, MobileBottomNav, Navbar } from './components/Navbar';
+import { HeroAdventureHub } from './components/hero/HeroAdventureHub';
+import { VideoLessonCutscene } from './components/hero/VideoLessonCutscene';
+import { BattleStageArena } from './components/hero/BattleStageArena';
+import { HeroRosterDrawer } from './components/hero/HeroRosterDrawer';
+import { TrainingDojoHub } from './components/hero/TrainingDojoHub';
 import { LessonPlayer } from './components/LessonPlayer';
 import { StoryLibrary } from './components/StoryLibrary';
 import { StoryReader } from './components/StoryReader';
-import { MinimalPairsView } from './components/MinimalPairsView';
-import { BlendingPlayground } from './components/BlendingPlayground';
 import { ParentDashboard } from './components/ParentDashboard';
-import { CharacterCompanion } from './components/CharacterCompanion';
 import { RestBreakModal } from './components/RestBreakModal';
 import { AiBuddyChat } from './components/AiBuddyChat';
 import { StickerAlbumModal } from './components/StickerAlbumModal';
-import { ArcadePlayground } from './components/ArcadePlayground';
-import { GojuonIslandMap } from './components/GojuonIslandMap';
-import { KanaLessonPlayer } from './components/KanaLessonPlayer';
 
 import { PhonemeInfo } from './types/phonics';
 import { DecodableStory } from './types/story';
-import { KanaItem } from './types/japanese';
 import { ChildProfile, SessionSettings } from './types/user';
+import { CurriculumUnit, HeroSaveState } from './types/heroGame';
+
 import { DECODABLE_STORIES } from './data/stories';
-import { JAPANESE_STORIES } from './data/japaneseStories';
-import { JAPANESE_MINIMAL_PAIRS } from './data/japaneseMinimalPairs';
-import { JAPANESE_BLENDING_WORDS } from './data/japaneseBlendingWords';
-
+import { ALL_CURRICULUM_UNITS } from './data/curriculumWorlds';
+import { resolveActiveHero, resolveActiveRival } from './data/heroRoster';
 import { storageService } from './services/storageService';
+import { heroStorage } from './services/heroStorage';
 import { audioService } from './services/audioService';
-
-type ViewMode = 'island_map' | 'stories' | 'minimal_pairs' | 'blending' | 'lesson' | 'story_reader' | 'ai_chat' | 'arcade';
+import { voiceCombatService } from './services/voiceCombatService';
 
 export const App: React.FC = () => {
-  const [currentLanguage, setCurrentLanguage] = useState<'en' | 'ja'>(() => {
-    try {
-      const saved = localStorage.getItem('phonokids_current_lang');
-      if (saved === 'ja' || saved === 'en') return saved;
-    } catch {}
-    return 'en';
-  });
-  const [currentView, setCurrentView] = useState<ViewMode>('island_map');
+  const [currentView, setCurrentView] = useState<AppViewMode>('hero_hub');
   const [profile, setProfile] = useState<ChildProfile>(() => storageService.getProfile());
   const [settings, setSettings] = useState<SessionSettings>(() => storageService.getSettings());
+  const [heroSave, setHeroSave] = useState<HeroSaveState>(() => heroStorage.getSaveState());
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
 
-  // Active selections
+  const [activeUnit, setActiveUnit] = useState<CurriculumUnit>(ALL_CURRICULUM_UNITS[0]);
   const [activePhoneme, setActivePhoneme] = useState<PhonemeInfo | null>(null);
-  const [activeKana, setActiveKana] = useState<KanaItem | null>(null);
-  const [japaneseMasteredKana, setJapaneseMasteredKana] = useState<string[]>(() =>
-    storageService.getJapaneseMasteredKana()
-  );
-  const [japaneseUnlockedGroups, setJapaneseUnlockedGroups] = useState<number[]>(() =>
-    storageService.getJapaneseUnlockedGroups()
-  );
   const [activeStory, setActiveStory] = useState<DecodableStory | null>(null);
+
+  const [isRosterOpen, setIsRosterOpen] = useState<boolean>(false);
   const [isParentGateOpen, setIsParentGateOpen] = useState<boolean>(false);
   const [isStickerAlbumOpen, setIsStickerAlbumOpen] = useState<boolean>(false);
 
-  // Health: Session Rest Break Countdown
-  const [sessionSecondsElapsed, setSessionSecondsElapsed] = useState<number>(0);
+  // Health: Session Rest Break Countdown (useRef avoids 1s state re-renders interrupting active TTS)
+  const sessionSecondsRef = useRef<number>(0);
   const [showRestBreak, setShowRestBreak] = useState<boolean>(false);
 
+  const activeHero = resolveActiveHero(heroSave);
+  const activeRival = resolveActiveRival(heroSave, activeHero);
+
   useEffect(() => {
-    // Configure initial audio settings
     audioService.setVoiceSpeed(settings.voiceSpeed);
     audioService.setAccent(settings.accent);
     audioService.setSoundEnabled(soundEnabled);
   }, [settings, soundEnabled]);
 
-  // Session timer ticker for eye strain prevention
   useEffect(() => {
     const timer = setInterval(() => {
-      setSessionSecondsElapsed((prev) => {
-        const next = prev + 1;
-        if (next >= settings.sessionMinutes * 60 && !showRestBreak) {
-          setShowRestBreak(true);
-        }
-        return next;
-      });
+      sessionSecondsRef.current += 1;
+      if (sessionSecondsRef.current >= settings.sessionMinutes * 60 && !showRestBreak) {
+        setShowRestBreak(true);
+      }
     }, 1000);
-
     return () => clearInterval(timer);
   }, [settings.sessionMinutes, showRestBreak]);
+
+  useEffect(() => {
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        voiceCombatService.releaseSession();
+        audioService.stopSpeaking();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', onVisibilityChange);
+  }, []);
 
   const handleRefreshProfile = () => {
     setProfile(storageService.getProfile());
@@ -92,16 +86,21 @@ export const App: React.FC = () => {
     audioService.setSoundEnabled(nextState);
   };
 
+  const handleAddStars = (amount: number) => {
+    storageService.addStars(amount);
+    handleRefreshProfile();
+  };
+
   const handleSelectPhoneme = (phInfo: PhonemeInfo) => {
     setActivePhoneme(phInfo);
     setCurrentView('lesson');
   };
 
-  const handleFinishLesson = (phonemeId: string) => {
+  const handleFinishPhonemeLesson = (phonemeId: string) => {
     storageService.recordPhonemeMastery(phonemeId);
     storageService.addStars(3);
     handleRefreshProfile();
-    setCurrentView('island_map');
+    setCurrentView('dojo');
   };
 
   const handleNextPhoneme = (nextPhInfo: PhonemeInfo) => {
@@ -111,29 +110,6 @@ export const App: React.FC = () => {
       handleRefreshProfile();
     }
     setActivePhoneme(nextPhInfo);
-  };
-
-  const handleSelectKana = (kanaItem: KanaItem) => {
-    setActiveKana(kanaItem);
-    setCurrentView('lesson');
-  };
-
-  const handleFinishKanaLesson = (kanaId: string) => {
-    storageService.recordKanaMastery(kanaId);
-    storageService.addStars(3);
-    setJapaneseMasteredKana(storageService.getJapaneseMasteredKana());
-    handleRefreshProfile();
-    setCurrentView('island_map');
-  };
-
-  const handleNextKana = (nextKanaItem: KanaItem) => {
-    if (activeKana) {
-      storageService.recordKanaMastery(activeKana.id);
-      storageService.addStars(3);
-      setJapaneseMasteredKana(storageService.getJapaneseMasteredKana());
-      handleRefreshProfile();
-    }
-    setActiveKana(nextKanaItem);
   };
 
   const handleSelectStory = (story: DecodableStory) => {
@@ -150,183 +126,246 @@ export const App: React.FC = () => {
     setCurrentView('stories');
   };
 
-  const handleAddStars = (amount: number) => {
-    storageService.addStars(amount);
-    handleRefreshProfile();
-  };
+  const activeUnitRef = useRef(activeUnit);
+  activeUnitRef.current = activeUnit;
 
-  const handleToggleLanguage = () => {
-    const nextLang = currentLanguage === 'en' ? 'ja' : 'en';
-    setCurrentLanguage(nextLang);
-    try {
-      localStorage.setItem('phonokids_current_lang', nextLang);
-    } catch {}
-    if (currentView === 'lesson') {
-      setCurrentView('island_map');
-      setActivePhoneme(null);
-      setActiveKana(null);
-    }
-    if (currentView === 'story_reader') {
-      setCurrentView('stories');
-      setActiveStory(null);
-    }
-  };
+  const handleNextUnit = useCallback(() => {
+    const curUnit = activeUnitRef.current;
+    const idx = ALL_CURRICULUM_UNITS.findIndex((u) => u.id === curUnit.id);
+    const nextUnit =
+      idx !== -1 && idx + 1 < ALL_CURRICULUM_UNITS.length
+        ? ALL_CURRICULUM_UNITS[idx + 1]
+        : ALL_CURRICULUM_UNITS[0];
+    setActiveUnit(nextUnit);
+    setCurrentView('hero_cutscene');
+  }, []);
 
-  const isViewportLockedView = 
-    currentView === 'story_reader' || 
-    currentView === 'lesson' || 
-    currentView === 'ai_chat' ||
-    currentView === 'blending' ||
-    currentView === 'minimal_pairs' ||
-    currentView === 'arcade';
+  const handleCutsceneStartBattle = useCallback(() => {
+    voiceCombatService.warmUpSession();
+    setCurrentView('hero_battle');
+  }, []);
+
+  const handleHeroBackToHub = useCallback(() => {
+    voiceCombatService.releaseSession();
+    setCurrentView('hero_hub');
+  }, []);
+
+  const handleToggleToddlerMode = useCallback(() => {
+    setHeroSave(
+      heroStorage.updateSaveState({
+        toddlerForgivingMode: !heroSave.toddlerForgivingMode,
+      })
+    );
+  }, [heroSave.toddlerForgivingMode]);
+
+  const handleOpenRoster = useCallback(() => {
+    setIsRosterOpen(true);
+  }, []);
+
+  const handleUnitVictory = useCallback((starsEarned: number) => {
+    const curUnit = activeUnitRef.current;
+    const updated = heroStorage.recordUnitVictory(
+      curUnit.id,
+      starsEarned,
+      curUnit.rewardPhonemeIds
+    );
+    setHeroSave(updated);
+    setProfile(storageService.getProfile());
+    setSettings(storageService.getSettings());
+  }, []);
+
+  const isImmersiveFullscreen =
+    currentView === 'hero_cutscene' ||
+    currentView === 'hero_battle' ||
+    currentView === 'lesson' ||
+    currentView === 'story_reader';
+
+  const isViewportLockedView =
+    isImmersiveFullscreen || currentView === 'dojo' || currentView === 'ai_chat';
+
+  const isOverlayPaused =
+    isRosterOpen || showRestBreak || isParentGateOpen || isStickerAlbumOpen;
 
   return (
-    <div className={`h-screen w-screen overflow-hidden bg-gradient-to-b from-amber-50 via-yellow-50 to-orange-50 text-amber-950 flex flex-col font-child select-none ${settings.reducedMotion ? 'motion-reduce' : ''}`}>
-      {/* Sticky Top Navigation */}
-      <div className="shrink-0 z-40">
-        <Navbar
-          currentView={currentView as any}
-          onNavigate={(view) => {
-            audioService.playPopSound(500);
-            setCurrentView(view);
-          }}
-          stars={profile.stars}
-          soundEnabled={soundEnabled}
-          onToggleSound={handleToggleSound}
-          onOpenParentGate={() => setIsParentGateOpen(true)}
-          onOpenStickerAlbum={() => setIsStickerAlbumOpen(true)}
-          currentLanguage={currentLanguage}
-          onToggleLanguage={handleToggleLanguage}
-        />
-      </div>
+    <div
+      className={`h-[100dvh] w-screen overflow-hidden bg-gradient-to-b from-amber-50 via-yellow-50 to-orange-50 text-slate-950 flex flex-col font-sans select-none ${
+        settings.reducedMotion ? 'motion-reduce' : ''
+      }`}
+    >
+      {!isImmersiveFullscreen && (
+        <div className="shrink-0 z-40">
+          <Navbar
+            currentView={currentView}
+            activeHeroName={activeHero.nameEn}
+            onNavigate={(view) => {
+              audioService.playPopSound(500);
+              voiceCombatService.releaseSession();
+              setCurrentView(view);
+            }}
+            onOpenRoster={() => setIsRosterOpen(true)}
+            stars={profile.stars}
+            soundEnabled={soundEnabled}
+            onToggleSound={handleToggleSound}
+            onOpenParentGate={() => setIsParentGateOpen(true)}
+            onOpenStickerAlbum={() => setIsStickerAlbumOpen(true)}
+          />
+        </div>
+      )}
 
-      {/* Main Content Area: 100% Symmetrical Between English & Japanese */}
-      <main className={`flex-1 min-h-0 ${isViewportLockedView ? 'overflow-hidden flex flex-col' : 'overflow-y-auto pb-16'}`}>
-        {currentView === 'island_map' && (
-          currentLanguage === 'ja' ? (
-            <GojuonIslandMap
-              unlockedGroups={japaneseUnlockedGroups}
-              masteredKana={japaneseMasteredKana}
-              onSelectKana={handleSelectKana}
-              onAddStars={handleAddStars}
-            />
-          ) : (
-            <PhonicsIslandMap
-              unlockedGroups={profile.unlockedGroups}
-              masteredPhonemes={profile.masteredPhonemes}
-              profile={profile}
-              onSelectPhoneme={handleSelectPhoneme}
-            />
-          )
+      <main
+        className={`flex-1 min-h-0 ${
+          isViewportLockedView ? 'overflow-hidden flex flex-col' : 'overflow-y-auto pb-6 lg:pb-12'
+        }`}
+      >
+        {currentView === 'hero_hub' && (
+          <HeroAdventureHub
+            saveState={heroSave}
+            hero={activeHero}
+            rival={activeRival}
+            onAgeFilterChange={(ageGroupFilter) =>
+              setHeroSave(heroStorage.updateSaveState({ ageGroupFilter }))
+            }
+            onOpenRoster={() => setIsRosterOpen(true)}
+            onStartUnitCutscene={(unit) => {
+              voiceCombatService.warmUpSession();
+              setActiveUnit(unit);
+              setCurrentView('hero_cutscene');
+            }}
+            onStartUnitBattle={(unit) => {
+              voiceCombatService.warmUpSession();
+              setActiveUnit(unit);
+              setCurrentView('hero_battle');
+            }}
+          />
         )}
 
-        {currentView === 'lesson' && (
-          currentLanguage === 'ja' ? (
-            activeKana ? (
-              <KanaLessonPlayer
-                kana={activeKana}
-                onFinishLesson={handleFinishKanaLesson}
-                onNextKana={handleNextKana}
-                onBack={() => setCurrentView('island_map')}
-              />
-            ) : null
-          ) : (
-            activePhoneme ? (
-              <LessonPlayer
-                phoneme={activePhoneme}
-                onFinishLesson={handleFinishLesson}
-                onNextPhoneme={handleNextPhoneme}
-                onBack={() => setCurrentView('island_map')}
-              />
-            ) : null
-          )
+        {currentView === 'hero_cutscene' && (
+          <VideoLessonCutscene
+            unit={activeUnit}
+            hero={activeHero}
+            toddlerForgivingMode={heroSave.toddlerForgivingMode}
+            isOverlayPaused={isOverlayPaused}
+            onStartBattle={handleCutsceneStartBattle}
+            onBackToHub={handleHeroBackToHub}
+          />
+        )}
+
+        {currentView === 'hero_battle' && (
+          <BattleStageArena
+            unit={activeUnit}
+            hero={activeHero}
+            rival={activeRival}
+            toddlerMode={heroSave.toddlerForgivingMode}
+            isOverlayPaused={isOverlayPaused}
+            onToggleToddlerMode={handleToggleToddlerMode}
+            onOpenRoster={handleOpenRoster}
+            onUnitVictory={handleUnitVictory}
+            onNextUnit={handleNextUnit}
+            onBackToHub={handleHeroBackToHub}
+          />
+        )}
+
+        {currentView === 'dojo' && (
+          <TrainingDojoHub
+            profile={profile}
+            onSelectPhoneme={handleSelectPhoneme}
+            onAddStars={handleAddStars}
+          />
+        )}
+
+        {currentView === 'lesson' && activePhoneme && (
+          <LessonPlayer
+            phoneme={activePhoneme}
+            onFinishLesson={handleFinishPhonemeLesson}
+            onNextPhoneme={handleNextPhoneme}
+            onBack={() => setCurrentView('dojo')}
+          />
         )}
 
         {currentView === 'stories' && (
           <StoryLibrary
             completedStories={profile.completedStories}
             onSelectStory={handleSelectStory}
-            stories={currentLanguage === 'ja' ? JAPANESE_STORIES : DECODABLE_STORIES}
-            language={currentLanguage}
+            stories={DECODABLE_STORIES}
+            language="en"
           />
         )}
 
-        {currentView === 'story_reader' && activeStory && (() => {
-          const activeStories = currentLanguage === 'ja' ? JAPANESE_STORIES : DECODABLE_STORIES;
-          const sIdx = activeStories.findIndex((s) => s.id === activeStory.id);
-          const nextStory = sIdx !== -1 && sIdx + 1 < activeStories.length
-            ? activeStories[sIdx + 1]
-            : activeStories[0];
-          return (
-            <StoryReader
-              story={activeStory}
-              onBackToHome={() => setCurrentView('stories')}
-              onStoryFinished={handleFinishStory}
-              onNextStory={() => {
-                storageService.markStoryCompleted(activeStory.id);
-                storageService.addStars(5);
-                handleRefreshProfile();
-                setActiveStory(nextStory);
-              }}
-              nextStoryTitle={nextStory.title}
-              language={currentLanguage}
-            />
-          );
-        })()}
-
-        {currentView === 'minimal_pairs' && (
-          <MinimalPairsView
-            onAddStars={handleAddStars}
-            drills={currentLanguage === 'ja' ? JAPANESE_MINIMAL_PAIRS : undefined}
-            language={currentLanguage}
-          />
-        )}
-
-        {currentView === 'blending' && (
-          <BlendingPlayground
-            onAddStars={handleAddStars}
-            blends={currentLanguage === 'ja' ? JAPANESE_BLENDING_WORDS : undefined}
-            language={currentLanguage}
-          />
-        )}
-
-        {currentView === 'arcade' && (
-          <ArcadePlayground
-            onAddStars={handleAddStars}
-            onBackToHome={() => setCurrentView('island_map')}
-            language={currentLanguage}
-          />
-        )}
+        {currentView === 'story_reader' &&
+          activeStory &&
+          (() => {
+            const sIdx = DECODABLE_STORIES.findIndex((s) => s.id === activeStory.id);
+            const nextStory =
+              sIdx !== -1 && sIdx + 1 < DECODABLE_STORIES.length
+                ? DECODABLE_STORIES[sIdx + 1]
+                : DECODABLE_STORIES[0];
+            return (
+              <StoryReader
+                story={activeStory}
+                onBackToHome={() => setCurrentView('stories')}
+                onStoryFinished={handleFinishStory}
+                onNextStory={() => {
+                  storageService.markStoryCompleted(activeStory.id);
+                  storageService.addStars(5);
+                  handleRefreshProfile();
+                  setActiveStory(nextStory);
+                }}
+                nextStoryTitle={nextStory.title}
+                language="en"
+              />
+            );
+          })()}
 
         {currentView === 'ai_chat' && (
           <AiBuddyChat
             onAddStars={handleAddStars}
             onOpenParentSettings={() => setIsParentGateOpen(true)}
-            language={currentLanguage}
+            language="en"
           />
         )}
       </main>
 
-      {/* Interactive Mascot Companion - Shown on exploration map and story bookshelf in both languages */}
-      {(currentView === 'island_map' || currentView === 'stories') && (
-        <CharacterCompanion />
+      {!isImmersiveFullscreen && (
+        <MobileBottomNav
+          currentView={currentView}
+          onNavigate={(view) => {
+            audioService.playPopSound(500);
+            voiceCombatService.releaseSession();
+            setCurrentView(view);
+          }}
+          onOpenRoster={() => setIsRosterOpen(true)}
+        />
       )}
 
-      {/* Eye Strain & Screen Time Rest Break Modal */}
+      {isRosterOpen && (
+        <HeroRosterDrawer
+          saveState={heroSave}
+          onUpdateSave={(next) => setHeroSave(heroStorage.saveState(next))}
+          onSelectHero={(heroId) => setHeroSave(heroStorage.selectHero(heroId))}
+          onSelectRivalMode={(mode, rivalId) =>
+            setHeroSave(heroStorage.selectRival(mode, rivalId))
+          }
+          onAddCustomHero={(hero) => setHeroSave(heroStorage.addCustomHero(hero))}
+          onAddCustomRival={(rival) => setHeroSave(heroStorage.addCustomRival(rival))}
+          onRemoveCustom={(kind, id) => setHeroSave(heroStorage.removeCustomCharacter(kind, id))}
+          onClose={() => setIsRosterOpen(false)}
+        />
+      )}
+
       {showRestBreak && (
         <RestBreakModal
           onContinue={() => {
             setShowRestBreak(false);
-            setSessionSecondsElapsed(0); // Reset timer for next cycle
+            sessionSecondsRef.current = 0;
           }}
           onFinishSession={() => {
             setShowRestBreak(false);
-            setCurrentView('island_map');
+            voiceCombatService.releaseSession();
+            setCurrentView('hero_hub');
           }}
         />
       )}
 
-      {/* Parent Dashboard Modal */}
       {isParentGateOpen && (
         <ParentDashboard
           onClose={() => setIsParentGateOpen(false)}
@@ -334,7 +373,6 @@ export const App: React.FC = () => {
         />
       )}
 
-      {/* Child Sticker Reward Album Modal */}
       {isStickerAlbumOpen && (
         <StickerAlbumModal
           onClose={() => setIsStickerAlbumOpen(false)}

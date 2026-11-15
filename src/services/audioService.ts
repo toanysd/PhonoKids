@@ -4,6 +4,10 @@ class AudioService {
   private voiceSpeed: number = 0.85; // Slightly slower for 3-5yo toddlers
   private accent: 'US' | 'UK' = 'US';
   private soundEnabled: boolean = true;
+  private activeUtterance: SpeechSynthesisUtterance | null = null;
+  private activeSpeechResolve: (() => void) | null = null;
+  private speakTimerId: ReturnType<typeof setTimeout> | null = null;
+  private lastCancelAt: number = 0;
 
   constructor() {
     // AudioContext will be initialized on first user gesture
@@ -182,45 +186,98 @@ class AudioService {
     }
   }
 
+  private cancelSpeechInternal() {
+    if (this.speakTimerId !== null) {
+      clearTimeout(this.speakTimerId);
+      this.speakTimerId = null;
+    }
+    const prevResolve = this.activeSpeechResolve;
+    this.activeSpeechResolve = null;
+    this.activeUtterance = null;
+    if (prevResolve) prevResolve();
+
+    if (
+      typeof window !== 'undefined' &&
+      'speechSynthesis' in window &&
+      (window.speechSynthesis.speaking || window.speechSynthesis.pending)
+    ) {
+      window.speechSynthesis.cancel();
+      this.lastCancelAt = performance.now();
+    }
+  }
+
+  private dispatchUtterance(utterance: SpeechSynthesisUtterance): Promise<void> {
+    this.cancelSpeechInternal();
+    return new Promise((resolve) => {
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        if (this.activeUtterance === utterance) {
+          this.activeUtterance = null;
+        }
+        if (this.activeSpeechResolve === finish) {
+          this.activeSpeechResolve = null;
+        }
+        resolve();
+      };
+
+      // Hold strong reference on instance so Chromium V8 does not GC mid-sentence
+      this.activeUtterance = utterance;
+      this.activeSpeechResolve = finish;
+      utterance.onend = finish;
+      utterance.onerror = finish;
+
+      const startSpeaking = () => {
+        if (this.activeUtterance !== utterance || settled) return;
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+        window.speechSynthesis.speak(utterance);
+      };
+
+      const elapsedSinceCancel = performance.now() - this.lastCancelAt;
+      if (this.lastCancelAt > 0 && elapsedSinceCancel < 45) {
+        this.speakTimerId = setTimeout(() => {
+          this.speakTimerId = null;
+          startSpeaking();
+        }, Math.max(10, Math.ceil(45 - elapsedSinceCancel)));
+      } else {
+        startSpeaking();
+      }
+    });
+  }
+
   // High-fidelity speech synthesis for children
   public speakEnglish(text: string, rateMultiplier: number = 1.0): Promise<void> {
-    return new Promise((resolve) => {
-      if (!('speechSynthesis' in window) || !this.soundEnabled) {
-        resolve();
-        return;
-      }
+    if (!('speechSynthesis' in window) || !this.soundEnabled) {
+      return Promise.resolve();
+    }
 
-      // Strict Architecture Guard: Never pass Vietnamese text into English TTS engine
-      // This prevents the engine from pronouncing letters like 'p' as Vietnamese letter name 'pê'!
-      if (/[à-ỹ]/i.test(text)) {
-        console.warn("[audioService] Vietnamese text rejected by speakEnglish to protect pronunciation:", text);
-        resolve();
-        return;
-      }
+    // Strict Architecture Guard: Never pass Vietnamese text into English TTS engine
+    // This prevents the engine from pronouncing letters like 'p' as Vietnamese letter name 'pê'!
+    if (/[à-ỹ]/i.test(text)) {
+      console.warn("[audioService] Vietnamese text rejected by speakEnglish to protect pronunciation:", text);
+      return Promise.resolve();
+    }
 
-      window.speechSynthesis.cancel(); // Stop previous utterance
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = this.voiceSpeed * rateMultiplier;
+    utterance.pitch = 1.25; // Friendly, slightly higher child-friendly pitch
+    utterance.lang = this.accent === 'US' ? 'en-US' : 'en-GB';
 
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = this.voiceSpeed * rateMultiplier;
-      utterance.pitch = 1.25; // Friendly, slightly higher child-friendly pitch
-      utterance.lang = this.accent === 'US' ? 'en-US' : 'en-GB';
+    // Pick the best natural English voice if available
+    const voices = window.speechSynthesis.getVoices();
+    const preferredVoice = voices.find(v =>
+      (this.accent === 'US' ? (v.lang.includes('en-US') || v.lang.includes('en_US')) : (v.lang.includes('en-GB') || v.lang.includes('en_GB'))) &&
+      (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Daniel') || v.name.includes('Karen'))
+    );
 
-      // Pick the best natural English voice if available
-      const voices = window.speechSynthesis.getVoices();
-      const preferredVoice = voices.find(v => 
-        (this.accent === 'US' ? (v.lang.includes('en-US') || v.lang.includes('en_US')) : (v.lang.includes('en-GB') || v.lang.includes('en_GB'))) &&
-        (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Daniel') || v.name.includes('Karen'))
-      );
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
+    }
 
-      if (preferredVoice) {
-        utterance.voice = preferredVoice;
-      }
-
-      utterance.onend = () => resolve();
-      utterance.onerror = () => resolve();
-
-      window.speechSynthesis.speak(utterance);
-    });
+    return this.dispatchUtterance(utterance);
   }
 
   /**
@@ -228,34 +285,26 @@ class AudioService {
    * Automatically picks native Japanese voices (Google 日本語, Kyoko, Nanami, Ayumi, Haruka).
    */
   public speakJapanese(text: string, rateMultiplier: number = 0.85): Promise<void> {
-    return new Promise((resolve) => {
-      if (!('speechSynthesis' in window) || !this.soundEnabled) {
-        resolve();
-        return;
-      }
+    if (!('speechSynthesis' in window) || !this.soundEnabled) {
+      return Promise.resolve();
+    }
 
-      window.speechSynthesis.cancel(); // Stop previous utterance
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = this.voiceSpeed * rateMultiplier;
+    utterance.pitch = 1.15; // Friendly, natural Japanese tone
+    utterance.lang = 'ja-JP';
 
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = this.voiceSpeed * rateMultiplier;
-      utterance.pitch = 1.15; // Friendly, natural Japanese tone
-      utterance.lang = 'ja-JP';
+    const voices = window.speechSynthesis.getVoices();
+    const preferredVoice = voices.find(v =>
+      (v.lang.includes('ja-JP') || v.lang.includes('ja_JP') || v.lang.startsWith('ja')) &&
+      (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Kyoko') || v.name.includes('Nanami') || v.name.includes('Ayumi') || v.name.includes('Haruka'))
+    ) || voices.find(v => v.lang.includes('ja'));
 
-      const voices = window.speechSynthesis.getVoices();
-      const preferredVoice = voices.find(v =>
-        (v.lang.includes('ja-JP') || v.lang.includes('ja_JP') || v.lang.startsWith('ja')) &&
-        (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Kyoko') || v.name.includes('Nanami') || v.name.includes('Ayumi') || v.name.includes('Haruka'))
-      ) || voices.find(v => v.lang.includes('ja'));
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
+    }
 
-      if (preferredVoice) {
-        utterance.voice = preferredVoice;
-      }
-
-      utterance.onend = () => resolve();
-      utterance.onerror = () => resolve();
-
-      window.speechSynthesis.speak(utterance);
-    });
+    return this.dispatchUtterance(utterance);
   }
 
   /**
@@ -381,10 +430,7 @@ class AudioService {
   }
 
   public stopSpeaking() {
-    // Stop speech synthesis if speaking
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
+    this.cancelSpeechInternal();
     // Stop any active phoneme audio
     Object.values(this.phonemeAudioCache).forEach((audio) => {
       try {

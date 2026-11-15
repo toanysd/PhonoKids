@@ -1,0 +1,15 @@
+# MemPalace Configuration — englishStudy
+wing: englishstudy
+rooms:
+  - name: handoff
+    description: Session handoff state snapshots (.agents/context/HANDOFF.md)
+  - name: specs
+    description: Technical specifications, architecture & AGENTS.md (docs/*.md)
+  - name: lessons
+    description: Mistake ledger & prevention rules (docs/SO_BAI_HOC.md)
+  - name: ideas
+    description: Pending feature ideas (.agents/context/IDEA_INBOX.md)
+  - name: pe_directives
+    description: Work orders and verification reports (.agents/pe/)
+  - name: decisions
+    description: Verbatim architectural decisions and chat exchanges

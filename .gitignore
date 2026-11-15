@@ -29,3 +29,6 @@ dist-ssr
 # Portable Windows Package
 PhonoKids_Portable_Windows/
 *.zip
+
+# Local Session Evidence Logs
+.agents/evidence/

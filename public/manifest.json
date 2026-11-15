@@ -1,7 +1,7 @@
 {
-  "name": "PhonoKids — Ehon Phonics Playground",
-  "short_name": "PhonoKids",
-  "description": "Ứng dụng học ngữ âm Phonics tương tác đa giác quan chuẩn quốc tế với nghệ thuật tranh Ehon cho trẻ 3–8 tuổi.",
+  "name": "HeroSpeak Kids — Anh Hùng Tiếng Anh (3–8 Tuổi)",
+  "short_name": "HeroSpeak Kids",
+  "description": "Game hoạt cảnh nhập vai điều khiển và chiến đấu bằng giọng nói tiếng Anh cho trẻ từ 3 tuổi theo lộ trình Wow English & Oxford Phonics World.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "landscape-primary",

@@ -2,11 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --stage-sky: #e0f2fe;
+  --surface-card: #fffdf7;
+  --surface-muted: #fef3c7;
+  --accent-gold: #f59e0b;
+  --accent-energy: #2563eb;
+  --ink-primary: #1e1b4b;
+}
+
 @layer base {
   * {
     -webkit-tap-highlight-color: transparent;
   }
-  
+
   html, body {
     overflow: hidden;
     height: 100vh;
@@ -18,30 +27,85 @@
     -webkit-user-select: none;
     touch-action: manipulation;
     overscroll-behavior: none;
+    font-variant-numeric: tabular-nums;
   }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
 /* Custom Child-friendly interactive styles */
 .kid-shadow {
-  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 0 rgba(15, 23, 42, 0.16);
 }
 
 .kid-shadow:active {
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-  transform: translateY(6px);
+  box-shadow: 0 2px 0 rgba(15, 23, 42, 0.16);
+  transform: translateY(4px);
 }
 
 .bubble-glow {
   filter: drop-shadow(0 0 12px rgba(255, 214, 112, 0.7));
 }
 
+/* Media Privacy & Default Blur Shield (Rule #3) */
+.privacy-blur-shield {
+  filter: blur(12px);
+  transition: filter 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.privacy-blur-shield:hover,
+.privacy-blur-shield.is-unblurred {
+  filter: blur(0px);
+}
+
 @keyframes floatAnim {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-8px) rotate(2deg); }
+  50% { transform: translateY(-7px) rotate(1.5deg); }
 }
 
 .animate-float {
-  animation: floatAnim 3s ease-in-out infinite;
+  animation: floatAnim 2.8s ease-in-out infinite;
+}
+
+@keyframes heroIdle {
+  0%, 100% { transform: translateY(0px) scaleY(1); }
+  50% { transform: translateY(-5px) scaleY(1.02); }
+}
+
+.animate-hero-idle {
+  animation: heroIdle 1.6s ease-in-out infinite;
+}
+
+@keyframes beamSlash {
+  0% { opacity: 0; transform: scaleX(0.2) scaleY(0.7); }
+  35% { opacity: 1; transform: scaleX(1.08) scaleY(1.1); }
+  100% { opacity: 0; transform: scaleX(1.25) scaleY(0.4); }
+}
+
+.animate-beam-slash {
+  animation: beamSlash 520ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes hitShake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  20% { transform: translateX(-10px) rotate(-6deg); }
+  45% { transform: translateX(10px) rotate(6deg); }
+  70% { transform: translateX(-6px) rotate(-3deg); }
+}
+
+.animate-hit-shake {
+  animation: hitShake 420ms ease-out;
+}
+
+@keyframes speechPop {
+  0% { opacity: 0; transform: translateY(8px) scale(0.88); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-speech-pop {
+  animation: speechPop 220ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes mouthBreathe {
@@ -51,4 +115,55 @@
 
 .animate-mouth {
   animation: mouthBreathe 1.5s ease-in-out infinite;
+}
+
+@keyframes spriteIdleBreath {
+  0%, 100% { transform: translateY(0px) scaleY(1) scaleX(1); }
+  50% { transform: translateY(-4px) scaleY(1.022) scaleX(0.99); }
+}
+
+.animate-sprite-idle {
+  animation: spriteIdleBreath 2.3s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+@keyframes spriteSpeakBounce {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-6px) scale(1.045); }
+}
+
+.animate-sprite-speak {
+  animation: spriteSpeakBounce 0.55s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+@keyframes spriteMoveDash {
+  0%, 100% { transform: translateY(0px) rotate(-2deg); }
+  50% { transform: translateY(-7px) rotate(2deg); }
+}
+
+.animate-sprite-move {
+  animation: spriteMoveDash 0.36s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+@keyframes spriteAttackLunge {
+  0% { transform: translateX(0px) scale(1); }
+  45% { transform: translateX(12px) scale(1.1); }
+  100% { transform: translateX(0px) scale(1.04); }
+}
+
+.animate-sprite-attack {
+  animation: spriteAttackLunge 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: bottom center;
+}
+
+@keyframes spriteVictoryHop {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  45% { transform: translateY(-12px) scale(1.06); }
+}
+
+.animate-sprite-victory {
+  animation: spriteVictoryHop 0.9s ease-in-out infinite;
+  transform-origin: bottom center;
 }

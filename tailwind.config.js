@@ -14,10 +14,19 @@ export default {
           green: '#E9FF70',
           teal: '#70D6FF',
           purple: '#B794F4',
+        },
+        stage: {
+          ink: '#1E1B4B',
+          cream: '#FFFDF7',
+          sky: '#E0F2FE',
+          gold: '#F59E0B',
         }
       },
       fontFamily: {
-        child: ['"Nunito"', 'Comic Sans MS', 'sans-serif'],
+        display: ['"Baloo 2"', '"Plus Jakarta Sans"', '"Nunito"', 'sans-serif'],
+        sans: ['"Plus Jakarta Sans"', '"Nunito"', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'monospace'],
+        child: ['"Plus Jakarta Sans"', '"Nunito"', 'sans-serif'],
       },
       animation: {
         'bounce-gentle': 'bounce 2s infinite',

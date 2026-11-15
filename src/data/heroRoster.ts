@@ -1,0 +1,215 @@
+import { HeroCharacter, RivalCharacter, HeroSaveState } from '../types/heroGame';
+
+export const DEFAULT_HEROES: HeroCharacter[] = [
+  {
+    id: 'hesman',
+    nameVi: 'Dũng Sĩ Hesman (Golion)',
+    nameEn: 'Golion Hesman',
+    japaneseTitle: 'ゴライオン',
+    universe: 'hesman',
+    template: 'mecha_lion',
+    primaryColor: '#111827',
+    secondaryColor: '#DC2626',
+    accentColor: '#FACC15',
+    weaponName: 'Gươm Ánh Sáng',
+    attackEffect: 'blazing_sword',
+    attackCalloutEn: 'Blazing Sword!',
+    greetingEn: 'I am Hesman! Let us speak English!',
+    taglineVi: 'Hợp thể 5 sư tử thép (ゴライオン), vung Gươm Ánh Sáng chinh phục từ vựng.',
+    moveStyle: 'fly',
+    defaultRivalId: 'galra_king',
+  },
+  {
+    id: 'anpanman',
+    nameVi: 'Siêu Nhân Anpanman',
+    nameEn: 'Anpanman',
+    japaneseTitle: 'アンパンマン',
+    universe: 'anpanman',
+    template: 'bread_hero',
+    primaryColor: '#DC2626',
+    secondaryColor: '#D97706',
+    accentColor: '#FDE047',
+    weaponName: 'Cú Đấm Bánh Đậu',
+    attackEffect: 'an_punch',
+    attackCalloutEn: 'An Punch!',
+    greetingEn: 'Hello friend! Anpanman is here to help!',
+    taglineVi: 'Siêu nhân thân thiện nhất cho bé 3 tuổi, bay lượn với áo choàng ấm áp.',
+    moveStyle: 'fly',
+    defaultRivalId: 'baikinman',
+  },
+  {
+    id: 'spiderman',
+    nameVi: 'Người Nhện Spider-Man',
+    nameEn: 'Spider-Man',
+    japaneseTitle: 'スパイダーマン',
+    universe: 'spiderman',
+    template: 'spider_hero',
+    primaryColor: '#E11D48',
+    secondaryColor: '#1D4ED8',
+    accentColor: '#F8FAFC',
+    weaponName: 'Bắn Tơ Nhện',
+    attackEffect: 'web_burst',
+    attackCalloutEn: 'Web Blast!',
+    greetingEn: 'Hey buddy! Ready to swing and speak?',
+    taglineVi: 'Bắn tơ nhanh nhẹn bắt gọn mục tiêu và đánh bại kẻ quấy rối.',
+    moveStyle: 'swing',
+    defaultRivalId: 'green_goblin',
+  },
+  {
+    id: 'ultraman',
+    nameVi: 'Siêu Nhân Ultraman Zero',
+    nameEn: 'Ultraman Zero',
+    japaneseTitle: 'ウルトラマン',
+    universe: 'ultraman',
+    template: 'cosmic_ultra',
+    primaryColor: '#0284C7',
+    secondaryColor: '#E2E8F0',
+    accentColor: '#EF4444',
+    weaponName: 'Tia Sáng Specium',
+    attackEffect: 'specium_ray',
+    attackCalloutEn: 'Specium Ray!',
+    greetingEn: 'Cosmic power ready! Speak loud with me!',
+    taglineVi: 'Chiến binh ánh sáng ngân hà bắn tia năng lượng theo giọng nói của bé.',
+    moveStyle: 'fly',
+    defaultRivalId: 'baltan',
+  },
+  {
+    id: 'pikachu',
+    nameVi: 'Pikachu Tia Chớp',
+    nameEn: 'Pikachu',
+    japaneseTitle: 'ピカチュウ',
+    universe: 'pikachu',
+    template: 'thunder_pet',
+    primaryColor: '#FACC15',
+    secondaryColor: '#F59E0B',
+    accentColor: '#EF4444',
+    weaponName: 'Sấm Sét Vàng',
+    attackEffect: 'thunder_bolt',
+    attackCalloutEn: 'Thunder Bolt!',
+    greetingEn: 'Pika happy! Let us play together!',
+    taglineVi: 'Linh thú điện đáng yêu tung tia chớp vàng rực mỗi khi bé đọc đúng.',
+    moveStyle: 'run',
+    defaultRivalId: 'meowth_rival',
+  },
+];
+
+export const DEFAULT_RIVALS: RivalCharacter[] = [
+  {
+    id: 'galra_king',
+    nameVi: 'Chúa Tể Galra (Zarkon)',
+    nameEn: 'Emperor Galra',
+    universe: 'hesman',
+    template: 'galra_boss',
+    primaryColor: '#581C87',
+    secondaryColor: '#F43F5E',
+    accentColor: '#C084FC',
+    tauntEn: 'Repeat my words if you can, Hesman!',
+    taglineVi: 'Đối thủ truyền kiếp của Golion / Hesman.',
+  },
+  {
+    id: 'mecha_beast',
+    nameVi: 'Quái Thú Robot Ngân Hà',
+    nameEn: 'Robeast Titan',
+    universe: 'hesman',
+    template: 'robeast_mech',
+    primaryColor: '#334155',
+    secondaryColor: '#EF4444',
+    accentColor: '#38BDF8',
+    tauntEn: 'Beep boop! Say the secret sound!',
+    taglineVi: 'Robot khổng lồ thử thách phát âm của Hesman.',
+  },
+  {
+    id: 'baikinman',
+    nameVi: 'Baikinman (Khuẩn Đen UFO)',
+    nameEn: 'Baikinman',
+    universe: 'anpanman',
+    template: 'germ_ufo',
+    primaryColor: '#4C1D95',
+    secondaryColor: '#7C3AED',
+    accentColor: '#A3E635',
+    tauntEn: 'Hahiha! Tell me the magic word!',
+    taglineVi: 'Nhân vật tinh nghịch lái UFO tím trong bộ Anpanman.',
+  },
+  {
+    id: 'dokinchan',
+    nameVi: 'Dokin-chan Tinh Nghịch',
+    nameEn: 'Dokin-chan',
+    universe: 'anpanman',
+    template: 'dokin_ufo',
+    primaryColor: '#EA580C',
+    secondaryColor: '#FB7185',
+    accentColor: '#FDE047',
+    tauntEn: 'Can you speak clearly for me?',
+    taglineVi: 'Cô bạn đỏng đảnh trong thế giới Anpanman.',
+  },
+  {
+    id: 'green_goblin',
+    nameVi: 'Yêu Tinh Xanh Green Goblin',
+    nameEn: 'Green Goblin',
+    universe: 'spiderman',
+    template: 'goblin_glider',
+    primaryColor: '#16A34A',
+    secondaryColor: '#7E22CE',
+    accentColor: '#F97316',
+    tauntEn: 'Catch my glider and repeat this!',
+    taglineVi: 'Đối thủ bay trên ván lượn trong bộ Spider-Man.',
+  },
+  {
+    id: 'doc_ock',
+    nameVi: 'Tiến Sĩ Bạch Tuộc Doc Ock',
+    nameEn: 'Doctor Octopus',
+    universe: 'spiderman',
+    template: 'octo_mech',
+    primaryColor: '#15803D',
+    secondaryColor: '#475569',
+    accentColor: '#FBBF24',
+    tauntEn: 'Four metal arms challenge your voice!',
+    taglineVi: 'Nhà khoa học với 4 cánh tay cơ khí.',
+  },
+  {
+    id: 'baltan',
+    nameVi: 'Chiến Binh Vũ Trụ Baltan',
+    nameEn: 'Alien Baltan',
+    universe: 'ultraman',
+    template: 'alien_baltan',
+    primaryColor: '#0F766E',
+    secondaryColor: '#F59E0B',
+    accentColor: '#22D3EE',
+    tauntEn: 'Ho ho ho! Answer my space quiz!',
+    taglineVi: 'Đối thủ quen thuộc của Ultraman.',
+  },
+  {
+    id: 'meowth_rival',
+    nameVi: 'Meowth Đĩa Bay',
+    nameEn: 'Meowth Flyer',
+    universe: 'pikachu',
+    template: 'meowth_balloon',
+    primaryColor: '#B45309',
+    secondaryColor: '#FDE68A',
+    accentColor: '#EC4899',
+    tauntEn: 'Meow! Say the English word right now!',
+    taglineVi: 'Kẻ thách thức tinh quái từ biệt đội đĩa bay.',
+  },
+];
+
+export function getAllHeroes(save: HeroSaveState): HeroCharacter[] {
+  return [...DEFAULT_HEROES, ...(save.customHeroes || [])];
+}
+
+export function getAllRivals(save: HeroSaveState): RivalCharacter[] {
+  return [...DEFAULT_RIVALS, ...(save.customRivals || [])];
+}
+
+export function resolveActiveHero(save: HeroSaveState): HeroCharacter {
+  const all = getAllHeroes(save);
+  return all.find((h) => h.id === save.selectedHeroId) || DEFAULT_HEROES[0];
+}
+
+export function resolveActiveRival(save: HeroSaveState, hero: HeroCharacter): RivalCharacter {
+  const all = getAllRivals(save);
+  if (save.rivalSelectionMode === 'manual') {
+    const picked = all.find((r) => r.id === save.selectedRivalId);
+    if (picked) return picked;
+  }
+  return all.find((r) => r.id === hero.defaultRivalId) || DEFAULT_RIVALS[0];
+}
