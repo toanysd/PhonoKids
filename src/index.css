@@ -4,11 +4,11 @@
 
 :root {
   --stage-sky: #e0f2fe;
-  --surface-card: #fffdf7;
-  --surface-muted: #fef3c7;
-  --accent-gold: #f59e0b;
-  --accent-energy: #2563eb;
-  --ink-primary: #1e1b4b;
+  --surface-card: #fffdf5;
+  --surface-muted: #fef08a;
+  --accent-gold: #facc15;
+  --accent-energy: #22d3ee;
+  --ink-primary: #0f172a;
 }
 
 @layer base {
@@ -35,18 +35,36 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Custom Child-friendly interactive styles */
+/* Comic halftone dots & radial speed-line utilities */
+.comic-halftone {
+  background-image: radial-gradient(rgba(15, 23, 42, 0.09) 1.5px, transparent 1.5px);
+  background-size: 10px 10px;
+}
+
+.comic-halftone-light {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.14) 1.5px, transparent 1.5px);
+  background-size: 10px 10px;
+}
+
+.comic-speedlines {
+  background-image: repeating-conic-gradient(
+    from -6deg at 50% 50%,
+    rgba(250, 204, 21, 0.16) 0deg 4deg,
+    transparent 4deg 14deg
+  );
+}
+
 .kid-shadow {
-  box-shadow: 0 6px 0 rgba(15, 23, 42, 0.16);
+  box-shadow: 4px 5px 0 #0f172a;
 }
 
 .kid-shadow:active {
-  box-shadow: 0 2px 0 rgba(15, 23, 42, 0.16);
-  transform: translateY(4px);
+  box-shadow: 1px 2px 0 #0f172a;
+  transform: translate(2px, 3px);
 }
 
 .bubble-glow {
-  filter: drop-shadow(0 0 12px rgba(255, 214, 112, 0.7));
+  filter: drop-shadow(0 0 12px rgba(250, 204, 21, 0.75));
 }
 
 /* Media Privacy & Default Blur Shield (Rule #3) */
@@ -76,6 +94,25 @@
 
 .animate-hero-idle {
   animation: heroIdle 1.6s ease-in-out infinite;
+}
+
+@keyframes comicStarburst {
+  0% { transform: scale(0.72) rotate(-6deg); opacity: 0; }
+  45% { transform: scale(1.08) rotate(3deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.animate-starburst {
+  animation: comicStarburst 360ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes starburstPulse {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.06) rotate(4deg); }
+}
+
+.animate-starburst-pulse {
+  animation: starburstPulse 1.8s ease-in-out infinite;
 }
 
 @keyframes beamSlash {
@@ -166,4 +203,14 @@
 .animate-sprite-victory {
   animation: spriteVictoryHop 0.9s ease-in-out infinite;
   transform-origin: bottom center;
+}
+
+@keyframes confettiDrop {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translateY(105dvh) rotate(520deg); opacity: 0; }
+}
+
+.animate-confetti-drop {
+  animation: confettiDrop 2.4s linear infinite;
 }

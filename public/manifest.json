@@ -1,17 +1,17 @@
 {
-  "name": "HeroSpeak Kids — Anh Hùng Tiếng Anh (3–8 Tuổi)",
-  "short_name": "HeroSpeak Kids",
-  "description": "Game hoạt cảnh nhập vai điều khiển và chiến đấu bằng giọng nói tiếng Anh cho trẻ từ 3 tuổi theo lộ trình Wow English & Oxford Phonics World.",
+  "name": "PhonoKids — Comic Hero Phonics & Sound Lab",
+  "short_name": "PhonoKids",
+  "description": "Comic Hero Phonics, Sayshape Sound Lab, Reading Room, Star Zone & Voice Battle for kids.",
   "start_url": "/",
   "display": "standalone",
-  "orientation": "landscape-primary",
-  "background_color": "#fffbeb",
-  "theme_color": "#f59e0b",
+  "orientation": "portrait-primary",
+  "background_color": "#E0F7FF",
+  "theme_color": "#FACC15",
   "icons": [
     {
-      "src": "/assets/ehon/star.jpg",
-      "sizes": "192x192 512x512",
-      "type": "image/jpeg",
+      "src": "/assets/comic/words/star.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
       "purpose": "any maskable"
     }
   ]

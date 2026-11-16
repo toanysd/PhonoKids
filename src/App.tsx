@@ -1,101 +1,69 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { WorldOverworldMap } from './components/game/WorldOverworldMap';
-import { GameHudBar } from './components/game/GameHudBar';
-import { HeroCommunicatorModal } from './components/game/HeroCommunicatorModal';
-import { VideoLessonCutscene } from './components/hero/VideoLessonCutscene';
-import { BattleStageArena } from './components/hero/BattleStageArena';
-import { HeroRosterDrawer } from './components/hero/HeroRosterDrawer';
-import { TrainingDojoHub } from './components/hero/TrainingDojoHub';
-import { LessonPlayer } from './components/LessonPlayer';
-import { StoryLibrary } from './components/StoryLibrary';
-import { StoryReader } from './components/StoryReader';
-import { ParentDashboard } from './components/ParentDashboard';
-import { RestBreakModal } from './components/RestBreakModal';
-import { StickerAlbumModal } from './components/StickerAlbumModal';
-
-type AppViewMode =
-  | 'hero_hub'
-  | 'hero_cutscene'
-  | 'hero_battle'
-  | 'dojo'
-  | 'lesson'
-  | 'stories'
-  | 'story_reader'
-  | 'ai_chat';
-
-import { PhonemeInfo } from './types/phonics';
-import { DecodableStory } from './types/story';
-import { ChildProfile, SessionSettings } from './types/user';
-import { CurriculumUnit, HeroSaveState } from './types/heroGame';
-
-import { DECODABLE_STORIES } from './data/stories';
-import { ALL_CURRICULUM_UNITS } from './data/curriculumWorlds';
-import { resolveActiveHero, resolveActiveRival } from './data/heroRoster';
-import { storageService } from './services/storageService';
-import { heroStorage } from './services/heroStorage';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { DAILY_QUESTS, getHeroById } from './data/comicGameData';
 import { audioService } from './services/audioService';
-import { voiceCombatService } from './services/voiceCombatService';
+import { comicStorage, getQuestProgressCount } from './services/comicStorage';
+import { micEngine } from './services/micEngine';
+import { ComicSaveState, HeroId, PortalId, StoryStage } from './types/comicGame';
+import { ComicTopHud } from './components/comic/ComicUiPrimitives';
+import { ComicCommandHub } from './components/comic/ComicCommandHub';
+import { SoundLabScreen } from './components/comic/SoundLabScreen';
+import { ReadingPlanetScreen } from './components/comic/ReadingPlanetScreen';
+import { ComicBattleScreen } from './components/comic/ComicBattleScreen';
+import { StarZoneScreen } from './components/comic/StarZoneScreen';
+import { FreeStoryMapScreen, MiniGamesScreen } from './components/comic/MiniGamesAndMapScreen';
+import { DailyQuestsModal, HeroSquadModal, VietnameseGuideModal } from './components/comic/HeroSquadAndQuestsModal';
+import { RestBreakModal } from './components/RestBreakModal';
+
+type ActiveView = Exclude<PortalId, 'hero_squad' | 'daily_quest'>;
 
 export const App: React.FC = () => {
-  const [currentView, setCurrentView] = useState<AppViewMode>('hero_hub');
-  const [profile, setProfile] = useState<ChildProfile>(() => storageService.getProfile());
-  const [settings, setSettings] = useState<SessionSettings>(() => storageService.getSettings());
-  const [heroSave, setHeroSave] = useState<HeroSaveState>(() => heroStorage.getSaveState());
-  const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
+  const [save, setSave] = useState<ComicSaveState>(() => comicStorage.load());
+  const [view, setView] = useState<ActiveView>('hub');
+  const [battleStage, setBattleStage] = useState<StoryStage | undefined>(undefined);
+  const [isSquadOpen, setIsSquadOpen] = useState(false);
+  const [isQuestsOpen, setIsQuestsOpen] = useState(false);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [showRestBreak, setShowRestBreak] = useState(false);
+  const [isSessionResting, setIsSessionResting] = useState(false);
 
-  const [activeUnit, setActiveUnit] = useState<CurriculumUnit>(ALL_CURRICULUM_UNITS[0]);
-  const [activePhoneme, setActivePhoneme] = useState<PhonemeInfo | null>(null);
-  const [activeStory, setActiveStory] = useState<DecodableStory | null>(null);
+  const sessionSecondsRef = useRef(0);
+  const breakLimitRef = useRef(save.sessionMinutes * 60);
+  const snoozedRef = useRef(false);
 
-  const [isRosterOpen, setIsRosterOpen] = useState<boolean>(false);
-  const [isParentGateOpen, setIsParentGateOpen] = useState<boolean>(false);
-  const [isStickerAlbumOpen, setIsStickerAlbumOpen] = useState<boolean>(false);
-
-  // Health: Session Rest Break Countdown (useRef avoids 1s state re-renders interrupting active TTS)
-  const sessionSecondsRef = useRef<number>(0);
-  const breakLimitSecondsRef = useRef<number>(settings.sessionMinutes * 60);
-  const isSnoozedRef = useRef<boolean>(false);
-  const [showRestBreak, setShowRestBreak] = useState<boolean>(false);
-  const [isSessionResting, setIsSessionResting] = useState<boolean>(false);
-
-  const activeHero = resolveActiveHero(heroSave);
-  const activeRival = resolveActiveRival(heroSave, activeHero);
+  const hero = useMemo(() => getHeroById(save.selectedHeroId), [save.selectedHeroId]);
+  const claimableQuestCount = useMemo(
+    () =>
+      DAILY_QUESTS.filter(
+        (q) => !save.dailyProgress.claimedQuestIds.includes(q.id) && getQuestProgressCount(q, save) >= q.targetCount
+      ).length,
+    [save]
+  );
 
   useEffect(() => {
-    audioService.setVoiceSpeed(settings.voiceSpeed);
-    audioService.setAccent(settings.accent);
-    audioService.setSoundEnabled(soundEnabled);
-  }, [settings, soundEnabled]);
+    audioService.setSoundEnabled(save.soundEnabled);
+    audioService.setVoiceSpeed(0.9);
+    audioService.setAccent('US');
+  }, [save.soundEnabled]);
 
   useEffect(() => {
-    if (!isSnoozedRef.current) {
-      breakLimitSecondsRef.current = settings.sessionMinutes * 60;
-    }
-  }, [settings.sessionMinutes]);
+    if (!snoozedRef.current) breakLimitRef.current = save.sessionMinutes * 60;
+  }, [save.sessionMinutes]);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      if (
-        document.hidden ||
-        showRestBreak ||
-        isParentGateOpen ||
-        isSessionResting ||
-        currentView === 'hero_hub'
-      ) {
+      if (document.hidden || showRestBreak || isGuideOpen || isSquadOpen || isQuestsOpen || isSessionResting || view === 'hub') {
         return;
       }
       sessionSecondsRef.current += 1;
-      if (sessionSecondsRef.current >= breakLimitSecondsRef.current) {
-        setShowRestBreak(true);
-      }
+      if (sessionSecondsRef.current >= breakLimitRef.current) setShowRestBreak(true);
     }, 1000);
     return () => clearInterval(timer);
-  }, [settings.sessionMinutes, showRestBreak, isParentGateOpen, isSessionResting, currentView]);
+  }, [view, showRestBreak, isGuideOpen, isSquadOpen, isQuestsOpen, isSessionResting]);
 
   useEffect(() => {
     const onVisibilityChange = () => {
       if (document.hidden) {
-        voiceCombatService.releaseSession();
+        micEngine.release();
         audioService.stopSpeaking();
       }
     };
@@ -103,300 +71,158 @@ export const App: React.FC = () => {
     return () => document.removeEventListener('visibilitychange', onVisibilityChange);
   }, []);
 
-  const handleRefreshProfile = () => {
-    setProfile(storageService.getProfile());
-    setSettings(storageService.getSettings());
+  const updateSave = (patch: Partial<ComicSaveState>) => setSave(comicStorage.update(patch));
+
+  const navigateTo = (nextView: ActiveView, stageOverride?: StoryStage) => {
+    micEngine.stop();
+    audioService.stopSpeaking();
+    if (nextView !== 'hub') setIsSessionResting(false);
+    setBattleStage(stageOverride);
+    setView(nextView);
   };
 
-  const handleToggleSound = () => {
-    const nextState = !soundEnabled;
-    setSoundEnabled(nextState);
-    audioService.setSoundEnabled(nextState);
+  const handlePortalNavigate = (portal: PortalId) => {
+    if (portal === 'hero_squad') return setIsSquadOpen(true);
+    if (portal === 'daily_quest') return setIsQuestsOpen(true);
+    navigateTo(portal);
   };
 
-  const handleAddStars = (amount: number) => {
-    storageService.addStars(amount);
-    handleRefreshProfile();
+  const handlePlayStage = (stage: StoryStage) => {
+    updateSave({ selectedVillainId: stage.villainId });
+    navigateTo('battle_arena', stage);
   };
-
-  const handleSelectPhoneme = (phInfo: PhonemeInfo) => {
-    setIsSessionResting(false);
-    setActivePhoneme(phInfo);
-    setCurrentView('lesson');
-  };
-
-  const handleFinishPhonemeLesson = (phonemeId: string) => {
-    storageService.recordPhonemeMastery(phonemeId);
-    storageService.addStars(3);
-    handleRefreshProfile();
-    setCurrentView('dojo');
-  };
-
-  const handleNextPhoneme = (nextPhInfo: PhonemeInfo) => {
-    if (activePhoneme) {
-      storageService.recordPhonemeMastery(activePhoneme.id);
-      storageService.addStars(3);
-      handleRefreshProfile();
-    }
-    setActivePhoneme(nextPhInfo);
-  };
-
-  const handleSelectStory = (story: DecodableStory) => {
-    setIsSessionResting(false);
-    setActiveStory(story);
-    setCurrentView('story_reader');
-  };
-
-  const handleNavigateView = (view: 'hero_hub' | 'dojo' | 'stories' | 'ai_chat') => {
-    audioService.playPopSound(500);
-    voiceCombatService.releaseSession();
-    if (view !== 'hero_hub') {
-      setIsSessionResting(false);
-    }
-    setCurrentView(view);
-  };
-
-  const handleFinishStory = () => {
-    if (activeStory) {
-      storageService.markStoryCompleted(activeStory.id);
-      storageService.addStars(5);
-      handleRefreshProfile();
-    }
-    setCurrentView('stories');
-  };
-
-  const activeUnitRef = useRef(activeUnit);
-  activeUnitRef.current = activeUnit;
-
-  const handleNextUnit = useCallback(() => {
-    const curUnit = activeUnitRef.current;
-    const idx = ALL_CURRICULUM_UNITS.findIndex((u) => u.id === curUnit.id);
-    const nextUnit =
-      idx !== -1 && idx + 1 < ALL_CURRICULUM_UNITS.length
-        ? ALL_CURRICULUM_UNITS[idx + 1]
-        : ALL_CURRICULUM_UNITS[0];
-    setActiveUnit(nextUnit);
-    setCurrentView('hero_cutscene');
-  }, []);
-
-  const handleCutsceneStartBattle = useCallback(() => {
-    voiceCombatService.warmUpSession();
-    setCurrentView('hero_battle');
-  }, []);
-
-  const handleHeroBackToHub = useCallback(() => {
-    voiceCombatService.releaseSession();
-    setCurrentView('hero_hub');
-  }, []);
-
-  const handleToggleToddlerMode = useCallback(() => {
-    setHeroSave(
-      heroStorage.updateSaveState({
-        toddlerForgivingMode: !heroSave.toddlerForgivingMode,
-      })
-    );
-  }, [heroSave.toddlerForgivingMode]);
-
-  const handleOpenRoster = useCallback(() => {
-    setIsRosterOpen(true);
-  }, []);
-
-  const handleUnitVictory = useCallback((starsEarned: number) => {
-    const curUnit = activeUnitRef.current;
-    const updated = heroStorage.recordUnitVictory(
-      curUnit.id,
-      starsEarned,
-      curUnit.rewardPhonemeIds,
-      curUnit.unlockStoryId
-    );
-    setHeroSave(updated);
-    setProfile(storageService.getProfile());
-    setSettings(storageService.getSettings());
-  }, []);
-
-  const isOverlayPaused =
-    isRosterOpen || showRestBreak || isParentGateOpen || isStickerAlbumOpen;
 
   return (
-    <div
-      className={`h-[100dvh] w-screen overflow-hidden bg-slate-950 text-slate-950 flex flex-col font-sans select-none ${
-        settings.reducedMotion ? 'motion-reduce' : ''
-      }`}
-    >
-      <main className="flex-1 min-h-0 overflow-hidden flex flex-col relative">
-        {currentView === 'hero_hub' && (
-          <div className="relative flex-1 min-h-0 flex flex-col overflow-hidden">
-            <div className="absolute inset-x-0 top-0 z-30 pointer-events-none">
-              <GameHudBar
-                hero={activeHero}
-                xp={heroSave.xp || 0}
-                stars={profile.stars}
-                soundEnabled={soundEnabled}
-                onToggleSound={handleToggleSound}
-                onOpenRoster={() => setIsRosterOpen(true)}
-                onOpenStickerAlbum={() => setIsStickerAlbumOpen(true)}
-                onOpenParentGate={() => setIsParentGateOpen(true)}
-              />
-            </div>
-            <WorldOverworldMap
-              saveState={heroSave}
-              hero={activeHero}
-              rival={activeRival}
-              onStartUnitCutscene={(unit) => {
-                setIsSessionResting(false);
-                voiceCombatService.warmUpSession();
-                setActiveUnit(unit);
-                setCurrentView('hero_cutscene');
-              }}
-              onStartUnitBattle={(unit) => {
-                setIsSessionResting(false);
-                voiceCombatService.warmUpSession();
-                setActiveUnit(unit);
-                setCurrentView('hero_battle');
-              }}
-              onOpenPortal={(portal) => handleNavigateView(portal)}
+    <div className={`h-[100dvh] w-screen overflow-hidden bg-[#0F172A] flex flex-col font-sans select-none ${save.reducedMotion ? 'motion-reduce' : ''}`}>
+      <div className="relative flex-1 min-h-0 flex flex-col overflow-hidden bg-gradient-to-b from-[#38BDF8] via-[#E0F7FF] to-[#FEF9C3]">
+        <ComicTopHud
+          hero={hero}
+          stars={save.stars}
+          gems={save.gems}
+          energy={save.energy}
+          soundEnabled={save.soundEnabled}
+          activePortal={view}
+          onOpenSquad={() => setIsSquadOpen(true)}
+          onToggleSound={() => updateSave({ soundEnabled: !save.soundEnabled })}
+          onOpenGuide={() => setIsGuideOpen(true)}
+          onGoHome={() => navigateTo('hub')}
+        />
+
+        <main className="flex-1 min-h-0 flex flex-col overflow-hidden">
+          {view === 'hub' && (
+            <ComicCommandHub
+              activeHero={hero}
+              selectedHeroId={save.selectedHeroId}
+              claimableQuestCount={claimableQuestCount}
+              onSelectHero={(heroId: HeroId) => updateSave({ selectedHeroId: heroId })}
+              onNavigate={handlePortalNavigate}
             />
-          </div>
-        )}
+          )}
+          {view === 'sound_lab' && (
+            <SoundLabScreen
+              hero={hero}
+              toddlerFriendly={save.toddlerFriendly}
+              practicedPhonemes={save.practicedPhonemes}
+              onPracticeSuccess={(phonemeId) => setSave(comicStorage.recordPhonemePractice(phonemeId))}
+            />
+          )}
+          {view === 'reading_planet' && (
+            <ReadingPlanetScreen
+              hero={hero}
+              bookProgress={save.bookProgress}
+              toddlerFriendly={save.toddlerFriendly}
+              onBookProgress={(bookId, step, rewardStars) =>
+                setSave(comicStorage.recordBookProgress(bookId, step, rewardStars))
+              }
+            />
+          )}
+          {view === 'battle_arena' && (
+            <ComicBattleScreen
+              hero={hero}
+              villainId={save.selectedVillainId}
+              initialStage={battleStage}
+              toddlerFriendly={save.toddlerFriendly}
+              onSelectVillain={(villainId) => updateSave({ selectedVillainId: villainId })}
+              onBattleWin={(stageId, earnedStars) => setSave(comicStorage.recordStageWin(stageId, earnedStars))}
+              onOpenStoryMap={() => navigateTo('story_map')}
+            />
+          )}
+          {view === 'story_map' && (
+            <FreeStoryMapScreen
+              hero={hero}
+              stageStars={save.stageStars}
+              initialWorldId={battleStage?.worldId || 1}
+              onPlayStage={handlePlayStage}
+            />
+          )}
+          {view === 'mini_games' && (
+            <MiniGamesScreen
+              hero={hero}
+              toddlerFriendly={save.toddlerFriendly}
+              onMiniGameWin={(starsEarned) => setSave(comicStorage.recordMiniGameWin(starsEarned))}
+            />
+          )}
+          {view === 'star_zone' && (
+            <StarZoneScreen
+              hero={hero}
+              stars={save.stars}
+              gems={save.gems}
+              ownedUpgradeIds={save.ownedUpgradeIds}
+              equippedUpgradeIds={save.equippedUpgradeIds}
+              onBuyOrToggleUpgrade={(upgradeId) => {
+                const res = comicStorage.buyAndEquipUpgrade(upgradeId);
+                setSave(res.save);
+                return { ok: res.ok, reason: res.reason };
+              }}
+            />
+          )}
+        </main>
+      </div>
 
-        {currentView === 'hero_cutscene' && (
-          <VideoLessonCutscene
-            unit={activeUnit}
-            hero={activeHero}
-            toddlerForgivingMode={heroSave.toddlerForgivingMode}
-            isOverlayPaused={isOverlayPaused}
-            onStartBattle={handleCutsceneStartBattle}
-            onBackToHub={handleHeroBackToHub}
-          />
-        )}
-
-        {currentView === 'hero_battle' && (
-          <BattleStageArena
-            unit={activeUnit}
-            hero={activeHero}
-            rival={activeRival}
-            toddlerMode={heroSave.toddlerForgivingMode}
-            isOverlayPaused={isOverlayPaused}
-            onToggleToddlerMode={handleToggleToddlerMode}
-            onOpenRoster={handleOpenRoster}
-            onUnitVictory={handleUnitVictory}
-            onNextUnit={handleNextUnit}
-            onBackToHub={handleHeroBackToHub}
-          />
-        )}
-
-        {currentView === 'dojo' && (
-          <TrainingDojoHub
-            profile={profile}
-            onSelectPhoneme={handleSelectPhoneme}
-            onAddStars={handleAddStars}
-            onBackToMap={() => handleNavigateView('hero_hub')}
-          />
-        )}
-
-        {currentView === 'lesson' && activePhoneme && (
-          <LessonPlayer
-            phoneme={activePhoneme}
-            onFinishLesson={handleFinishPhonemeLesson}
-            onNextPhoneme={handleNextPhoneme}
-            onBack={() => setCurrentView('dojo')}
-          />
-        )}
-
-        {currentView === 'stories' && (
-          <StoryLibrary
-            completedStories={profile.completedStories}
-            unlockedStoryIds={heroSave.unlockedStoryIds || []}
-            onSelectStory={handleSelectStory}
-            onBackToMap={() => handleNavigateView('hero_hub')}
-            stories={DECODABLE_STORIES}
-            language="en"
-          />
-        )}
-
-        {currentView === 'story_reader' &&
-          activeStory &&
-          (() => {
-            const sIdx = DECODABLE_STORIES.findIndex((s) => s.id === activeStory.id);
-            const nextStory =
-              sIdx !== -1 && sIdx + 1 < DECODABLE_STORIES.length
-                ? DECODABLE_STORIES[sIdx + 1]
-                : DECODABLE_STORIES[0];
-            return (
-              <StoryReader
-                story={activeStory}
-                onBackToHome={() => setCurrentView('stories')}
-                onStoryFinished={handleFinishStory}
-                onNextStory={() => {
-                  storageService.markStoryCompleted(activeStory.id);
-                  storageService.addStars(5);
-                  handleRefreshProfile();
-                  setActiveStory(nextStory);
-                }}
-                nextStoryTitle={nextStory.title}
-                language="en"
-              />
-            );
-          })()}
-
-        {currentView === 'ai_chat' && (
-          <HeroCommunicatorModal
-            hero={activeHero}
-            onAddStars={handleAddStars}
-            onBackToMap={() => handleNavigateView('hero_hub')}
-            onOpenParentSettings={() => setIsParentGateOpen(true)}
-          />
-        )}
-      </main>
-
-      {isRosterOpen && (
-        <HeroRosterDrawer
-          saveState={heroSave}
-          onUpdateSave={(next) => setHeroSave(heroStorage.saveState(next))}
-          onSelectHero={(heroId) => setHeroSave(heroStorage.selectHero(heroId))}
-          onSelectRivalMode={(mode, rivalId) =>
-            setHeroSave(heroStorage.selectRival(mode, rivalId))
-          }
-          onAddCustomHero={(hero) => setHeroSave(heroStorage.addCustomHero(hero))}
-          onAddCustomRival={(rival) => setHeroSave(heroStorage.addCustomRival(rival))}
-          onRemoveCustom={(kind, id) => setHeroSave(heroStorage.removeCustomCharacter(kind, id))}
-          onClose={() => setIsRosterOpen(false)}
+      {isSquadOpen && (
+        <HeroSquadModal
+          selectedHeroId={save.selectedHeroId}
+          onSelectHero={(heroId: HeroId) => updateSave({ selectedHeroId: heroId })}
+          onClose={() => setIsSquadOpen(false)}
         />
       )}
-
+      {isQuestsOpen && (
+        <DailyQuestsModal
+          save={save}
+          onClaimQuest={(questId) => setSave(comicStorage.claimDailyQuest(questId).save)}
+          onClose={() => setIsQuestsOpen(false)}
+        />
+      )}
+      {isGuideOpen && (
+        <VietnameseGuideModal
+          save={save}
+          onUpdateSave={updateSave}
+          onResetAll={() => {
+            setSave(comicStorage.resetAll());
+            navigateTo('hub');
+          }}
+          onClose={() => setIsGuideOpen(false)}
+        />
+      )}
       {showRestBreak && (
         <RestBreakModal
           onContinue={() => {
-            isSnoozedRef.current = true;
+            snoozedRef.current = true;
             sessionSecondsRef.current = 0;
-            breakLimitSecondsRef.current = 3 * 60;
+            breakLimitRef.current = 3 * 60;
             setIsSessionResting(false);
             setShowRestBreak(false);
           }}
           onFinishSession={() => {
-            isSnoozedRef.current = false;
+            snoozedRef.current = false;
             sessionSecondsRef.current = 0;
-            breakLimitSecondsRef.current = settings.sessionMinutes * 60;
+            breakLimitRef.current = save.sessionMinutes * 60;
             setIsSessionResting(true);
             setShowRestBreak(false);
-            voiceCombatService.releaseSession();
+            micEngine.release();
             audioService.stopSpeaking();
-            setCurrentView('hero_hub');
+            navigateTo('hub');
           }}
-        />
-      )}
-
-      {isParentGateOpen && (
-        <ParentDashboard
-          onClose={() => setIsParentGateOpen(false)}
-          onProfileUpdated={handleRefreshProfile}
-        />
-      )}
-
-      {isStickerAlbumOpen && (
-        <StickerAlbumModal
-          onClose={() => setIsStickerAlbumOpen(false)}
-          onStarsUpdated={handleRefreshProfile}
         />
       )}
     </div>

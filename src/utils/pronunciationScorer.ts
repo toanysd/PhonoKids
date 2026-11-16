@@ -1,4 +1,18 @@
-import type { DistractorWordOption, VoiceStrikeResult } from '../services/voiceCombatService';
+export interface DistractorWordOption {
+  wordEn: string;
+  labelVi: string;
+}
+
+export interface VoiceStrikeResult {
+  transcript: string;
+  grade: 'super' | 'good' | 'retry';
+  starsEarned: 3 | 2 | 0;
+  damagePercent: number;
+  feedbackVi: string;
+  peakVolume: number;
+  silentTimeout?: boolean;
+  matchedDistractor?: string;
+}
 
 export interface PronunciationScoreParams {
   targetEn: string;
@@ -315,7 +329,7 @@ export function scorePronunciation({
             grade: 'good',
             starsEarned: 2,
             damagePercent: 75,
-            feedbackVi: `👍 Đúng từ khóa "${coreLabel}"! Nói trọn câu "${targetEn}" để đạt 3⭐ nhé!`,
+            feedbackVi: `Đúng từ khóa "${coreLabel}"! Nói trọn câu "${targetEn}" để đạt 3 sao nhé!`,
             peakVolume,
           };
         }
@@ -337,8 +351,8 @@ export function scorePronunciation({
   }
 
   const strictHint = !toddlerForgivingMode && targetTokens.length >= 2
-    ? `🎯 Chế độ Chuẩn: Máy nghe "${bestTranscript}" — hãy đọc đủ câu "${targetEn}" nhé!`
-    : `🎙️ Máy nghe "${bestTranscript}" — chưa đúng mẫu "${targetEn}", bé đọc lại nhé!`;
+    ? `Chế độ Chuẩn: Máy nghe "${bestTranscript}" — hãy đọc đủ câu "${targetEn}" nhé!`
+    : `Máy nghe "${bestTranscript}" — chưa đúng mẫu "${targetEn}", bé đọc lại nhé!`;
 
   return {
     transcript: bestTranscript,

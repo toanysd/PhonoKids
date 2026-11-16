@@ -1,7 +1,6 @@
 import voiceManifestJson from '../data/voiceManifest.json';
 import { normalizeVoiceLookup, VoiceRole } from '../utils/voiceKey';
 import {
-  playAnimalSfx,
   playGentleTryAgainSfx,
   playMagicChimeSfx,
   playPopSfx,
@@ -81,19 +80,11 @@ class AudioService {
     try { playMagicChimeSfx(this.getContext()); } catch { /* ignore */ }
   }
 
-  public playAnimalSound(type: string) {
-    if (!this.soundEnabled) return;
-    try { playAnimalSfx(this.getContext(), type); } catch { this.playPopSound(600); }
-  }
-
   public isCurrentlySpeaking(): boolean {
-    const audioBusy = Boolean(
-      this.activeVoiceAudio && !this.activeVoiceAudio.paused && !this.activeVoiceAudio.ended
-    );
+    const audioBusy = Boolean(this.activeVoiceAudio && !this.activeVoiceAudio.paused && !this.activeVoiceAudio.ended);
     const synthBusy = Boolean(
-      typeof window !== 'undefined' &&
-        'speechSynthesis' in window &&
-        (window.speechSynthesis.speaking || window.speechSynthesis.pending)
+      typeof window !== 'undefined' && 'speechSynthesis' in window &&
+      (window.speechSynthesis.speaking || window.speechSynthesis.pending)
     );
     return audioBusy || synthBusy;
   }
@@ -346,101 +337,17 @@ class AudioService {
     return this.speakEnglish(text, 1.0, role);
   }
 
-  /**
-   * High-fidelity Japanese speech synthesis for children (ja-JP).
-   * Automatically picks native Japanese voices (Google 日本語, Kyoko, Nanami, Ayumi, Haruka).
-   */
-  public speakJapanese(text: string, rateMultiplier: number = 0.85): Promise<void> {
-    if (!('speechSynthesis' in window) || !this.soundEnabled) {
-      return Promise.resolve();
-    }
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = this.voiceSpeed * rateMultiplier;
-    utterance.pitch = 1.15; // Friendly, natural Japanese tone
-    utterance.lang = 'ja-JP';
-
-    const voices = window.speechSynthesis.getVoices();
-    const preferredVoice = voices.find(v =>
-      (v.lang.includes('ja-JP') || v.lang.includes('ja_JP') || v.lang.startsWith('ja')) &&
-      (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Kyoko') || v.name.includes('Nanami') || v.name.includes('Ayumi') || v.name.includes('Haruka'))
-    ) || voices.find(v => v.lang.includes('ja'));
-
-    if (preferredVoice) {
-      utterance.voice = preferredVoice;
-    }
-
-    return this.dispatchUtterance(utterance);
-  }
-
-  /**
-   * Play authentic native Japanese TPR chant:
-   * Speaks the rhythmic chant (e.g. "あ・あ・あめ！"), short pause, then speaks target word.
-   */
-  public async playJapaneseTprAction(chantJa: string, wordJa: string): Promise<void> {
-    if (!this.soundEnabled) return;
-    try {
-      await this.speakJapanese(chantJa, 0.85);
-      await new Promise((r) => setTimeout(r, 260));
-      await this.speakJapanese(wordJa, 0.85);
-    } catch {
-      // Ignore
-    }
-  }
-
-  /**
-   * Play authentic native TPR action: speaks natural English chant,
-   * followed by pure native sound clips of the target phoneme repeated 3 times.
-   */
-  public async playTprAction(phonemeId: string, chantEn: string): Promise<void> {
-    if (!this.soundEnabled) return;
-    try {
-      // 1. Speak natural English action chant
-      await this.speakEnglish(chantEn, 0.9);
-      await new Promise((r) => setTimeout(r, 220));
-      // 2. Play pure authentic phoneme sound 3 times (/p/ ... /p/ ... /p/)
-      for (let i = 0; i < 3; i++) {
-        await this.playPhoneme(phonemeId);
-        await new Promise((r) => setTimeout(r, 180));
-      }
-    } catch {
-      // Ignore
-    }
-  }
-
   private phonemeAudioCache: Record<string, HTMLAudioElement> = {};
 
-  /**
-   * Play authentic pure phoneme sound recording (100% Synthetic Phonics compliant, NO schwa).
-   * E.g. /p/ plays pure unvoiced puff of air, NOT "pu" or "puh"!
-   */
+  /** Play authentic pure phoneme sound recording (Synthetic Phonics compliant, NO schwa). */
   public async playPhoneme(phonemeId: string): Promise<void> {
     if (!this.soundEnabled) return;
     try {
       const cleanId = phonemeId.toLowerCase().replace(/[\/\[\]]/g, '').trim();
       const ipaToFileMap: Record<string, string> = {
-        'ʃ': 'sh',
-        'θ': 'th_unvoiced',
-        'ð': 'th_voiced',
-        'ŋ': 'ng',
-        'tʃ': 'ch',
-        'dʒ': 'j',
-        'sh': 'sh',
-        'ch': 'ch',
-        'th': 'th_unvoiced',
-        'ng': 'ng',
-        'ai': 'ai',
-        'ee': 'ee',
-        'ie': 'ie',
-        'oa': 'oa',
-        'ue': 'ue',
-        'oo': 'oo_short',
-        'ar': 'ar',
-        'or': 'or',
-        'er': 'er',
-        'oi': 'oi',
-        'ou': 'ou',
-        'qu': 'qu',
+        'ʃ': 'sh', 'θ': 'th_unvoiced', 'ð': 'th_voiced', 'ŋ': 'ng', 'tʃ': 'ch', 'dʒ': 'j',
+        sh: 'sh', ch: 'ch', th: 'th_unvoiced', ng: 'ng', ai: 'ai', ee: 'ee', ie: 'ie',
+        oa: 'oa', ue: 'ue', oo: 'oo_short', ar: 'ar', or: 'or', er: 'er', oi: 'oi', ou: 'ou', qu: 'qu',
       };
       const audioKey = ipaToFileMap[cleanId] || cleanId;
 
@@ -467,44 +374,17 @@ class AudioService {
 
         audio.addEventListener('ended', done);
         audio.addEventListener('error', done);
-
-        audio.play().catch(() => {
-          done();
-        });
+        audio.play().catch(() => done());
       });
     } catch {
       // Fallback
     }
   }
 
-  /**
-   * Speak single phoneme using pure native audio recording.
-   * Completely eliminates schwa /ə/ addition (e.g. /p/ is crisp /p/, not 'puh' / 'pu').
-   */
-  public speakPhoneme(phonemeId: string, _ipa?: string): Promise<void> {
-    return this.playPhoneme(phonemeId);
-  }
-
-  /**
-   * Sequentially blend multiple phonemes with a crisp, realistic interval.
-   */
-  public async blendPhonemes(phonemeIds: string[], gapMs: number = 90): Promise<void> {
-    for (const ph of phonemeIds) {
-      await this.playPhoneme(ph);
-      await new Promise((r) => setTimeout(r, gapMs));
-    }
-  }
-
   public stopSpeaking() {
     this.cancelSpeechInternal();
-    // Stop any active phoneme audio
     Object.values(this.phonemeAudioCache).forEach((audio) => {
-      try {
-        audio.pause();
-        audio.currentTime = 0;
-      } catch {
-        // Ignore
-      }
+      try { audio.pause(); audio.currentTime = 0; } catch { /* ignore */ }
     });
   }
 }

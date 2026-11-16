@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react';
-import { KidButton } from './KidButton';
-import { Moon, Sparkles, X } from 'lucide-react';
 import { audioService } from '../services/audioService';
 
 interface RestBreakModalProps {
@@ -27,9 +25,10 @@ export const RestBreakModal: React.FC<RestBreakModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-label="Giờ nghỉ ngơi cho mắt"
-      className="fixed inset-0 bg-amber-950/80 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 animate-fadeIn"
+      data-testid="rest-break-modal"
+      className="fixed inset-0 bg-[#0F172A]/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4"
     >
-      <div className="relative bg-amber-50 rounded-3xl p-4 sm:p-7 max-w-lg w-full max-h-[92dvh] overflow-y-auto border-4 sm:border-8 border-amber-300 shadow-2xl text-center flex flex-col gap-3 sm:gap-4">
+      <div className="relative bg-[#FFFDF5] comic-halftone rounded-[28px] p-4 sm:p-7 max-w-lg w-full border-[4px] border-[#0F172A] shadow-[6px_8px_0_#0F172A] text-center flex flex-col gap-3 sm:gap-4">
         <button
           type="button"
           onClick={() => {
@@ -37,74 +36,56 @@ export const RestBreakModal: React.FC<RestBreakModalProps> = ({
             onFinishSession();
           }}
           aria-label="Đóng màn hình nghỉ ngơi"
-          className="absolute top-3 right-3 w-10 h-10 rounded-full bg-amber-200/90 hover:bg-amber-300 text-amber-950 flex items-center justify-center cursor-pointer active:scale-90"
+          className="absolute top-3 right-3 w-10 h-10 rounded-xl bg-[#FFE4E6] border-[3px] border-[#0F172A] shadow-[2px_3px_0_#0F172A] flex items-center justify-center cursor-pointer active:translate-y-[2px]"
         >
-          <X className="w-5 h-5" />
+          <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" stroke="#0F172A" strokeWidth="3.2" strokeLinecap="round" />
+          </svg>
         </button>
 
-        {/* Ehon Sun Painting Emblem */}
-        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-amber-400 shadow-xl mx-auto animate-bounce bg-amber-100 shrink-0">
+        <div className="w-24 h-24 rounded-full border-[4px] border-[#0F172A] bg-[#FACC15] shadow-[4px_5px_0_#0F172A] mx-auto p-1.5 animate-starburst-pulse">
           <img
-            src="/assets/ehon/sun.jpg"
-            alt="Mặt trời tranh Ehon"
-            className="w-full h-full object-cover"
+            src="/assets/comic/words/sun.webp"
+            alt="Sunny Star"
+            className="w-full h-full object-contain"
+            draggable={false}
           />
         </div>
 
         <div>
-          <span className="text-[11px] font-black text-amber-900 bg-amber-200 px-3 py-1 rounded-full uppercase tracking-wider">
+          <span className="inline-block text-xs font-display font-black text-[#0F172A] bg-[#FACC15] border-[2.5px] border-[#0F172A] px-3 py-1 rounded-full uppercase">
             Giờ Cho Mắt Nghỉ Ngơi
           </span>
-          <h3 className="text-xl sm:text-3xl font-black text-amber-950 mt-2 leading-tight">
-            Mắt Bé Cần Nghỉ Chút Xíu! 👀
+          <h3 className="font-display text-2xl sm:text-3xl font-black text-[#0F172A] mt-2 leading-tight">
+            Mắt Bé Cần Nghỉ Chút Xíu!
           </h3>
-        </div>
-
-        {/* TPR Rest Exercise with Ehon Giraffe Art Plate */}
-        <div className="bg-white rounded-2xl p-3 border-2 border-amber-200 text-left flex items-center gap-3 shadow-sm">
-          <div className="w-16 h-16 rounded-xl overflow-hidden border-2 border-amber-300 shrink-0 shadow">
-            <img
-              src="/assets/ehon/giraffe.jpg"
-              alt="Hươu cao cổ vươn vai"
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="min-w-0">
-            <h4 className="font-black text-amber-950 text-sm sm:text-base">
-              Vươn Cao Hươu Cao Cổ
-            </h4>
-            <p className="text-xs sm:text-sm font-bold text-amber-800 mt-0.5 italic">
-              &ldquo;Stretch high like a giraffe!&rdquo; 🦒
-            </p>
-          </div>
+          <p className="text-xs sm:text-sm font-bold text-slate-700 mt-1">
+            Nhìn ra xa 20 giây và vươn vai thật cao cùng các anh hùng nhé.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-          <KidButton
-            variant="warning"
-            size="lg"
-            className="w-full min-h-[52px]"
+          <button
+            type="button"
             onClick={() => {
-              audioService.playPopSound(500);
+              audioService.playPopSound(480);
               onFinishSession();
             }}
+            className="w-full h-14 rounded-2xl bg-[#EF4444] hover:bg-[#F87171] text-white border-[3.5px] border-[#0F172A] shadow-[4px_5px_0_#0F172A] active:translate-y-[2px] font-display font-black text-base cursor-pointer"
           >
-            <Moon className="w-5 h-5 mr-1.5" />
-            <span>Nghỉ Ngơi Hôm Nay</span>
-          </KidButton>
+            Nghỉ Ngơi Hôm Nay
+          </button>
 
-          <KidButton
-            variant="success"
-            size="lg"
-            className="w-full min-h-[52px]"
+          <button
+            type="button"
             onClick={() => {
-              audioService.playPopSound(550);
+              audioService.playPopSound(560);
               onContinue();
             }}
+            className="w-full h-14 rounded-2xl bg-[#A3E635] hover:bg-[#BEF264] text-[#0F172A] border-[3.5px] border-[#0F172A] shadow-[4px_5px_0_#0F172A] active:translate-y-[2px] font-display font-black text-base cursor-pointer"
           >
-            <Sparkles className="w-5 h-5 mr-1.5" />
-            <span>Chơi Thêm 3 Phút Nữa</span>
-          </KidButton>
+            Chơi Thêm 3 Phút Nữa
+          </button>
         </div>
       </div>
     </div>
