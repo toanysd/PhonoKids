@@ -105,7 +105,40 @@ export interface TargetHuntRound {
   options: StageTargetOption[];
 }
 
-export type CombatMode = 'target_hunt' | 'letter_trace' | 'echo_duel' | 'victory';
+export type CombatMode =
+  | 'target_hunt'
+  | 'sound_forge'
+  | 'mystery_chest'
+  | 'letter_trace'
+  | 'echo_duel'
+  | 'victory';
+
+export type StageNodeType = 'hunt' | 'forge' | 'mystery_chest' | 'rune_trace' | 'boss_raid';
+
+export interface SoundForgeChallenge {
+  id: string;
+  targetWord: string;
+  meaningVi: string;
+  phonemes: string[];
+  exampleSentenceEn: string;
+  exampleSentenceVi: string;
+  visualWordKey: string;
+  emoji: string;
+}
+
+export interface MysteryChestChallenge {
+  id: string;
+  promptEn: string;
+  targetWord: string;
+  distractorWord: string;
+  targetMeaningVi: string;
+  distractorMeaningVi: string;
+  targetEmoji: string;
+  distractorEmoji: string;
+  targetVisualKey: string;
+  distractorVisualKey: string;
+  hintVi: string;
+}
 
 export interface QaChoiceOption {
   id: string;
@@ -152,10 +185,14 @@ export interface CurriculumUnit {
   summaryVi: string;
   cutsceneSlides: CutsceneSlide[];
   targetHuntRounds: TargetHuntRound[];
+  soundForgeRounds?: SoundForgeChallenge[];
+  mysteryChestRounds?: MysteryChestChallenge[];
   letterTraceRound?: LetterTraceChallenge;
   echoDuelRounds: DialogueChallenge[];
   bossRounds: DialogueChallenge[];
   rewardPhonemeIds?: string[];
+  nodeType?: StageNodeType;
+  unlockStoryId?: string;
 }
 
 export type BackdropTheme =
@@ -189,4 +226,6 @@ export interface HeroSaveState {
   customHeroes: HeroCharacter[];
   customRivals: RivalCharacter[];
   studioPrivacyBlur: boolean;
+  xp?: number;
+  unlockedStoryIds?: string[];
 }

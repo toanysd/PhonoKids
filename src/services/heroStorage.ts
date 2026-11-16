@@ -3,6 +3,8 @@ import { storageService } from './storageService';
 
 const HERO_SAVE_KEY = 'herospeak_save_v1';
 
+const DEFAULT_UNLOCKED_STORIES = ['story_cat_sat', 'story_sam_ant', 'story_red_hen'];
+
 const DEFAULT_SAVE_STATE: HeroSaveState = {
   selectedHeroId: 'hesman',
   rivalSelectionMode: 'story_match',
@@ -14,6 +16,8 @@ const DEFAULT_SAVE_STATE: HeroSaveState = {
   customHeroes: [],
   customRivals: [],
   studioPrivacyBlur: true,
+  xp: 0,
+  unlockedStoryIds: DEFAULT_UNLOCKED_STORIES,
 };
 
 class HeroStorageService {
@@ -29,6 +33,11 @@ class HeroStorageService {
           unitStars: parsed.unitStars && typeof parsed.unitStars === 'object' ? parsed.unitStars : {},
           customHeroes: Array.isArray(parsed.customHeroes) ? parsed.customHeroes : [],
           customRivals: Array.isArray(parsed.customRivals) ? parsed.customRivals : [],
+          xp: typeof parsed.xp === 'number' ? parsed.xp : 0,
+          unlockedStoryIds:
+            Array.isArray(parsed.unlockedStoryIds) && parsed.unlockedStoryIds.length > 0
+              ? parsed.unlockedStoryIds
+              : DEFAULT_UNLOCKED_STORIES,
         };
       }
     } catch {
@@ -108,7 +117,8 @@ class HeroStorageService {
   public recordUnitVictory(
     unitId: string,
     earnedStars: number,
-    rewardPhonemeIds?: string[]
+    rewardPhonemeIds?: string[],
+    unlockStoryId?: string
   ): HeroSaveState {
     const current = this.getSaveState();
     const prevBest = current.unitStars[unitId] || 0;
@@ -116,6 +126,11 @@ class HeroStorageService {
     const completed = current.completedUnitIds.includes(unitId)
       ? current.completedUnitIds
       : [...current.completedUnitIds, unitId];
+    const currentStories = current.unlockedStoryIds || DEFAULT_UNLOCKED_STORIES;
+    const nextStories =
+      unlockStoryId && !currentStories.includes(unlockStoryId)
+        ? [...currentStories, unlockStoryId]
+        : currentStories;
 
     // Add stars to shared global profile
     storageService.addStars(clampedStars);
@@ -130,6 +145,8 @@ class HeroStorageService {
         ...current.unitStars,
         [unitId]: Math.max(prevBest, clampedStars),
       },
+      xp: (current.xp || 0) + clampedStars * 25,
+      unlockedStoryIds: nextStories,
     });
   }
 

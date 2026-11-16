@@ -24,9 +24,12 @@ interface BattleTopBarProps {
   heroHp: number;
   bossHp: number;
   starsEarned: number;
+  comboCount?: number;
   toddlerMode: boolean;
   mode: CombatMode;
   hasLetterTrace: boolean;
+  hasSoundForge?: boolean;
+  hasMysteryChest?: boolean;
   onSwitchMode: (mode: Exclude<CombatMode, 'victory'>) => void;
   onToggleToddlerMode: () => void;
   onOpenRoster: () => void;
@@ -41,9 +44,12 @@ export const BattleTopBar: React.FC<BattleTopBarProps> = ({
   heroHp,
   bossHp,
   starsEarned,
+  comboCount = 0,
   toddlerMode,
   mode,
   hasLetterTrace,
+  hasSoundForge = false,
+  hasMysteryChest = false,
   onSwitchMode,
   onToggleToddlerMode,
   onOpenRoster,
@@ -126,6 +132,12 @@ export const BattleTopBar: React.FC<BattleTopBarProps> = ({
           <span className="hidden lg:inline">Đổi Tướng</span>
         </button>
 
+        {comboCount >= 2 && (
+          <div className="inline-flex items-center gap-0.5 px-2 py-1 rounded-xl bg-gradient-to-r from-orange-500 to-rose-500 text-white font-mono text-[11px] font-black shadow animate-pulse">
+            🔥 x{comboCount}
+          </div>
+        )}
+
         <div className="inline-flex items-center gap-0.5 px-2 py-1 rounded-xl bg-amber-400/20 border border-amber-300/40 font-mono text-[11px] font-bold text-amber-300 tabular-nums">
           <Heart className="w-3 h-3 fill-amber-400 text-amber-400" />
           <span>+{starsEarned}⭐</span>
@@ -133,9 +145,9 @@ export const BattleTopBar: React.FC<BattleTopBarProps> = ({
       </div>
     </div>
 
-    {/* Compact 3-Act Switcher Strip */}
+    {/* Compact Mode Switcher Strip */}
     {mode !== 'victory' && (
-      <div className="px-2 pb-1.5 flex items-center justify-center gap-1.5">
+      <div className="px-2 pb-1.5 flex items-center justify-center gap-1.5 overflow-x-auto">
         <button
           type="button"
           data-testid="act-tab-target_hunt"
@@ -148,6 +160,34 @@ export const BattleTopBar: React.FC<BattleTopBarProps> = ({
         >
           1. Săn &amp; Nhắc
         </button>
+        {hasSoundForge && (
+          <button
+            type="button"
+            data-testid="act-tab-sound_forge"
+            onClick={() => onSwitchMode('sound_forge')}
+            className={`px-2.5 py-0.5 rounded-full text-[11px] font-extrabold border transition-colors cursor-pointer whitespace-nowrap ${
+              mode === 'sound_forge'
+                ? 'bg-cyan-400 text-slate-950 border-cyan-300 shadow'
+                : 'bg-white/10 hover:bg-white/20 text-slate-200 border-white/15'
+            }`}
+          >
+            ⚒️ Ghép Âm
+          </button>
+        )}
+        {hasMysteryChest && (
+          <button
+            type="button"
+            data-testid="act-tab-mystery_chest"
+            onClick={() => onSwitchMode('mystery_chest')}
+            className={`px-2.5 py-0.5 rounded-full text-[11px] font-extrabold border transition-colors cursor-pointer whitespace-nowrap ${
+              mode === 'mystery_chest'
+                ? 'bg-amber-400 text-slate-950 border-amber-300 shadow'
+                : 'bg-white/10 hover:bg-white/20 text-slate-200 border-white/15'
+            }`}
+          >
+            🧰 Rương Âm
+          </button>
+        )}
         {hasLetterTrace && (
           <button
             type="button"

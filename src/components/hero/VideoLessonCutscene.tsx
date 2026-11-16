@@ -46,21 +46,16 @@ async function speakCutsceneAudio(
   if (!combined) return;
   const maxMs = Math.min(9000, Math.max(2200, combined.length * 140));
   await Promise.race([
-    audioService.speakEnglish(combined, 0.9),
+    audioService.speakEnglish(combined, 1.0, 'kid'),
     (async () => {
-      await sleep(650);
-      if (
-        typeof window !== 'undefined' &&
-        'speechSynthesis' in window &&
-        !window.speechSynthesis.speaking &&
-        !window.speechSynthesis.pending
-      ) {
+      await sleep(750);
+      if (!audioService.isCurrentlySpeaking()) {
         await sleep(300);
-        if (!window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
+        if (!audioService.isCurrentlySpeaking()) {
           return;
         }
       }
-      await sleep(maxMs - 650);
+      await sleep(maxMs - 750);
     })(),
   ]);
 }

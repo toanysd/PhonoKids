@@ -12,6 +12,8 @@ import { BattleBottomControls, BattleTopBar } from './BattleHudOverlay';
 import { BattleStageViewport, getStageLayoutCoords } from './BattleStageViewport';
 import {
   buildPhaseLabelVi,
+  collectStageVoiceTexts,
+  computeStrikeCoords,
   deriveRoundSpeechConfig,
   resolveNextCombatStep,
 } from './battleRoundHelpers';
@@ -71,22 +73,31 @@ export const BattleStageArena: React.FC<BattleStageArenaProps> = ({
     unit.targetHuntRounds.length > 0 ? 'target_hunt' : 'echo_duel'
   );
   const [huntIdx, setHuntIdx] = useState(0);
+  const [forgeIdx, setForgeIdx] = useState(0);
+  const [chestIdx, setChestIdx] = useState(0);
   const [echoIdx, setEchoIdx] = useState(0);
 
   const [isAttacking, setIsAttacking] = useState(false);
   const [beamActive, setBeamActive] = useState(false);
   const [earnedStars, setEarnedStars] = useState(0);
+  const [comboCount, setComboCount] = useState(0);
   const [calloutBanner, setCalloutBanner] = useState('');
   const [manualFeedback, setManualFeedback] = useState('');
   const [victoryCountdownSec, setVictoryCountdownSec] = useState<number | null>(null);
   const [selectedQaChoiceId, setSelectedQaChoiceId] = useState<string | null>(null);
   const [wrongQaChoiceId, setWrongQaChoiceId] = useState<string | null>(null);
+  const [selectedChestWord, setSelectedChestWord] = useState<string | null>(null);
+  const [wrongChestWord, setWrongChestWord] = useState<string | null>(null);
 
+  const forgeRounds = unit.soundForgeRounds || [];
+  const chestRounds = unit.mysteryChestRounds || [];
   const allEchoRounds = useMemo(
     () => [...unit.echoDuelRounds, ...unit.bossRounds],
     [unit.echoDuelRounds, unit.bossRounds]
   );
   const currentHunt = unit.targetHuntRounds[huntIdx];
+  const currentForge = forgeRounds[forgeIdx];
+  const currentChest = chestRounds[chestIdx];
   const currentEcho = allEchoRounds[echoIdx] || allEchoRounds[0];
 
   const correctHuntOption = useMemo(
@@ -100,9 +111,11 @@ export const BattleStageArena: React.FC<BattleStageArenaProps> = ({
         mode,
         currentHunt,
         correctHuntOption,
+        currentForge,
+        currentChest,
         currentEcho,
       }),
-    [mode, currentHunt, correctHuntOption, currentEcho]
+    [mode, currentHunt, correctHuntOption, currentForge, currentChest, currentEcho]
   );
 
   const visemeUrl = useMemo(() => {
@@ -125,7 +138,7 @@ export const BattleStageArena: React.FC<BattleStageArenaProps> = ({
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  useEffect(() => {
+  const resetCombatProgress = useCallback(() => {
     heroPosRef.current = layout.heroHome;
     waypointRef.current = null;
     strikeLockRef.current = false;
@@ -137,21 +150,34 @@ export const BattleStageArena: React.FC<BattleStageArenaProps> = ({
     setBossHp(100);
     setMode(unit.targetHuntRounds.length > 0 ? 'target_hunt' : 'echo_duel');
     setHuntIdx(0);
+    setForgeIdx(0);
+    setChestIdx(0);
     setEchoIdx(0);
     setIsAttacking(false);
     setBeamActive(false);
     setEarnedStars(0);
+    setComboCount(0);
     setManualFeedback('');
     setVictoryCountdownSec(null);
     setSelectedQaChoiceId(null);
     setWrongQaChoiceId(null);
+    setSelectedChestWord(null);
+    setWrongChestWord(null);
+  }, [layout.heroHome, layout.bossPos, unit.targetHuntRounds.length]);
 
+  useEffect(() => {
+    resetCombatProgress();
+    audioService.preloadVoiceClips(
+      collectStageVoiceTexts(unit.targetHuntRounds, forgeRounds, chestRounds, allEchoRounds),
+      'teacher'
+    );
+    audioService.preloadVoiceClips([hero.attackCalloutEn], 'hero');
     return () => {
       if (attackTimerRef.current) clearTimeout(attackTimerRef.current);
       voiceCombatService.stopListening();
       audioService.stopSpeaking();
     };
-  }, [unit.id, unit.targetHuntRounds.length]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [unit.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (mode === 'victory') return;
@@ -162,33 +188,19 @@ export const BattleStageArena: React.FC<BattleStageArenaProps> = ({
     setManualFeedback('');
     setSelectedQaChoiceId(null);
     setWrongQaChoiceId(null);
-  }, [mode, huntIdx, echoIdx, layout.heroHome]);
+    setSelectedChestWord(null);
+    setWrongChestWord(null);
+  }, [mode, huntIdx, forgeIdx, chestIdx, echoIdx, layout.heroHome]);
 
   const roundStateRef = useRef({
-    mode,
-    huntIdx,
-    echoIdx,
-    earnedStars,
-    currentHunt,
-    allEchoRounds,
-    layout,
-    unit,
-    hero,
-    onUnitVictory,
-    onNextUnit,
+    mode, huntIdx, forgeIdx, chestIdx, echoIdx, earnedStars, currentHunt,
+    forgeCount: forgeRounds.length, chestCount: chestRounds.length, allEchoRounds,
+    layout, unit, hero, onUnitVictory, onNextUnit,
   });
   roundStateRef.current = {
-    mode,
-    huntIdx,
-    echoIdx,
-    earnedStars,
-    currentHunt,
-    allEchoRounds,
-    layout,
-    unit,
-    hero,
-    onUnitVictory,
-    onNextUnit,
+    mode, huntIdx, forgeIdx, chestIdx, echoIdx, earnedStars, currentHunt,
+    forgeCount: forgeRounds.length, chestCount: chestRounds.length, allEchoRounds,
+    layout, unit, hero, onUnitVictory, onNextUnit,
   };
 
   const performDashAndStrike = useCallback((roundStars: number, feedback?: string) => {
@@ -198,19 +210,13 @@ export const BattleStageArena: React.FC<BattleStageArenaProps> = ({
     setIsAttacking(true);
     waypointRef.current = null;
 
-    let targetCoord = s.layout.bossPos;
-    let dashCoord = isPortrait ? { x: 50, y: 54 } : { x: 52, y: 56 };
-
-    if (s.mode === 'target_hunt' && s.currentHunt) {
-      const cIdx = Math.max(
-        0,
-        s.currentHunt.options.findIndex((o) => o.isCorrect)
-      );
-      targetCoord = s.layout.targetSlots[cIdx % s.layout.targetSlots.length];
-      dashCoord = isPortrait
-        ? { x: targetCoord.x, y: Math.min(72, targetCoord.y + 22) }
-        : { x: Math.max(24, targetCoord.x - 18), y: targetCoord.y };
-    }
+    const { targetCoord, dashCoord } = computeStrikeCoords({
+      mode: s.mode,
+      isPortrait,
+      bossPos: s.layout.bossPos,
+      targetSlots: s.layout.targetSlots,
+      currentHunt: s.currentHunt,
+    });
 
     heroPosRef.current = dashCoord;
     setHeroPos(dashCoord);
@@ -222,7 +228,7 @@ export const BattleStageArena: React.FC<BattleStageArenaProps> = ({
     if (feedback) setManualFeedback(feedback);
 
     audioService.playSuccessJingle();
-    audioService.speakEnglish(s.hero.attackCalloutEn, 1.05);
+    audioService.speakEnglish(s.hero.attackCalloutEn, 1.0, 'hero');
 
     try {
       confetti({
@@ -236,12 +242,17 @@ export const BattleStageArena: React.FC<BattleStageArenaProps> = ({
 
     const nextStars = Math.max(s.earnedStars, roundStars);
     setEarnedStars(nextStars);
+    setComboCount((c) => c + 1);
 
     const stepPreview = resolveNextCombatStep({
       mode: s.mode,
       huntIdx: s.huntIdx,
+      forgeIdx: s.forgeIdx,
+      chestIdx: s.chestIdx,
       echoIdx: s.echoIdx,
       huntCount: s.unit.targetHuntRounds.length,
+      forgeCount: s.forgeCount,
+      chestCount: s.chestCount,
       echoTotal: s.allEchoRounds.length,
       hasLetterTrace: Boolean(s.unit.letterTraceRound),
     });
@@ -260,8 +271,12 @@ export const BattleStageArena: React.FC<BattleStageArenaProps> = ({
       const stepRes = resolveNextCombatStep({
         mode: cur.mode,
         huntIdx: cur.huntIdx,
+        forgeIdx: cur.forgeIdx,
+        chestIdx: cur.chestIdx,
         echoIdx: cur.echoIdx,
         huntCount: cur.unit.targetHuntRounds.length,
+        forgeCount: cur.forgeCount,
+        chestCount: cur.chestCount,
         echoTotal: cur.allEchoRounds.length,
         hasLetterTrace: Boolean(cur.unit.letterTraceRound),
       });
@@ -280,13 +295,15 @@ export const BattleStageArena: React.FC<BattleStageArenaProps> = ({
       } else {
         setMode(stepRes.nextMode);
         setHuntIdx(stepRes.nextHuntIdx);
+        setForgeIdx(stepRes.nextForgeIdx);
+        setChestIdx(stepRes.nextChestIdx);
         setEchoIdx(stepRes.nextEchoIdx);
       }
     }, 950);
   }, [isPortrait]);
 
   const director = useVoiceDirector({
-    stepKey: `${unit.id}_${mode}_${huntIdx}_${echoIdx}`,
+    stepKey: `${unit.id}_${mode}_${huntIdx}_${forgeIdx}_${chestIdx}_${echoIdx}`,
     enabled: mode !== 'victory' && mode !== 'letter_trace',
     paused: Boolean(isOverlayPaused) || isAttacking,
     heroNameVi: hero.nameVi,
@@ -376,10 +393,42 @@ export const BattleStageArena: React.FC<BattleStageArenaProps> = ({
     audioService.stopSpeaking();
     setSelectedQaChoiceId(null);
     setWrongQaChoiceId(null);
+    setSelectedChestWord(null);
+    setWrongChestWord(null);
     setManualFeedback('');
     setMode(nextMode);
     if (nextMode === 'target_hunt') setHuntIdx(0);
+    if (nextMode === 'sound_forge') setForgeIdx(0);
+    if (nextMode === 'mystery_chest') setChestIdx(0);
     if (nextMode === 'echo_duel') setEchoIdx(0);
+  };
+
+  const handleForgeComplete = () => {
+    performDashAndStrike(3, `⚒️ ${hero.nameVi} hợp âm "${currentForge?.targetWord || ''}" tung chiêu!`);
+  };
+
+  const handlePickChest = (word: string, isTarget: boolean) => {
+    if (isAttacking || mode !== 'mystery_chest') return;
+    if (!isTarget) {
+      setWrongChestWord(word);
+      setComboCount(0);
+      audioService.playGentleTryAgain();
+      audioService.speakEnglish(word, 1.0);
+      setManualFeedback(`"${word}" chưa đúng rương rồi! Nghe kỹ và chọn rương còn lại nhé!`);
+      window.setTimeout(() => setWrongChestWord((prev) => (prev === word ? null : prev)), 1800);
+      return;
+    }
+    if (selectedChestWord === word) {
+      director.cancelForManualAction();
+      performDashAndStrike(3, `🧰 Mở đúng kho báu "${word}"!`);
+      return;
+    }
+    setWrongChestWord(null);
+    setSelectedChestWord(word);
+    audioService.playPopSound(660);
+    audioService.speakEnglish(word, 1.0);
+    setManualFeedback(`🎙️ Chuẩn rồi! Nói to "${word}" hoặc chạm rương lần nữa để mở!`);
+    director.triggerManualListen();
   };
 
   const handleSelectQaChoice = (choice: QaChoiceOption) => {
@@ -418,6 +467,10 @@ export const BattleStageArena: React.FC<BattleStageArenaProps> = ({
     mode,
     huntIdx,
     huntCount: unit.targetHuntRounds.length,
+    forgeIdx,
+    forgeCount: forgeRounds.length,
+    chestIdx,
+    chestCount: chestRounds.length,
     echoIdx,
     echoTotal: allEchoRounds.length,
     traceRound: unit.letterTraceRound,
@@ -433,9 +486,12 @@ export const BattleStageArena: React.FC<BattleStageArenaProps> = ({
         heroHp={heroHp}
         bossHp={bossHp}
         starsEarned={earnedStars}
+        comboCount={comboCount}
         toddlerMode={toddlerMode}
         mode={mode}
         hasLetterTrace={Boolean(unit.letterTraceRound)}
+        hasSoundForge={forgeRounds.length > 0}
+        hasMysteryChest={chestRounds.length > 0}
         onSwitchMode={handleSwitchMode}
         onToggleToddlerMode={onToggleToddlerMode}
         onOpenRoster={onOpenRoster}
@@ -465,12 +521,24 @@ export const BattleStageArena: React.FC<BattleStageArenaProps> = ({
         earnedStars={earnedStars}
         victoryCountdownSec={victoryCountdownSec}
         currentHunt={currentHunt}
+        currentForge={currentForge}
+        currentChest={currentChest}
         currentEcho={currentEcho}
         selectedQaChoiceId={selectedQaChoiceId}
         wrongQaChoiceId={wrongQaChoiceId}
+        selectedChestWord={selectedChestWord}
+        wrongChestWord={wrongChestWord}
         onStageTap={handleStageTap}
         onTapTargetOption={handleTapTargetOption}
         onSelectQaChoice={handleSelectQaChoice}
+        onForgeComplete={handleForgeComplete}
+        onPickChest={handlePickChest}
+        onReplayChestPrompt={() => {
+          if (currentChest) {
+            audioService.speakEnglish(currentChest.promptEn, 1.0);
+            director.triggerManualListen();
+          }
+        }}
         onTraceComplete={handleTraceComplete}
         onTapRival={() => {
           if (currentEcho) {
@@ -478,16 +546,7 @@ export const BattleStageArena: React.FC<BattleStageArenaProps> = ({
             director.triggerManualListen();
           }
         }}
-        onReplay={() => {
-          setVictoryCountdownSec(null);
-          setBossHp(100);
-          setSelectedQaChoiceId(null);
-          setWrongQaChoiceId(null);
-          setMode(unit.targetHuntRounds.length > 0 ? 'target_hunt' : 'echo_duel');
-          setHuntIdx(0);
-          setEchoIdx(0);
-          setEarnedStars(0);
-        }}
+        onReplay={resetCombatProgress}
         onNextUnit={onNextUnit}
         onCancelVictoryCountdown={() => setVictoryCountdownSec(null)}
       />

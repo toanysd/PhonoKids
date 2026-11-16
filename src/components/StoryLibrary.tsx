@@ -10,6 +10,8 @@ interface StoryLibraryProps {
   onSelectStory: (story: DecodableStory) => void;
   stories?: DecodableStory[];
   language?: 'en' | 'ja';
+  onBackToMap?: () => void;
+  unlockedStoryIds?: string[];
 }
 
 const STAGE_FILTERS: { id: number | 'all'; label: string }[] = [
@@ -24,6 +26,8 @@ export const StoryLibrary: React.FC<StoryLibraryProps> = ({
   completedStories,
   onSelectStory,
   stories = DECODABLE_STORIES,
+  onBackToMap,
+  unlockedStoryIds = [],
 }) => {
   const [selectedStage, setSelectedStage] = useState<number | 'all'>('all');
   const [storyIdx, setStoryIdx] = useState<number>(0);
@@ -35,6 +39,7 @@ export const StoryLibrary: React.FC<StoryLibraryProps> = ({
   const safeIdx = Math.min(storyIdx, safeList.length - 1);
   const currentStory = safeList[safeIdx] || stories[0];
   const isCompleted = completedStories.includes(currentStory.id);
+  const isUnlockedReward = unlockedStoryIds.includes(currentStory.id);
   const visual = getStoryCoverVisual(currentStory.id, currentStory);
 
   const stepStory = (delta: number) => {
@@ -43,37 +48,51 @@ export const StoryLibrary: React.FC<StoryLibraryProps> = ({
   };
 
   return (
-    <div className="w-full h-full max-w-4xl mx-auto px-2.5 sm:px-5 py-2 flex flex-col gap-2 overflow-hidden">
-      {/* 1. Compact Stage Filter Pills + Pager Count */}
-      <div className="shrink-0 flex items-center justify-between gap-2">
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 flex-1 min-w-0">
-          {STAGE_FILTERS.map((f) => {
-            const active = selectedStage === f.id;
-            return (
-              <button
-                key={String(f.id)}
-                type="button"
-                onClick={() => {
-                  audioService.playPopSound(500);
-                  setSelectedStage(f.id);
-                  setStoryIdx(0);
-                }}
-                className={`min-h-[40px] px-3 py-1 rounded-2xl font-black text-xs whitespace-nowrap shrink-0 border-2 cursor-pointer transition-all ${
-                  active
-                    ? 'bg-slate-900 text-amber-300 border-amber-400 shadow-sm'
-                    : 'bg-white text-amber-950 border-amber-200'
-                }`}
-              >
-                {f.label}
-              </button>
-            );
-          })}
-        </div>
+    <div className="w-full h-full bg-gradient-to-b from-slate-950 via-indigo-950 to-slate-900 flex flex-col overflow-hidden">
+      <div className="w-full h-full max-w-4xl mx-auto px-2.5 sm:px-5 py-2 flex flex-col gap-2 overflow-hidden">
+        {/* Top Theater Bar (Back to Map + Filters + Pager Count) */}
+        <div className="shrink-0 flex items-center justify-between gap-2">
+          {onBackToMap && (
+            <button
+              type="button"
+              onClick={() => {
+                audioService.playPopSound(440);
+                onBackToMap();
+              }}
+              className="shrink-0 min-h-[40px] px-3 py-1 rounded-2xl bg-white/15 hover:bg-white/25 text-white border border-white/25 font-black text-xs inline-flex items-center gap-1 cursor-pointer active:scale-95"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span>Bản Đồ</span>
+            </button>
+          )}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 flex-1 min-w-0">
+            {STAGE_FILTERS.map((f) => {
+              const active = selectedStage === f.id;
+              return (
+                <button
+                  key={String(f.id)}
+                  type="button"
+                  onClick={() => {
+                    audioService.playPopSound(500);
+                    setSelectedStage(f.id);
+                    setStoryIdx(0);
+                  }}
+                  className={`min-h-[40px] px-3 py-1 rounded-2xl font-black text-xs whitespace-nowrap shrink-0 border-2 cursor-pointer transition-all ${
+                    active
+                      ? 'bg-amber-400 text-slate-950 border-white shadow-sm'
+                      : 'bg-white/10 text-amber-100 border-white/20'
+                  }`}
+                >
+                  {f.label}
+                </button>
+              );
+            })}
+          </div>
 
-        <span className="shrink-0 font-mono text-xs font-black bg-amber-200 text-amber-950 px-3 py-1.5 rounded-2xl border border-amber-300 tabular-nums">
-          {safeIdx + 1}/{safeList.length}
-        </span>
-      </div>
+          <span className="shrink-0 font-mono text-xs font-black bg-amber-300 text-slate-950 px-3 py-1.5 rounded-2xl tabular-nums">
+            {safeIdx + 1}/{safeList.length}
+          </span>
+        </div>
 
       {/* 2. Full-Screen Paged Storybook Spotlight Card */}
       <div
@@ -98,12 +117,19 @@ export const StoryLibrary: React.FC<StoryLibraryProps> = ({
               {currentStory.ageBand}
             </span>
           </div>
-          {isCompleted && (
-            <span className="text-xs font-black bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full inline-flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Đã đọc</span>
-            </span>
-          )}
+          <div className="flex items-center gap-1.5">
+            {isUnlockedReward && !isCompleted && (
+              <span className="text-xs font-black bg-amber-100 text-amber-900 px-2.5 py-1 rounded-full">
+                ✨ Mới mở khóa
+              </span>
+            )}
+            {isCompleted && (
+              <span className="text-xs font-black bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full inline-flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Đã đọc</span>
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Center Cover Art + Title + Phonics Chips with Side Arrows */}
@@ -178,6 +204,7 @@ export const StoryLibrary: React.FC<StoryLibraryProps> = ({
           <Sparkles className="w-5 h-5 text-amber-800" />
           <span>MỞ SÁCH RA ĐỌC</span>
         </button>
+      </div>
       </div>
     </div>
   );

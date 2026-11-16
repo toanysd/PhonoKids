@@ -1,19 +1,14 @@
-# HANDOFF.md — englishStudy (HeroSpeak Kids)
+# HANDOFF.md — englishStudy (HeroSpeak Kids 2.0)
 
 - **Cập nhật:** 2026-11-16
-- **Trạng thái mới nhất:** Đã sửa triệt để lỗi `RestBreakModal` tự bật lại khi bấm "Nghỉ Ngơi Hôm Nay" và nâng cấp toàn bộ giao diện di động (`390×844`) sang bố cục phân trang 1 màn hình không cuộn.
+- **Trạng thái mới nhất:** Hoàn tất nâng cấp **HeroSpeak Kids 2.0**: thay toàn bộ giọng máy thành kho **1,484 clip bản ngữ US Studio (`.mp3` `24kHz`)**, đập bỏ vỏ web `<Navbar>` sang **Bản Đồ Game toàn màn hình 48 chặng**, và mở rộng lên **5 cơ chế chiến đấu + Rạp Truyện đồng bộ chữ theo tiếng đọc**.
 
-## 1. Thay Đổi Trọng Tâm Đã Hoàn Tất
-- **Sửa bộ đếm Nghỉ Mắt (`App.tsx`, `RestBreakModal.tsx`):** Chỉ đếm giờ ở màn học/chơi (tạm dừng ở `hero_hub`, `document.hidden`, `ParentDashboard`, `isSessionResting`); bấm "Nghỉ Ngơi Hôm Nay" reset `sessionSecondsRef = 0` + `isSessionResting(true)` + về `hero_hub`; bấm "Chơi Thêm 3 Phút Nữa" đặt ngưỡng `180s`; hỗ trợ `Escape` & nút `✕`.
-- **Phân trang 1 màn hình Không Cuộn trên Di động (`390×844`):**
-  - `App.tsx` khóa `<main overflow-hidden>`; `HeroAdventureHub.tsx` (1 bài/màn hình, nền thế giới `opacity-45` + thanh `Đổi` gọn), `HeroRosterDrawer.tsx`, `TrainingDojoHub.tsx` (`grid-cols-4`), `PhonicsIslandMap.tsx`, `ArcadePlayground.tsx` (`grid-cols-4`, đổi `🎈 Bắt Bóng`), `BlendingPlayground.tsx`, `MinimalPairsView.tsx`, `StoryLibrary.tsx`, `StickerAlbumModal.tsx` đều vừa khít 1 màn hình (`scrollHeight === clientHeight`).
-  - `QaDuelStageCard.tsx` (`grid-cols-1 sm:grid-cols-3`) + `BattleStageArena.tsx` (giữ gợi ý sai `1800ms`).
+## 1. Kiến Trúc & Tính Năng Mới
+- **Lõi Giọng Bản Ngữ (`build_native_voice_bank.py`, `voiceManifest.json`, `audioService.ts` `512L`, `sfxService.ts` `95L`, `voiceKey.ts`):** Thu âm `1,484` câu/từ chuẩn Bắc Mỹ (`en-US-AvaNeural`, `AnaNeural`, `AndrewNeural`, `GuyNeural`, `pitch=+0Hz`, `19.52 MB`); xóa `pitch = 1.25`; đồng bộ karaoke từng từ trên 1 mạch kể truyện (`speakEnglishTimed` trong `StoryReader.tsx` `490L`).
+- **Full-Bleed 2D Game Shell (`App.tsx` `406L`, `GameHudBar.tsx` `145L`, `WorldOverworldMap.tsx` `361L`, `HeroCommunicatorModal.tsx` `243L`):** Bản đồ chữ S 6 Thế Giới × 8 chặng, HUD nổi (`Lv/XP`, `Đổi Tướng`, `⭐`, `🎁 Rương Quà`, `🔊`, `🛡️`), 4 cổng Game (`Bản Đồ | Đấu Trường | Rạp Truyện | Bộ Đàm`).
+- **48 Màn Chơi & 5 Cơ Chế (`campaignExpansionW1To3.ts`, `campaignExpansionW4To6.ts`, `campaignStageEnricher.ts`, `SoundFusionForgeOverlay.tsx`, `MinimalPairChestOverlay.tsx`, `BattleStageArena.tsx` `592L`):** Thêm Lò Rèn Ghép Âm, Rương Thính Âm phân biệt cặp âm, Combo `x{n} 🔥`, XP và mở khóa 28 truyện (`heroStorage.ts`).
 
-## 2. Kết Quả Kiểm Chứng Mới Nhất
-- **Evidence:** `.agents/evidence/20261116-073649_mobile_paged_ux_and_rest_fix.md` (`E1..E4` đều `exit 0`):
-  - `npx tsc --noEmit --pretty false`: `exit 0`, không output.
-  - `verify_mobile_paged_and_rest.py`: `status: ALL_PASS` (`390×844` & `1440×900`, `hOverflow: 0`, `mScrollH === mClientH`, `broken: []`, `RestBreakModal` không tự bật lại).
-  - `verify_phase3_gameplay.py`: `status: ALL_PASS`, 0 lỗi/tràn khung.
-  - `run_verify.mjs`: `exit 0`, `console_errors: []`.
-  - `npm run build` (`tsc -b && vite build`): `exit 0`, xuất `dist/assets/index-9HiVZSFQ.js` và đẩy nhánh `main` triển khai tự động lên `phonokids.vercel.app`.
-- **Lưu ý vận hành:** Mở local bằng `start_game.bat`; tuân thủ Quy tắc #8 (không tự build) & #9 (không tự sync `D:` ⟷ USB).
+## 2. Kiểm Chứng Mới Nhất (`20261116-221926_herospeak_v2_game_and_native_voice.md` & Production Deploy)
+- `npx tsc --noEmit --pretty false`: `exit 0` (không lỗi); `npm run build` (`tsc -b && vite build`): `exit 0` (`dist/assets/index-DzVXZH2l.js`, `2,180.68 kB`).
+- `verify_herospeak_v2_game.py`: `status: ALL_PASS` (`1,484/1,484` file `.mp3` hợp lệ, `0` `<header>`, `0` tràn/cuộn dọc trên cả Mobile `390×844` & Desktop `1440×900`, đủ 5 mode & `RestBreakModal`).
+- **Deploy & vận hành:** Chuẩn bị đẩy toàn bộ mã nguồn + `1,484` file audio `.mp3` lên `origin main` (GitHub -> Vercel auto-deploy `https://phonokids.vercel.app`); tuân thủ Quy tắc #9 (không tự sync `D:` ⟷ USB).

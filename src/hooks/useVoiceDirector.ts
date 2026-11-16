@@ -58,25 +58,20 @@ async function speakGuarded(
   }
   if (!textEn) return;
 
-  const speechPromise = audioService.speakEnglish(textEn, rate);
+  const speechPromise = audioService.speakEnglish(textEn, rate, 'teacher');
   const maxMs = Math.min(8500, Math.max(2200, textEn.length * 135));
 
   await Promise.race([
     speechPromise,
     (async () => {
-      await sleep(650);
-      if (
-        typeof window !== 'undefined' &&
-        'speechSynthesis' in window &&
-        !window.speechSynthesis.speaking &&
-        !window.speechSynthesis.pending
-      ) {
+      await sleep(750);
+      if (!audioService.isCurrentlySpeaking()) {
         await sleep(300);
-        if (!window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
+        if (!audioService.isCurrentlySpeaking()) {
           return;
         }
       }
-      await sleep(maxMs - 650);
+      await sleep(maxMs - 750);
     })(),
   ]);
 }

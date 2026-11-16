@@ -80,9 +80,9 @@ export const HeroRosterDrawer: React.FC<HeroRosterDrawerProps> = ({
     setDemoSpeaking(true);
     audioService.playMagicChime();
     if (tab === 'hero') {
-      await audioService.speakEnglish(spotlightHero.greetingEn, 1.0);
+      await audioService.speakEnglish(spotlightHero.greetingEn, 1.0, 'hero');
     } else {
-      await audioService.speakEnglish(spotlightRival.tauntEn, 0.95);
+      await audioService.speakEnglish(spotlightRival.tauntEn, 1.0, 'villain');
     }
     setTimeout(() => setDemoSpeaking(false), 700);
   };

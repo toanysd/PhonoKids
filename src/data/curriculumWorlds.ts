@@ -1,7 +1,10 @@
 import { CurriculumUnit, CurriculumWorld } from '../types/heroGame';
 import { UNITS_STAGE_1_TO_3 } from './curriculumUnitsStage1To3';
 import { UNITS_STAGE_4_TO_6 } from './curriculumUnitsStage4To6';
+import { CAMPAIGN_EXPANSION_W1_TO_3 } from './campaignExpansionW1To3';
+import { CAMPAIGN_EXPANSION_W4_TO_6 } from './campaignExpansionW4To6';
 import { LETTER_TRACE_BY_UNIT, QA_CHALLENGES_BY_UNIT } from './curriculumInteractiveData';
+import { enrichCampaignStages } from './campaignStageEnricher';
 
 export const CURRICULUM_WORLDS: CurriculumWorld[] = [
   {
@@ -72,23 +75,29 @@ export const CURRICULUM_WORLDS: CurriculumWorld[] = [
   },
 ];
 
-export const ALL_CURRICULUM_UNITS: CurriculumUnit[] = [
+const BASE_UNITS: CurriculumUnit[] = [
   ...UNITS_STAGE_1_TO_3,
+  ...CAMPAIGN_EXPANSION_W1_TO_3,
   ...UNITS_STAGE_4_TO_6,
-].map((unit) => {
-  const qaChallenge = QA_CHALLENGES_BY_UNIT[unit.id];
-  const mergedEcho =
-    qaChallenge && unit.echoDuelRounds.length >= 2
-      ? [unit.echoDuelRounds[0], qaChallenge, ...unit.echoDuelRounds.slice(2)]
-      : qaChallenge
-      ? [...unit.echoDuelRounds, qaChallenge]
-      : unit.echoDuelRounds;
-  return {
-    ...unit,
-    letterTraceRound: LETTER_TRACE_BY_UNIT[unit.id] || unit.letterTraceRound,
-    echoDuelRounds: mergedEcho,
-  };
-});
+  ...CAMPAIGN_EXPANSION_W4_TO_6,
+]
+  .sort((a, b) => a.worldId - b.worldId || a.unitNumber - b.unitNumber)
+  .map((unit) => {
+    const qaChallenge = QA_CHALLENGES_BY_UNIT[unit.id];
+    const mergedEcho =
+      qaChallenge && unit.echoDuelRounds.length >= 2
+        ? [unit.echoDuelRounds[0], qaChallenge, ...unit.echoDuelRounds.slice(2)]
+        : qaChallenge
+        ? [...unit.echoDuelRounds, qaChallenge]
+        : unit.echoDuelRounds;
+    return {
+      ...unit,
+      letterTraceRound: LETTER_TRACE_BY_UNIT[unit.id] || unit.letterTraceRound,
+      echoDuelRounds: mergedEcho,
+    };
+  });
+
+export const ALL_CURRICULUM_UNITS: CurriculumUnit[] = enrichCampaignStages(BASE_UNITS);
 
 export function getUnitsByWorld(worldId: number): CurriculumUnit[] {
   return ALL_CURRICULUM_UNITS.filter((u) => u.worldId === worldId);

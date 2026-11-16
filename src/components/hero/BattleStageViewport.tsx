@@ -4,8 +4,10 @@ import {
   CurriculumUnit,
   DialogueChallenge,
   HeroCharacter,
+  MysteryChestChallenge,
   QaChoiceOption,
   RivalCharacter,
+  SoundForgeChallenge,
   StageTargetOption,
   TargetHuntRound,
 } from '../../types/heroGame';
@@ -14,6 +16,8 @@ import { WORLD_BACKDROP_ASSETS } from '../../data/characterSpriteManifest';
 import { CharacterRigSvg } from './CharacterRigSvg';
 import { BattleLetterTraceOverlay } from './BattleLetterTraceOverlay';
 import { QaDuelStageCard } from './QaDuelStageCard';
+import { SoundFusionForgeOverlay } from './SoundFusionForgeOverlay';
+import { MinimalPairChestOverlay } from './MinimalPairChestOverlay';
 import { getWordVisual } from '../../services/imageService';
 import { Pause, RotateCcw, Sparkles, Trophy, Volume2 } from 'lucide-react';
 
@@ -68,12 +72,19 @@ interface BattleStageViewportProps {
   earnedStars: number;
   victoryCountdownSec: number | null;
   currentHunt?: TargetHuntRound;
+  currentForge?: SoundForgeChallenge;
+  currentChest?: MysteryChestChallenge;
   currentEcho?: DialogueChallenge;
   selectedQaChoiceId: string | null;
   wrongQaChoiceId: string | null;
+  selectedChestWord: string | null;
+  wrongChestWord: string | null;
   onStageTap: (e: React.PointerEvent<HTMLDivElement>) => void;
   onTapTargetOption: (slot: { x: number; y: number }, opt: StageTargetOption) => void;
   onSelectQaChoice: (choice: QaChoiceOption) => void;
+  onForgeComplete: () => void;
+  onPickChest: (word: string, isTarget: boolean) => void;
+  onReplayChestPrompt: () => void;
   onTraceComplete: () => void;
   onTapRival: () => void;
   onReplay: () => void;
@@ -101,12 +112,19 @@ export const BattleStageViewport: React.FC<BattleStageViewportProps> = ({
   earnedStars,
   victoryCountdownSec,
   currentHunt,
+  currentForge,
+  currentChest,
   currentEcho,
   selectedQaChoiceId,
   wrongQaChoiceId,
+  selectedChestWord,
+  wrongChestWord,
   onStageTap,
   onTapTargetOption,
   onSelectQaChoice,
+  onForgeComplete,
+  onPickChest,
+  onReplayChestPrompt,
   onTraceComplete,
   onTapRival,
   onReplay,
@@ -117,6 +135,7 @@ export const BattleStageViewport: React.FC<BattleStageViewportProps> = ({
   const worldBackdropUrl = WORLD_BACKDROP_ASSETS[unit.worldId] || WORLD_BACKDROP_ASSETS[1];
   const { bossPos, targetSlots } = getStageLayoutCoords(isPortrait);
   const isQaRound = mode === 'echo_duel' && currentEcho?.interactionType === 'qa';
+  const hasBottomCard = isQaRound || mode === 'sound_forge' || mode === 'mystery_chest';
 
   return (
     <div
@@ -146,6 +165,10 @@ export const BattleStageViewport: React.FC<BattleStageViewportProps> = ({
           <span className="font-display text-xs sm:text-base font-bold text-slate-950 block truncate sm:whitespace-normal">
             {mode === 'target_hunt'
               ? `🔊 Nghe & nhắc lại: "${currentHunt?.promptAudioEn || ''}" — ${currentHunt?.instructionVi || ''}`
+              : mode === 'sound_forge'
+              ? `⚒️ Chạm từng tinh thể ghép vần đọc từ "${currentForge?.targetWord || ''}"!`
+              : mode === 'mystery_chest'
+              ? `👂 Nghe giọng bản ngữ và mở đúng rương kho báu!`
               : mode === 'letter_trace'
               ? `✍️ Tô nét chữ "${unit.letterTraceRound?.displayChar || ''}" theo chấm xanh để nạp năng lượng!`
               : isQaRound
@@ -161,8 +184,20 @@ export const BattleStageViewport: React.FC<BattleStageViewportProps> = ({
           mode === 'letter_trace' && isPortrait ? 'hidden' : ''
         }`}
         style={{
-          left: mode === 'letter_trace' ? '16%' : isQaRound && isPortrait ? '18%' : `${heroPos.x}%`,
-          top: isQaRound && isPortrait ? '28%' : `${heroPos.y}%`,
+          left:
+            mode === 'letter_trace'
+              ? '16%'
+              : hasBottomCard && isPortrait
+              ? '22%'
+              : hasBottomCard
+              ? '14%'
+              : `${heroPos.x}%`,
+          top:
+            hasBottomCard && isPortrait
+              ? '23%'
+              : hasBottomCard
+              ? '42%'
+              : `${heroPos.y}%`,
         }}
       >
         {calloutBanner && (
@@ -185,7 +220,7 @@ export const BattleStageViewport: React.FC<BattleStageViewportProps> = ({
             pose={heroPose}
             isSpeaking={directorPhase === 'coop_assist' || (isListening && micVolume > 16)}
             customAvatarUrl={hero.customAvatarUrl}
-            className="w-32 h-32 sm:w-44 sm:h-44"
+            className={hasBottomCard && isPortrait ? 'w-20 h-20 sm:w-28 sm:h-28' : 'w-32 h-32 sm:w-44 sm:h-44'}
           />
         </div>
       </div>
@@ -291,6 +326,66 @@ export const BattleStageViewport: React.FC<BattleStageViewportProps> = ({
             </div>
           );
         })}
+
+      {/* MODE 2: Sound Fusion Forge */}
+      {mode === 'sound_forge' && currentForge && (
+        <>
+          <div
+            style={isPortrait ? { left: '76%', top: '23%' } : { left: '86%', top: '42%' }}
+            className="absolute -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none"
+          >
+            <CharacterRigSvg
+              template={rival.template}
+              primaryColor={rival.primaryColor}
+              secondaryColor={rival.secondaryColor}
+              accentColor={rival.accentColor}
+              pose={rivalPose}
+              facing="left"
+              customAvatarUrl={rival.customAvatarUrl}
+              className={isPortrait ? 'w-20 h-20' : 'w-28 h-28'}
+            />
+          </div>
+          <div className="absolute inset-x-0 bottom-2 sm:bottom-4 z-30 flex justify-center pointer-events-none">
+            <SoundFusionForgeOverlay
+              challenge={currentForge}
+              heroNameVi={hero.nameVi}
+              showGuidingHand={showGuidingHand}
+              onForgeComplete={onForgeComplete}
+            />
+          </div>
+        </>
+      )}
+
+      {/* MODE 3: Minimal Pair Mystery Chests */}
+      {mode === 'mystery_chest' && currentChest && (
+        <>
+          <div
+            style={isPortrait ? { left: '76%', top: '23%' } : { left: '86%', top: '42%' }}
+            className="absolute -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none"
+          >
+            <CharacterRigSvg
+              template={rival.template}
+              primaryColor={rival.primaryColor}
+              secondaryColor={rival.secondaryColor}
+              accentColor={rival.accentColor}
+              pose={rivalPose}
+              facing="left"
+              customAvatarUrl={rival.customAvatarUrl}
+              className={isPortrait ? 'w-20 h-20' : 'w-28 h-28'}
+            />
+          </div>
+          <div className="absolute inset-x-0 bottom-2 sm:bottom-4 z-30 flex justify-center pointer-events-none">
+            <MinimalPairChestOverlay
+              challenge={currentChest}
+              selectedWord={selectedChestWord}
+              wrongWord={wrongChestWord}
+              showGuidingHand={showGuidingHand}
+              onReplayPrompt={onReplayChestPrompt}
+              onPickChest={onPickChest}
+            />
+          </div>
+        </>
+      )}
 
       {/* ACT 2: Interactive Battle Letter Tracing */}
       {mode === 'letter_trace' && unit.letterTraceRound && (
@@ -407,8 +502,14 @@ export const BattleStageViewport: React.FC<BattleStageViewportProps> = ({
             </h3>
             <p className="text-sm font-bold text-slate-700">
               Bé đã hoàn thành “{unit.titleVi}” và nhận{' '}
-              <span className="text-amber-600 font-black">+{Math.max(2, earnedStars)} ⭐</span>!
+              <span className="text-amber-600 font-black">+{Math.max(2, earnedStars)} ⭐</span> •{' '}
+              <span className="text-indigo-700 font-black">+{Math.max(2, earnedStars) * 25} XP</span>!
             </p>
+            {unit.unlockStoryId && (
+              <div className="px-3 py-1 rounded-full bg-indigo-100 border border-indigo-300 text-indigo-900 text-xs font-black">
+                🎬 Đã mở khóa truyện mới trong Rạp Truyện!
+              </div>
+            )}
             <div className="flex items-center justify-center gap-2 text-2xl">
               <Sparkles className="w-5 h-5 text-amber-400" />
               <span>⭐⭐⭐</span>

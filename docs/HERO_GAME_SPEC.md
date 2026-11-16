@@ -5,13 +5,13 @@
 ## 1. Tổng Quan Kiến Trúc & Lộ Trình Sư Phạm Kép (3–8 Tuổi)
 **HeroSpeak Kids** chuyển đổi nền tảng học ngữ âm thành Game Nhập Vai Hoạt Cảnh Chiến Đấu điều khiển bằng tương tác chạm/phím và giọng nói tiếng Anh trực tiếp cho trẻ từ 3 tuổi:
 
-- **6 Thế Giới / 24 Bài Học Toàn Diện (`src/data/curriculumWorlds.ts`):**
-  1. **Thế Giới 1 (3–4 Tuổi — `Wow English & Super Simple Oral/TPR`):** Chào hỏi (`Hello!`, `Bye-bye!`), màu sắc (`Red`, `Blue`, `Yellow`), trái cây (`Apple`, `Banana`, `Yummy!`), thú cưng & vận động (`Cat`, `Dog`, `Jump!`).
-  2. **Thế Giới 2 (3.5–4.5 Tuổi — `Oxford Phonics World Level 1`):** Âm đầu A–Z gắn 100% file `.mp3` thuần âm vị (`s, a, t, p`, `i, n, c, k, e`, `h, r, m, d, g`, `o, u, l, f, b`) và khẩu hình miệng thật (`/assets/visemes/*.jpg`).
-  3. **Thế Giới 3 (4–5 Tuổi — `Oxford Phonics World Level 2`):** Ghép vần ngắn CVC (`-at`, `-an`, `-en`, `-ig`, `-og`, `-un`) và đọc câu nối âm.
-  4. **Thế Giới 4 (5–6 Tuổi — `Wow English Preschool & GrapeSEED`):** Cơ thể & cảm xúc, gia đình, phương tiện & thời tiết, toán học đếm 1–5 và Big/Small.
-  5. **Thế Giới 5 (5.5–7 Tuổi — `Oxford Phonics World Levels 3 & 4`):** Nguyên âm dài `Magic E`, cặp nguyên âm `ee/oa/ai`, tổ hợp phụ âm `st/cl/fr`, âm ghép `sh/ch/th`.
-  6. **Thế Giới 6 (6–8 Tuổi — `Oxford L5 & Cambridge Pre-A1 Starters`):** Nguyên âm trượt `ar/or/ou/oi`, mẫu câu `I can... / Yes, I can!`, giới từ `in/on/under` và Đại Chiến Ngân Hà.
+- **6 Thế Giới / 48 Màn Chơi Toàn Diện (`curriculumWorlds.ts`, `campaignExpansionW1To3.ts`, `campaignExpansionW4To6.ts`, `campaignStageEnricher.ts`):** Mỗi Thế giới gồm 8 chặng đi đường hình chữ S (`1..8` có Boss canh chặng 8), kết nạp kho `PHONICS_WORD_BANK` (796 từ), `MINIMAL_PAIRS_DRILLS` và mở khóa dần 28 truyện Ehon (`unlockedStoryIds`) + hệ thống lên cấp `xp`:
+  1. **Thế Giới 1 (3–4 Tuổi — `Wow English & Super Simple Oral/TPR`):** Chào hỏi (`Hello!`, `Bye-bye!`), màu sắc, trái cây, thú cưng, đồ chơi, đếm 1–3, nông trại & trăng sao (`u1_1..u1_8`).
+  2. **Thế Giới 2 (3.5–4.5 Tuổi — `Oxford Phonics World Level 1`):** Âm đầu A–Z (`p/n/t`, `f/v/j`, `k/w/qu`, `g/l/r`) gắn 42 file `.mp3` thuần âm vị + khẩu hình miệng thật (`/assets/visemes/*.jpg`, `u2_1..u2_8`).
+  3. **Thế Giới 3 (4–5 Tuổi — `Oxford Phonics World Level 2`):** Ghép vần ngắn CVC (`-at`, `-an`, `-en`, `-ig`, `-og`, `-ot/-op`, `-in/-it`, `-ug/-up`, `u3_1..u3_8`).
+  4. **Thế Giới 4 (5–6 Tuổi — `Wow English Preschool & GrapeSEED`):** Cơ thể, gia đình, phương tiện, đếm số, bữa trưa, công viên vận động, balo tới trường & thám hiểm (`u4_1..u4_8`).
+  5. **Thế Giới 5 (5.5–7 Tuổi — `Oxford Phonics World Levels 3 & 4`):** `Magic E`, cặp nguyên âm `oa/oo/ai/ee/ue`, tổ hợp & âm ghép `sh/ch/th` (`u5_1..u5_8`).
+  6. **Thế Giới 6 (6–8 Tuổi — `Oxford L5 & Cambridge Pre-A1 Starters`):** Nguyên âm trượt `ar/or/oi/ou`, nhật ký hằng ngày, giới từ và Đại Lễ Anh Hùng (`u6_1..u6_8`).
 
 ## 2. Hệ Thống Đồ Họa 2D AI Character DNA & Studio Tự Tạo (`characterSpriteManifest.ts`, `CharacterRigSvg.tsx`, `src/three/*`)
 - **Kho Sprite 2D AI Tách Nền & Hoạt Ảnh 2.5D (`public/assets/sprites/`, `src/data/characterSpriteManifest.ts`):**
@@ -34,14 +34,14 @@
   - Khi bật `toddlerMode`, nếu bé nói trúng từ khóa cốt lõi (`coreKeywords`, ví dụ `"Hello"` thay vì `"Find Hello!"`), chấm `2⭐` khích lệ; nói tròn câu hoặc ở chế độ Chuẩn (`>= 75%`) mới đạt `3⭐` và kích hoạt chốt sớm ở `interimResult`.
 - **Đồng Bộ 1:1 Câu Đọc Mẫu & Yêu Cầu Nhắc Lại (`curriculumUnitsStage1To3.ts`, `curriculumUnitsStage4To6.ts`):**
   - Toàn bộ 37 vòng `targetHuntRounds` bỏ hướng dẫn siêu ngôn ngữ (`sound`, `for `, `c a t`), hiển thị và đọc đúng câu 1:1 (ví dụ `"Find Hello!"`). Mọi vòng lặp lại (`echoDuelRounds`, `bossRounds` ngoài `qa`) bảo đảm `speakerPromptEn === childTargetEn`.
-- **Vòng Lặp Chiến Đấu 3 Chặng + Bộ Chuyển Chặng Trên Thanh HUD (`BattleStageArena.tsx`, `BattleHudOverlay.tsx`, `battleRoundHelpers.ts`):**
-  - Thanh đầu trang giữ gọn **3 nút chuyển chặng tức thì** (`1. Săn & Nhắc` | `2. Tô Chữ` | `3. Hỏi Đáp`).
-  1. **Chặng 1 — Săn & Nhắc 1:1 (`target_hunt`):** Nghe & nhắc lại đúng câu lệnh tìm mục tiêu hoặc di chuyển/chạm chọn thẻ đúng.
-  2. **Chặng 2 — Tô Nét Chữ Lồng Âm Vị (`BattleLetterTraceOverlay.tsx`, `curriculumInteractiveData.ts`):** Toàn bộ 24 bài học (`u1_1`..`u6_4`) gắn chữ cái/âm ghép tương ứng kho `letterStrokes.ts`, tự phát âm vị + từ ví dụ (trì hoãn 160ms chống `StrictMode`), cho phép tô nét với dung sai rộng thân thiện cho trẻ 3–8 tuổi (`r = 38` trên khung `200×200`), nút *Nghe Âm / Xem Mẫu / Xóa Vẽ Lại* và tự động tung chiêu khi tô xong toàn bộ nét.
-  3. **Chặng 3 — Hỏi Đáp Tương Tác & Đấu Boss (`QaDuelStageCard.tsx`, `interactionType: 'qa'`):** Mỗi bài học tích hợp 1 vòng Hỏi–Đáp có câu hỏi tiếng Anh + giải nghĩa tiếng Việt và **3 thẻ đáp án minh họa**; chạm thẻ sai lắc nhẹ nhắc thử lại (không trừ HP), chạm thẻ đúng lần 1 chọn thẻ & mở Mic đọc đáp án, chạm lần 2 hoặc nói đúng đáp án để tung chiêu dứt điểm.
-- **Chuỗi Tự Chạy Toàn Tuyến & Giao Diện Mobile-First `100dvh`:**
-  1. **Video Hoạt Cảnh Mở Đầu (`VideoLessonCutscene.tsx`):** Tự đọc mẫu ➔ mở Mic 3.8s ➔ tự lật sang thẻ tiếp theo và đếm ngược `3..2..1` vào trận (có nút tạm dừng).
-  2. **Sân Khấu Chiến Đấu (`BattleStageArena.tsx`, `BattleStageViewport.tsx`, `BattleHudOverlay.tsx`, `useArenaMovement.ts`):** Toàn màn hình `100dvh` ẩn thanh điều hướng tổng; tự chuyển bố cục **Trục Dọc (Trên–Dưới)** trên Mobile `<768px` và **Đấu Trường Ngang 16:9** trên Desktop, kèm đếm ngược `6s` tự sang bài mới sau khi thắng.
-  3. **Bố Cục Phân Trang 1 Màn Hình Không Cuộn (`390×844` Zero-Scroll Paged Screens):** Các màn nhiều mục (`HeroAdventureHub`, `HeroRosterDrawer`, `TrainingDojoHub` gồm `7 Đảo Âm` / `Ghép Vần` / `Nghe Âm` / `Trò Chơi`, `StoryLibrary`, `StickerAlbumModal`) hiển thị đúng 1 thẻ trọng tâm vừa khít khung hình (`scrollHeight === clientHeight`), chuyển trang qua nút `◀`/`▶` hoặc vuốt ngang `40px`, thanh tab con `grid-cols-4` vừa khít di động; thẻ Hỏi–Đáp (`QaDuelStageCard.tsx`) xếp dọc toàn chiều ngang (`grid-cols-1 sm:grid-cols-3`) và giữ gợi ý thử lại `1800ms`.
-  4. **Bộ Đếm Nghỉ Mắt Thông Minh (`App.tsx`, `RestBreakModal.tsx`):** Chỉ tính giờ khi bé ở màn học/chơi thực sự (tạm dừng ở `hero_hub`, `document.hidden`, `ParentDashboard`, `isSessionResting`); bấm **"Nghỉ Ngơi Hôm Nay"** đặt lại `sessionSecondsRef = 0`, bật `isSessionResting` và đưa về `hero_hub` không bật lặp lại; bấm **"Chơi Thêm 3 Phút Nữa"** đặt `breakLimitSecondsRef = 180` (`3` phút).
+- **Vòng Lặp Chiến Đấu 5 Cơ Chế + Combo x{n} + HUD Chuyển Nhanh (`BattleStageArena.tsx`, `BattleHudOverlay.tsx`, `battleRoundHelpers.ts`):**
+  1. **Săn & Nhắc 1:1 (`target_hunt`):** Nghe & nhắc lại đúng câu lệnh tìm mục tiêu hoặc di chuyển/chạm chọn thẻ đúng.
+  2. **Lò Rèn Ghép Âm (`SoundFusionForgeOverlay.tsx`):** Chạm từng tinh thể âm vị thuần (`/assets/audio/phonemes/*.mp3`) rồi hợp âm & đọc từ hoàn chỉnh kèm câu mẫu.
+  3. **Rương Thính Âm (`MinimalPairChestOverlay.tsx`):** Nghe giọng chuẩn bản ngữ phân biệt cặp âm tối thiểu (`pen/ben`, `ship/sip`, `tree/three`...) để mở đúng rương kho báu.
+  4. **Vẽ Phù Hiệu Chữ (`BattleLetterTraceOverlay.tsx`):** Toàn bộ 48 màn gắn chữ cái/âm ghép tương ứng kho `letterStrokes.ts`, tự động tung chiêu khi tô xong toàn bộ nét.
+  5. **Hỏi Đáp & Đấu Boss (`QaDuelStageCard.tsx`):** 3 thẻ đáp án minh họa xếp dọc toàn chiều ngang trên di động, nới nhắc sai `1800ms`, tích lũy `Combo x{n}`, thưởng `XP` & mở khóa truyện mới khi thắng.
+- **Kho Giọng Đọc Bản Ngữ Phòng Thu Mỹ (`audioService.ts`, `voiceManifest.json`, `build_native_voice_bank.py`):**
+  - Đóng gói sẵn **1,484 file `.mp3` `24kHz/48kbps`** phân vai `teacher` (`en-US-AvaNeural`), `kid` (`en-US-AnaNeural`), `hero` (`en-US-AndrewNeural`), `villain` (`en-US-GuyNeural`) giữ nguyên `pitch=+0Hz` tự nhiên; phát truyện liên mạch đồng bộ từng từ qua `speakEnglishTimed()` theo dấu mốc `WordBoundary`; xóa bỏ hoàn toàn `pitch = 1.25` gây méo giọng.
+- **Game Shell Toàn Màn Hình `100dvh` (`WorldOverworldMap.tsx`, `GameHudBar.tsx`, `HeroCommunicatorModal.tsx`):**
+  - Loại bỏ hoàn toàn thanh `<Navbar>` & `<MobileBottomNav>` web cũ; 4 cổng Game (`Bản Đồ`, `Đấu Trường`, `Rạp Truyện`, `Bộ Đàm`), `RestBreakModal` chỉ đếm ở màn học/chơi thực sự.
 - **Tài liệu & Âm thanh giữ nguyên:** 42 file âm thuần `/assets/audio/phonemes/*.mp3`, kho tranh Ehon `/assets/ehon/*.jpg`, và `TrainingDojoHub.tsx` (Phòng Luyện Âm, Ghép Vần, Tai Tinh, Tô Chữ, Truyện Tranh Ehon, Bạn Leo AI). Chế độ Tiếng Nhật (`ja`) được ẩn khỏi UI.

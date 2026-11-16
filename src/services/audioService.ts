@@ -1,12 +1,32 @@
-// Web Audio API and Speech Synthesis Service for Toddlers
+import voiceManifestJson from '../data/voiceManifest.json';
+import { normalizeVoiceLookup, VoiceRole } from '../utils/voiceKey';
+import {
+  playAnimalSfx,
+  playGentleTryAgainSfx,
+  playMagicChimeSfx,
+  playPopSfx,
+  playSuccessJingleSfx,
+} from './sfxService';
+
+interface VoiceManifestEntry {
+  f: string;
+  w?: number[][];
+}
+
+const VOICE_MANIFEST = voiceManifestJson as Record<string, VoiceManifestEntry>;
+
+// Web Audio API and Studio Neural Voice Service for Children
 class AudioService {
   private audioCtx: AudioContext | null = null;
-  private voiceSpeed: number = 0.85; // Slightly slower for 3-5yo toddlers
+  private voiceSpeed: number = 0.85; // 0.85 = default natural kid pacing for studio clips
   private accent: 'US' | 'UK' = 'US';
   private soundEnabled: boolean = true;
   private activeUtterance: SpeechSynthesisUtterance | null = null;
+  private activeVoiceAudio: HTMLAudioElement | null = null;
   private activeSpeechResolve: (() => void) | null = null;
   private speakTimerId: ReturnType<typeof setTimeout> | null = null;
+  private wordTimers: number[] = [];
+  private voiceAudioCache: Record<string, HTMLAudioElement> = {};
   private lastCancelAt: number = 0;
 
   constructor() {
@@ -40,150 +60,70 @@ class AudioService {
     this.accent = accent;
   }
 
-  // Play charming procedural sound effects (No external asset loading failure risk)
+  // Play procedural sound effects cleanly without external asset risk
   public playPopSound(pitch: number = 440) {
     if (!this.soundEnabled) return;
-    try {
-      const ctx = this.getContext();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(pitch, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(pitch * 2.2, ctx.currentTime + 0.08);
-
-      gain.gain.setValueAtTime(0.3, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.09);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start();
-      osc.stop(ctx.currentTime + 0.1);
-    } catch {
-      // Audio context error ignore
-    }
+    try { playPopSfx(this.getContext(), pitch); } catch { /* ignore */ }
   }
 
   public playSuccessJingle() {
     if (!this.soundEnabled) return;
-    try {
-      const ctx = this.getContext();
-      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
-      const duration = 0.12;
-
-      notes.forEach((freq, idx) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * duration);
-
-        gain.gain.setValueAtTime(0, ctx.currentTime + idx * duration);
-        gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + idx * duration + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (idx + 1) * duration + 0.05);
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        osc.start(ctx.currentTime + idx * duration);
-        osc.stop(ctx.currentTime + (idx + 1) * duration + 0.06);
-      });
-    } catch {
-      // Ignore
-    }
+    try { playSuccessJingleSfx(this.getContext()); } catch { /* ignore */ }
   }
 
   public playGentleTryAgain() {
     if (!this.soundEnabled) return;
-    try {
-      const ctx = this.getContext();
-      const notes = [440, 392]; // A4, G4 gentle descending
-      const duration = 0.18;
-
-      notes.forEach((freq, idx) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * duration);
-
-        gain.gain.setValueAtTime(0.2, ctx.currentTime + idx * duration);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (idx + 1) * duration);
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        osc.start(ctx.currentTime + idx * duration);
-        osc.stop(ctx.currentTime + (idx + 1) * duration + 0.02);
-      });
-    } catch {
-      // Ignore
-    }
+    try { playGentleTryAgainSfx(this.getContext()); } catch { /* ignore */ }
   }
 
   public playMagicChime() {
     if (!this.soundEnabled) return;
-    try {
-      const ctx = this.getContext();
-      const freqs = [659.25, 880, 1174.66, 1318.51];
-      freqs.forEach((freq, i) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.06);
-        gain.gain.setValueAtTime(0.15, ctx.currentTime + i * 0.06);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.06 + 0.25);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(ctx.currentTime + i * 0.06);
-        osc.stop(ctx.currentTime + i * 0.06 + 0.26);
-      });
-    } catch {
-      // Ignore
+    try { playMagicChimeSfx(this.getContext()); } catch { /* ignore */ }
+  }
+
+  public playAnimalSound(type: string) {
+    if (!this.soundEnabled) return;
+    try { playAnimalSfx(this.getContext(), type); } catch { this.playPopSound(600); }
+  }
+
+  public isCurrentlySpeaking(): boolean {
+    const audioBusy = Boolean(
+      this.activeVoiceAudio && !this.activeVoiceAudio.paused && !this.activeVoiceAudio.ended
+    );
+    const synthBusy = Boolean(
+      typeof window !== 'undefined' &&
+        'speechSynthesis' in window &&
+        (window.speechSynthesis.speaking || window.speechSynthesis.pending)
+    );
+    return audioBusy || synthBusy;
+  }
+
+  private lookupVoiceEntry(text: string, role: VoiceRole): VoiceManifestEntry | null {
+    const norm = normalizeVoiceLookup(text);
+    if (!norm) return null;
+    return VOICE_MANIFEST[`${role}|${norm}`] || VOICE_MANIFEST[`teacher|${norm}`] || null;
+  }
+
+  public preloadVoiceClips(texts: string[], role: VoiceRole = 'teacher'): void {
+    if (typeof Audio === 'undefined') return;
+    let added = 0;
+    for (const raw of texts) {
+      if (added >= 24) break;
+      const entry = this.lookupVoiceEntry(raw, role);
+      if (entry && !this.voiceAudioCache[entry.f]) {
+        const audio = new Audio(entry.f);
+        audio.preload = 'auto';
+        this.voiceAudioCache[entry.f] = audio;
+        added += 1;
+      }
     }
   }
 
-  // Play special animal sound effects synthesized cleanly
-  public playAnimalSound(type: string) {
-    if (!this.soundEnabled) return;
-    try {
-      const ctx = this.getContext();
-      if (type === 'meow') {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(600, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(950, ctx.currentTime + 0.2);
-        osc.frequency.exponentialRampToValueAtTime(500, ctx.currentTime + 0.5);
-
-        gain.gain.setValueAtTime(0.12, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.55);
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.56);
-      } else if (type === 'bark') {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(250, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + 0.15);
-
-        gain.gain.setValueAtTime(0.3, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.21);
-      } else {
-        this.playPopSound(500);
-      }
-    } catch {
-      this.playPopSound(600);
+  private clearWordTimers() {
+    for (const tid of this.wordTimers) {
+      clearTimeout(tid);
     }
+    this.wordTimers = [];
   }
 
   private cancelSpeechInternal() {
@@ -191,6 +131,20 @@ class AudioService {
       clearTimeout(this.speakTimerId);
       this.speakTimerId = null;
     }
+    this.clearWordTimers();
+
+    if (this.activeVoiceAudio) {
+      try {
+        this.activeVoiceAudio.onended = null;
+        this.activeVoiceAudio.onerror = null;
+        this.activeVoiceAudio.pause();
+        this.activeVoiceAudio.currentTime = 0;
+      } catch {
+        // Ignore audio reset errors
+      }
+      this.activeVoiceAudio = null;
+    }
+
     const prevResolve = this.activeSpeechResolve;
     this.activeSpeechResolve = null;
     this.activeUtterance = null;
@@ -204,6 +158,76 @@ class AudioService {
       window.speechSynthesis.cancel();
       this.lastCancelAt = performance.now();
     }
+  }
+
+  private playManifestEntry(
+    entry: VoiceManifestEntry,
+    onWordIndex?: (idx: number | null) => void
+  ): Promise<void> {
+    this.cancelSpeechInternal();
+    return new Promise((resolve) => {
+      let settled = false;
+      let audio = this.voiceAudioCache[entry.f];
+      if (!audio) {
+        audio = new Audio(entry.f);
+        audio.preload = 'auto';
+        if (Object.keys(this.voiceAudioCache).length < 90) {
+          this.voiceAudioCache[entry.f] = audio;
+        }
+      }
+
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        this.clearWordTimers();
+        if (this.speakTimerId !== null) {
+          clearTimeout(this.speakTimerId);
+          this.speakTimerId = null;
+        }
+        audio.onended = null;
+        audio.onerror = null;
+        if (this.activeVoiceAudio === audio) {
+          this.activeVoiceAudio = null;
+        }
+        if (this.activeSpeechResolve === finish) {
+          this.activeSpeechResolve = null;
+        }
+        onWordIndex?.(null);
+        resolve();
+      };
+
+      const rate =
+        Math.abs(this.voiceSpeed - 0.85) < 0.02
+          ? 1.0
+          : Math.max(0.8, Math.min(1.25, this.voiceSpeed / 0.85));
+
+      try {
+        audio.currentTime = 0;
+      } catch {
+        // Ignore seek errors before metadata loads
+      }
+      audio.playbackRate = rate;
+      if ('preservesPitch' in audio) audio.preservesPitch = true;
+      const webkitAudio = audio as HTMLAudioElement & { webkitPreservesPitch?: boolean };
+      if ('webkitPreservesPitch' in webkitAudio) webkitAudio.webkitPreservesPitch = true;
+
+      this.activeVoiceAudio = audio;
+      this.activeSpeechResolve = finish;
+      audio.onended = finish;
+      audio.onerror = finish;
+      this.speakTimerId = setTimeout(finish, 18000);
+
+      if (onWordIndex && entry.w && entry.w.length > 0) {
+        entry.w.forEach(([startMs], idx) => {
+          const tid = window.setTimeout(() => {
+            if (!settled) onWordIndex(idx);
+          }, Math.round(startMs / rate));
+          this.wordTimers.push(tid);
+        });
+      }
+
+      audio.play().catch(finish);
+    });
   }
 
   private dispatchUtterance(utterance: SpeechSynthesisUtterance): Promise<void> {
@@ -248,29 +272,47 @@ class AudioService {
     });
   }
 
-  // High-fidelity speech synthesis for children
-  public speakEnglish(text: string, rateMultiplier: number = 1.0): Promise<void> {
-    if (!('speechSynthesis' in window) || !this.soundEnabled) {
+  // High-fidelity studio voice playback with zero-pitch-distortion fallback
+  public speakEnglish(
+    text: string,
+    rateMultiplier: number = 1.0,
+    role: VoiceRole = 'teacher'
+  ): Promise<void> {
+    if (!this.soundEnabled || !text.trim()) {
       return Promise.resolve();
     }
 
     // Strict Architecture Guard: Never pass Vietnamese text into English TTS engine
-    // This prevents the engine from pronouncing letters like 'p' as Vietnamese letter name 'pê'!
     if (/[à-ỹ]/i.test(text)) {
-      console.warn("[audioService] Vietnamese text rejected by speakEnglish to protect pronunciation:", text);
+      console.warn('[audioService] Vietnamese text rejected by speakEnglish to protect pronunciation:', text);
+      return Promise.resolve();
+    }
+
+    const entry = this.lookupVoiceEntry(text, role);
+    if (entry) {
+      return this.playManifestEntry(entry);
+    }
+
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
       return Promise.resolve();
     }
 
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = this.voiceSpeed * rateMultiplier;
-    utterance.pitch = 1.25; // Friendly, slightly higher child-friendly pitch
+    utterance.rate = Math.max(0.85, Math.min(1.15, this.voiceSpeed * rateMultiplier));
+    utterance.pitch = 1.0; // Natural pitch (no robotic high-pitch stretch)
     utterance.lang = this.accent === 'US' ? 'en-US' : 'en-GB';
 
-    // Pick the best natural English voice if available
     const voices = window.speechSynthesis.getVoices();
-    const preferredVoice = voices.find(v =>
-      (this.accent === 'US' ? (v.lang.includes('en-US') || v.lang.includes('en_US')) : (v.lang.includes('en-GB') || v.lang.includes('en_GB'))) &&
-      (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Daniel') || v.name.includes('Karen'))
+    const preferredVoice = voices.find(
+      (v) =>
+        (this.accent === 'US'
+          ? v.lang.includes('en-US') || v.lang.includes('en_US')
+          : v.lang.includes('en-GB') || v.lang.includes('en_GB')) &&
+        (v.name.includes('Natural') ||
+          v.name.includes('Google') ||
+          v.name.includes('Samantha') ||
+          v.name.includes('Daniel') ||
+          v.name.includes('Karen'))
     );
 
     if (preferredVoice) {
@@ -278,6 +320,30 @@ class AudioService {
     }
 
     return this.dispatchUtterance(utterance);
+  }
+
+  /**
+   * Plays a connected native storyteller recording while synchronizing word highlight indices.
+   */
+  public speakEnglishTimed(
+    text: string,
+    onWordIndex: (idx: number | null) => void,
+    role: VoiceRole = 'teacher'
+  ): Promise<void> {
+    if (!this.soundEnabled || !text.trim()) {
+      onWordIndex(null);
+      return Promise.resolve();
+    }
+    if (/[à-ỹ]/i.test(text)) {
+      onWordIndex(null);
+      return Promise.resolve();
+    }
+    const entry = this.lookupVoiceEntry(text, role);
+    if (entry) {
+      return this.playManifestEntry(entry, onWordIndex);
+    }
+    onWordIndex(null);
+    return this.speakEnglish(text, 1.0, role);
   }
 
   /**

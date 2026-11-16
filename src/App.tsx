@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { AppViewMode, MobileBottomNav, Navbar } from './components/Navbar';
-import { HeroAdventureHub } from './components/hero/HeroAdventureHub';
+import { WorldOverworldMap } from './components/game/WorldOverworldMap';
+import { GameHudBar } from './components/game/GameHudBar';
+import { HeroCommunicatorModal } from './components/game/HeroCommunicatorModal';
 import { VideoLessonCutscene } from './components/hero/VideoLessonCutscene';
 import { BattleStageArena } from './components/hero/BattleStageArena';
 import { HeroRosterDrawer } from './components/hero/HeroRosterDrawer';
@@ -10,8 +11,17 @@ import { StoryLibrary } from './components/StoryLibrary';
 import { StoryReader } from './components/StoryReader';
 import { ParentDashboard } from './components/ParentDashboard';
 import { RestBreakModal } from './components/RestBreakModal';
-import { AiBuddyChat } from './components/AiBuddyChat';
 import { StickerAlbumModal } from './components/StickerAlbumModal';
+
+type AppViewMode =
+  | 'hero_hub'
+  | 'hero_cutscene'
+  | 'hero_battle'
+  | 'dojo'
+  | 'lesson'
+  | 'stories'
+  | 'story_reader'
+  | 'ai_chat';
 
 import { PhonemeInfo } from './types/phonics';
 import { DecodableStory } from './types/story';
@@ -196,67 +206,57 @@ export const App: React.FC = () => {
     const updated = heroStorage.recordUnitVictory(
       curUnit.id,
       starsEarned,
-      curUnit.rewardPhonemeIds
+      curUnit.rewardPhonemeIds,
+      curUnit.unlockStoryId
     );
     setHeroSave(updated);
     setProfile(storageService.getProfile());
     setSettings(storageService.getSettings());
   }, []);
 
-  const isImmersiveFullscreen =
-    currentView === 'hero_cutscene' ||
-    currentView === 'hero_battle' ||
-    currentView === 'lesson' ||
-    currentView === 'story_reader';
-
   const isOverlayPaused =
     isRosterOpen || showRestBreak || isParentGateOpen || isStickerAlbumOpen;
 
   return (
     <div
-      className={`h-[100dvh] w-screen overflow-hidden bg-gradient-to-b from-amber-50 via-yellow-50 to-orange-50 text-slate-950 flex flex-col font-sans select-none ${
+      className={`h-[100dvh] w-screen overflow-hidden bg-slate-950 text-slate-950 flex flex-col font-sans select-none ${
         settings.reducedMotion ? 'motion-reduce' : ''
       }`}
     >
-      {!isImmersiveFullscreen && (
-        <div className="shrink-0 z-40">
-          <Navbar
-            currentView={currentView}
-            activeHeroName={activeHero.nameEn}
-            onNavigate={handleNavigateView}
-            onOpenRoster={() => setIsRosterOpen(true)}
-            stars={profile.stars}
-            soundEnabled={soundEnabled}
-            onToggleSound={handleToggleSound}
-            onOpenParentGate={() => setIsParentGateOpen(true)}
-            onOpenStickerAlbum={() => setIsStickerAlbumOpen(true)}
-          />
-        </div>
-      )}
-
-      <main className="flex-1 min-h-0 overflow-hidden flex flex-col">
+      <main className="flex-1 min-h-0 overflow-hidden flex flex-col relative">
         {currentView === 'hero_hub' && (
-          <HeroAdventureHub
-            saveState={heroSave}
-            hero={activeHero}
-            rival={activeRival}
-            onAgeFilterChange={(ageGroupFilter) =>
-              setHeroSave(heroStorage.updateSaveState({ ageGroupFilter }))
-            }
-            onOpenRoster={() => setIsRosterOpen(true)}
-            onStartUnitCutscene={(unit) => {
-              setIsSessionResting(false);
-              voiceCombatService.warmUpSession();
-              setActiveUnit(unit);
-              setCurrentView('hero_cutscene');
-            }}
-            onStartUnitBattle={(unit) => {
-              setIsSessionResting(false);
-              voiceCombatService.warmUpSession();
-              setActiveUnit(unit);
-              setCurrentView('hero_battle');
-            }}
-          />
+          <div className="relative flex-1 min-h-0 flex flex-col overflow-hidden">
+            <div className="absolute inset-x-0 top-0 z-30 pointer-events-none">
+              <GameHudBar
+                hero={activeHero}
+                xp={heroSave.xp || 0}
+                stars={profile.stars}
+                soundEnabled={soundEnabled}
+                onToggleSound={handleToggleSound}
+                onOpenRoster={() => setIsRosterOpen(true)}
+                onOpenStickerAlbum={() => setIsStickerAlbumOpen(true)}
+                onOpenParentGate={() => setIsParentGateOpen(true)}
+              />
+            </div>
+            <WorldOverworldMap
+              saveState={heroSave}
+              hero={activeHero}
+              rival={activeRival}
+              onStartUnitCutscene={(unit) => {
+                setIsSessionResting(false);
+                voiceCombatService.warmUpSession();
+                setActiveUnit(unit);
+                setCurrentView('hero_cutscene');
+              }}
+              onStartUnitBattle={(unit) => {
+                setIsSessionResting(false);
+                voiceCombatService.warmUpSession();
+                setActiveUnit(unit);
+                setCurrentView('hero_battle');
+              }}
+              onOpenPortal={(portal) => handleNavigateView(portal)}
+            />
+          </div>
         )}
 
         {currentView === 'hero_cutscene' && (
@@ -290,6 +290,7 @@ export const App: React.FC = () => {
             profile={profile}
             onSelectPhoneme={handleSelectPhoneme}
             onAddStars={handleAddStars}
+            onBackToMap={() => handleNavigateView('hero_hub')}
           />
         )}
 
@@ -305,7 +306,9 @@ export const App: React.FC = () => {
         {currentView === 'stories' && (
           <StoryLibrary
             completedStories={profile.completedStories}
+            unlockedStoryIds={heroSave.unlockedStoryIds || []}
             onSelectStory={handleSelectStory}
+            onBackToMap={() => handleNavigateView('hero_hub')}
             stories={DECODABLE_STORIES}
             language="en"
           />
@@ -337,21 +340,14 @@ export const App: React.FC = () => {
           })()}
 
         {currentView === 'ai_chat' && (
-          <AiBuddyChat
+          <HeroCommunicatorModal
+            hero={activeHero}
             onAddStars={handleAddStars}
+            onBackToMap={() => handleNavigateView('hero_hub')}
             onOpenParentSettings={() => setIsParentGateOpen(true)}
-            language="en"
           />
         )}
       </main>
-
-      {!isImmersiveFullscreen && (
-        <MobileBottomNav
-          currentView={currentView}
-          onNavigate={handleNavigateView}
-          onOpenRoster={() => setIsRosterOpen(true)}
-        />
-      )}
 
       {isRosterOpen && (
         <HeroRosterDrawer

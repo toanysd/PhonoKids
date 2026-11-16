@@ -68,17 +68,25 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
     setIsPlayingNarration(true);
     audioService.playPopSound(500);
 
-    const words = currentPage.wordsTiming;
-    for (let i = 0; i < words.length; i++) {
-      if (settings.showWordHighlights) {
-        setActiveWordIndex(i);
-      }
-      if (isJa) {
+    if (isJa) {
+      const words = currentPage.wordsTiming;
+      for (let i = 0; i < words.length; i++) {
+        if (settings.showWordHighlights) {
+          setActiveWordIndex(i);
+        }
         await audioService.speakJapanese(words[i].cleanWord, 0.85);
-      } else {
-        await audioService.speakEnglish(words[i].cleanWord, 0.82);
+        await new Promise((r) => setTimeout(r, 120));
       }
-      await new Promise(r => setTimeout(r, 120));
+    } else {
+      await audioService.speakEnglishTimed(
+        currentPage.sentence,
+        (idx) => {
+          if (settings.showWordHighlights) {
+            setActiveWordIndex(idx);
+          }
+        },
+        'teacher'
+      );
     }
 
     setActiveWordIndex(null);
@@ -110,7 +118,7 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
         if (isJa) {
           audioService.speakJapanese(hs.speechText!, 0.9);
         } else {
-          audioService.speakEnglish(hs.speechText!, 0.9);
+          audioService.speakEnglish(hs.speechText!, 1.0, 'kid');
         }
       }, 300);
     }
@@ -201,7 +209,8 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-2 h-[calc(100vh-4.6rem)] flex flex-col justify-between overflow-hidden">
+    <div className="w-full h-full bg-gradient-to-b from-slate-950 via-indigo-950 to-slate-900 px-2.5 sm:px-5 py-2 flex flex-col justify-between overflow-hidden">
+      <div className="max-w-7xl w-full mx-auto h-full flex flex-col justify-between overflow-hidden">
       {/* Top Bar Navigation */}
       <div className="flex items-center justify-between mb-2 shrink-0">
         <button
@@ -215,18 +224,18 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
         <div className="flex items-center space-x-2">
           <button
             onClick={handleAskLeoStory}
-            className="flex items-center space-x-1 bg-purple-100 hover:bg-purple-200 text-purple-950 font-black px-3 py-1 rounded-full border border-purple-300 shadow-xs active:scale-95 transition-transform cursor-pointer text-xs"
+            className="shrink-0 flex items-center space-x-1 bg-purple-100 hover:bg-purple-200 text-purple-950 font-black px-2.5 sm:px-3 py-1 rounded-full border border-purple-300 shadow-xs active:scale-95 transition-transform cursor-pointer text-xs whitespace-nowrap"
             title="Nhận gợi ý từ Bạn Sư Tử Leo"
           >
             <Sparkles className="w-3.5 h-3.5 text-purple-600" />
             <span>Hỏi Leo 🦁</span>
           </button>
 
-          <div className="flex items-center space-x-2.5 bg-white/90 px-3.5 py-1.5 rounded-2xl border-2 border-amber-200 shadow-xs">
-            <BookOpen className="w-4 h-4 text-amber-600" />
-            <span className="font-black text-amber-950 text-sm md:text-base">{story.title}</span>
-            <span className="text-xs bg-amber-300 text-amber-950 font-black px-2.5 py-0.5 rounded-full shadow-xs">
-              Trang {currentPageIndex + 1} / {story.pages.length}
+          <div className="flex items-center space-x-1.5 sm:space-x-2.5 bg-white/90 px-2.5 sm:px-3.5 py-1.5 rounded-2xl border-2 border-amber-200 shadow-xs min-w-0">
+            <BookOpen className="w-4 h-4 text-amber-600 shrink-0 hidden sm:inline" />
+            <span className="font-black text-amber-950 text-xs sm:text-base truncate max-w-[92px] sm:max-w-none">{story.title}</span>
+            <span className="text-[11px] sm:text-xs bg-amber-300 text-amber-950 font-black px-2 py-0.5 rounded-full shadow-xs whitespace-nowrap shrink-0">
+              {currentPageIndex + 1}/{story.pages.length}
             </span>
           </div>
         </div>
@@ -475,6 +484,7 @@ export const StoryReader: React.FC<StoryReaderProps> = ({
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };
