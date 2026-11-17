@@ -214,3 +214,39 @@
 .animate-confetti-drop {
   animation: confettiDrop 2.4s linear infinite;
 }
+
+@keyframes cutinSlam {
+  0% { opacity: 0; transform: translateX(-18%) skewX(-6deg) scale(1.06); }
+  100% { opacity: 1; transform: translateX(0) skewX(-2deg) scale(1); }
+}
+
+.animate-cutin-slam {
+  animation: cutinSlam 180ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes impactFlash {
+  0% { filter: brightness(1.65) contrast(1.25); transform: scale(1.06); }
+  100% { filter: brightness(1) contrast(1); transform: scale(1); }
+}
+
+.animate-impact-flash {
+  animation: impactFlash 220ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes mangaStampPop {
+  0% { opacity: 0; transform: scale(1.65) rotate(-14deg); }
+  70% { opacity: 1; transform: scale(0.96) rotate(-5deg); }
+  100% { opacity: 1; transform: scale(1) rotate(-6deg); }
+}
+
+.animate-manga-stamp {
+  animation: mangaStampPop 260ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-cutin-slam,
+  .animate-impact-flash,
+  .animate-manga-stamp {
+    animation: none;
+  }
+}

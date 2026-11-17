@@ -2,8 +2,9 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ALL_STORY_STAGES, COMIC_VILLAINS, getStageById, getVillainById, getWorldById } from '../../data/comicGameData';
 import { audioService } from '../../services/audioService';
 import { micEngine } from '../../services/micEngine';
-import { ComicHero, MicCaptureResult, SpritePose, StoryStage, VillainId } from '../../types/comicGame';
-import { ComicActionButton, MicWaveformOrb, SpeakerIcon, StarIcon, SwapIcon } from './ComicUiPrimitives';
+import { ComicHero, MangaCameraShot, MicCaptureResult, SpritePose, StoryStage, VillainId } from '../../types/comicGame';
+import { ComicActionButton, MicWaveformOrb, StarIcon, SwapIcon } from './ComicUiPrimitives';
+import { MangaBattleStage } from './MangaBattleStage';
 
 export interface ComicBattleScreenProps {
   hero: ComicHero;
@@ -18,20 +19,28 @@ export interface ComicBattleScreenProps {
 const EMPTY_BARS = new Array<number>(16).fill(8);
 const HIT_DAMAGE = 34;
 
+const CAMERA_OPTIONS: Array<{ id: 'auto' | MangaCameraShot; label: string }> = [
+  { id: 'auto', label: 'AUTO' },
+  { id: 'vs_split', label: '1:VS' },
+  { id: 'eye_cutin', label: '2:EYE' },
+  { id: 'finisher_splash', label: '3:SPL' },
+  { id: 'clash_shoulder', label: '4:OTS' },
+  { id: 'victory_cover', label: '5:COV' },
+];
+
 function AccuracyArcMeter({ value }: { value: number }) {
   const clamped = Math.max(0, Math.min(100, Math.round(value)));
-  const arcLen = Math.PI * 34;
+  const arcLen = Math.PI * 30;
   const dashOffset = arcLen * (1 - clamped / 100);
   const strokeColor = clamped >= 75 ? '#84CC16' : clamped >= 45 ? '#FACC15' : clamped > 0 ? '#EF4444' : '#94A3B8';
   return (
-    <div data-testid="battle-accuracy-arc" className="relative flex flex-col items-center justify-center w-[90px] shrink-0">
-      <svg viewBox="0 0 88 52" className="w-[86px] h-[50px]" aria-hidden="true">
-        <path d="M 10 44 A 34 34 0 0 1 78 44" fill="none" stroke="#E2E8F0" strokeWidth="9" strokeLinecap="round" />
-        <path d="M 10 44 A 34 34 0 0 1 78 44" fill="none" stroke={strokeColor} strokeWidth="9" strokeLinecap="round" strokeDasharray={arcLen} strokeDashoffset={dashOffset} className="transition-all duration-300" />
+    <div data-testid="battle-accuracy-arc" className="relative flex flex-col items-center justify-center w-[72px] shrink-0">
+      <svg viewBox="0 0 80 46" className="w-[70px] h-[40px]" aria-hidden="true">
+        <path d="M 10 40 A 30 30 0 0 1 70 40" fill="none" stroke="#E2E8F0" strokeWidth="8" strokeLinecap="round" />
+        <path d="M 10 40 A 30 30 0 0 1 70 40" fill="none" stroke={strokeColor} strokeWidth="8" strokeLinecap="round" strokeDasharray={arcLen} strokeDashoffset={dashOffset} className="transition-all duration-300" />
       </svg>
-      <div className="-mt-6 text-center leading-none">
-        <span data-testid="battle-accuracy-value" className="font-mono font-black text-base text-[#0F172A] tabular-nums">{clamped}%</span>
-        <div className="font-display font-bold text-[9px] uppercase tracking-wider text-slate-600">ACC</div>
+      <div className="-mt-5 text-center leading-none">
+        <span data-testid="battle-accuracy-value" className="font-mono font-black text-sm text-[#0F172A] tabular-nums">{clamped}%</span>
       </div>
     </div>
   );
@@ -52,6 +61,7 @@ export const ComicBattleScreen: React.FC<ComicBattleScreenProps> = ({
   const [combo, setCombo] = useState(0);
   const [heroPose, setHeroPose] = useState<SpritePose>('idle');
   const [villainPose, setVillainPose] = useState<SpritePose>('idle');
+  const [cameraMode, setCameraMode] = useState<'auto' | MangaCameraShot>('auto');
   const [isListening, setIsListening] = useState(false);
   const [bars, setBars] = useState<number[]>(EMPTY_BARS);
   const [volume, setVolume] = useState(0);
@@ -72,6 +82,7 @@ export const ComicBattleScreen: React.FC<ComicBattleScreenProps> = ({
     setCombo(0);
     setHeroPose('idle');
     setVillainPose('idle');
+    setCameraMode('auto');
     setLastResult(null);
     setLastAccuracy(0);
     setCalloutText('');
@@ -89,6 +100,26 @@ export const ComicBattleScreen: React.FC<ComicBattleScreenProps> = ({
   const villain = useMemo(() => getVillainById(villainId), [villainId]);
   const world = useMemo(() => getWorldById(stage.worldId), [stage.worldId]);
   const arenaBackdrop = world.arenaScene || hero.arenaScene;
+
+  useEffect(() => {
+    [hero.mangaCutinUrl, hero.mangaSplashUrl, villain.mangaMenaceUrl].forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, [hero.mangaCutinUrl, hero.mangaSplashUrl, villain.mangaMenaceUrl]);
+
+  const activeShot: MangaCameraShot =
+    cameraMode !== 'auto'
+      ? cameraMode
+      : villainHp === 0
+        ? 'victory_cover'
+        : isListening
+          ? 'eye_cutin'
+          : heroPose === 'attack'
+            ? 'finisher_splash'
+            : heroPose === 'hit'
+              ? 'clash_shoulder'
+              : 'vs_split';
 
   const scheduleIdleReset = (ms: number) => {
     if (poseTimerRef.current) clearTimeout(poseTimerRef.current);
@@ -132,6 +163,7 @@ export const ComicBattleScreen: React.FC<ComicBattleScreenProps> = ({
     setVillainHp(100);
     setHeroPose('idle');
     setVillainPose('speaking');
+    setCameraMode('auto');
     scheduleIdleReset(1100);
   };
 
@@ -143,6 +175,7 @@ export const ComicBattleScreen: React.FC<ComicBattleScreenProps> = ({
     setHeroHp(100);
     setHeroPose('idle');
     setVillainPose('idle');
+    setCameraMode('auto');
     setLastResult(null);
     setLastAccuracy(0);
     setCalloutText('');
@@ -165,6 +198,7 @@ export const ComicBattleScreen: React.FC<ComicBattleScreenProps> = ({
       handleCycleWord();
       return;
     }
+    setCameraMode('auto');
     const seq = ++sessionRef.current;
     setIsListening(true);
     setHeroPose('speaking');
@@ -196,6 +230,7 @@ export const ComicBattleScreen: React.FC<ComicBattleScreenProps> = ({
       handleCycleWord();
       return;
     }
+    setCameraMode('auto');
     audioService.speakEnglish(stage.displayWord, 0.9, 'teacher');
     setLastResult({ passed: true, accuracy: 88, grade: 'good', transcript: stage.displayWord, mode: 'voice_wave', messageEn: 'POWER ASSIST!' });
     applyHitSuccess(88, 'POWER ASSIST!');
@@ -208,101 +243,99 @@ export const ComicBattleScreen: React.FC<ComicBattleScreenProps> = ({
     <section
       data-testid="comic-battle-screen"
       data-mic-mode={lastResult?.mode || 'idle'}
-      className="relative flex-1 min-h-0 h-full w-full overflow-hidden flex flex-col justify-between p-2 sm:p-4 gap-1.5 sm:gap-2.5"
+      className="relative flex-1 min-h-0 h-full w-full overflow-hidden flex flex-col justify-between px-2 py-1.5 sm:px-4 sm:py-2 gap-1.5"
     >
       <img src={arenaBackdrop} alt={world.nameEn} className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none" draggable={false} />
-      <div aria-hidden="true" className="absolute inset-0 bg-[#0F172A]/35 pointer-events-none" />
+      <div aria-hidden="true" className="absolute inset-0 bg-[#0F172A]/45 pointer-events-none" />
 
-      {/* Switcher Bar */}
-      <div className="relative z-10 shrink-0 max-w-4xl w-full mx-auto flex items-center justify-between gap-1.5">
-        <button type="button" data-testid="btn-switch-word" onClick={handleCycleWord} className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-[#FACC15] border-[3px] border-[#0F172A] shadow-[2px_3px_0_#0F172A] active:translate-y-[1px] font-display font-black text-[11px] sm:text-xs text-[#0F172A] cursor-pointer truncate">
-          <SwapIcon className="w-3.5 h-3.5 shrink-0" />
-          <span className="truncate">Word: {stage.displayWord}</span>
-        </button>
-        {onOpenStoryMap && (
-          <button type="button" data-testid="btn-battle-open-map" onClick={() => { audioService.playPopSound(500); onOpenStoryMap(); }} className="px-2.5 py-1 rounded-xl bg-white border-[3px] border-[#0F172A] shadow-[2px_3px_0_#0F172A] font-display font-black text-[11px] sm:text-xs text-[#0F172A] cursor-pointer shrink-0">
-            W{stage.worldId} Map
+      {/* Ultra-Compact Top Bar: Chapter / Camera Switcher / Slim VS Strip */}
+      <div className="relative z-10 shrink-0 max-w-4xl w-full mx-auto flex flex-col gap-1">
+        <div className="flex items-center justify-between gap-1">
+          <button type="button" data-testid="btn-switch-word" onClick={handleCycleWord} className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-[#FACC15] border-[2.5px] border-[#0F172A] shadow-[2px_2px_0_#0F172A] active:translate-y-[1px] font-display font-black text-[11px] text-[#0F172A] cursor-pointer truncate">
+            <SwapIcon className="w-3 h-3 shrink-0" />
+            <span className="truncate">Ch.{stage.stageNumber}: {stage.displayWord}</span>
           </button>
-        )}
-        <button type="button" data-testid="btn-switch-villain" onClick={handleCycleVillain} className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-[#A855F7] text-white border-[3px] border-[#0F172A] shadow-[2px_3px_0_#0F172A] active:translate-y-[1px] font-display font-black text-[11px] sm:text-xs cursor-pointer truncate">
-          <SwapIcon className="w-3.5 h-3.5 shrink-0" />
-          <span className="truncate">{villain.nameEn}</span>
-        </button>
-      </div>
+          <div className="flex items-center gap-1 shrink-0">
+            {onOpenStoryMap && (
+              <button type="button" data-testid="btn-battle-open-map" onClick={() => { audioService.playPopSound(500); onOpenStoryMap(); }} className="px-2 py-0.5 rounded-lg bg-white border-[2.5px] border-[#0F172A] shadow-[2px_2px_0_#0F172A] font-display font-black text-[11px] text-[#0F172A] cursor-pointer">
+                W{stage.worldId} Map
+              </button>
+            )}
+            <button type="button" data-testid="btn-switch-villain" onClick={handleCycleVillain} className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-[#A855F7] text-white border-[2.5px] border-[#0F172A] shadow-[2px_2px_0_#0F172A] active:translate-y-[1px] font-display font-black text-[11px] cursor-pointer max-w-[135px] truncate">
+              <SwapIcon className="w-3 h-3 shrink-0" />
+              <span className="truncate">{villain.nameEn}</span>
+            </button>
+          </div>
+        </div>
 
-      {/* HP Bars + Combo */}
-      <div className="relative z-10 shrink-0 max-w-4xl w-full mx-auto grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-        <div className="bg-white/95 rounded-xl border-[3px] border-[#0F172A] shadow-[2px_3px_0_#0F172A] p-1.5">
-          <div className="flex items-center justify-between text-[10px] sm:text-xs font-display font-black text-[#0F172A] mb-0.5">
-            <span className="truncate">{hero.id === 'hesman' ? 'Hesman' : hero.nameEn}</span>
-            <span data-testid="hero-hp-text" className="font-mono tabular-nums">{heroHp}%</span>
-          </div>
-          <div className="h-2.5 sm:h-3 rounded-full bg-slate-200 border-[2px] border-[#0F172A] overflow-hidden">
-            <div data-testid="hero-hp-bar" className="h-full bg-[#22C55E] transition-all duration-300" style={{ width: `${heroHp}%` }} />
-          </div>
+        <div data-testid="manga-cam-bar" className="flex items-center justify-between gap-1 bg-white/95 rounded-lg border-[2.5px] border-[#0F172A] px-1 py-0.5">
+          {CAMERA_OPTIONS.map((cam) => (
+            <button
+              key={cam.id}
+              type="button"
+              data-testid={`btn-cam-${cam.id}`}
+              onClick={() => setCameraMode(cam.id)}
+              className={`flex-1 py-0.5 rounded font-mono font-black text-[9px] sm:text-[10px] cursor-pointer ${cameraMode === cam.id ? 'bg-[#0F172A] text-[#FACC15]' : 'text-[#0F172A] hover:bg-slate-200'}`}
+            >
+              {cam.label}
+            </button>
+          ))}
         </div>
-        <div data-testid="battle-combo" className="px-2.5 py-1 rounded-xl bg-[#FACC15] border-[3px] border-[#0F172A] shadow-[2px_3px_0_#0F172A] font-display font-black text-xs sm:text-sm text-[#0F172A] whitespace-nowrap">
-          COMBO x{combo}
-        </div>
-        <div className="bg-white/95 rounded-xl border-[3px] border-[#0F172A] shadow-[2px_3px_0_#0F172A] p-1.5">
-          <div className="flex items-center justify-between text-[10px] sm:text-xs font-display font-black text-[#0F172A] mb-0.5">
-            <span className="truncate">{villain.nameEn}</span>
-            <span data-testid="villain-hp-text" className="font-mono tabular-nums">{villainHp}%</span>
-          </div>
-          <div className="h-2.5 sm:h-3 rounded-full bg-slate-200 border-[2px] border-[#0F172A] overflow-hidden">
-            <div data-testid="villain-hp-bar" className="h-full bg-[#EF4444] transition-all duration-300" style={{ width: `${villainHp}%` }} />
-          </div>
-        </div>
-      </div>
 
-      {/* Arena Center */}
-      <div className="relative z-10 flex-1 min-h-0 max-w-4xl w-full mx-auto flex flex-col justify-between">
-        <div className="flex flex-col items-center gap-1.5 sm:gap-2">
-          <button type="button" data-testid="battle-speech-bubble" onClick={handleHearWord} className="relative px-4 py-1.5 rounded-2xl bg-white border-[3.5px] border-[#0F172A] shadow-[4px_4px_0_#0F172A] cursor-pointer active:translate-y-[1px]">
-            <span className="font-display font-black text-sm sm:text-lg tracking-wide text-[#0F172A]">SAY: {stage.displayWord.toUpperCase()}!</span>
-          </button>
-          <div data-testid="battle-word-card" onClick={handleHearWord} className="relative -rotate-2 bg-[#FFFDF5] rounded-2xl border-[4px] border-[#0F172A] shadow-[5px_6px_0_#0F172A] px-3 py-1.5 sm:px-5 sm:py-2 flex items-center gap-3 cursor-pointer">
-            <img src={stage.imageUrl} alt={stage.displayWord} className="w-16 h-16 sm:w-24 sm:h-24 object-contain drop-shadow-[0_3px_0_rgba(15,23,42,0.18)]" draggable={false} />
-            <div className="flex flex-col items-start">
-              <span className="font-display font-black text-xl sm:text-3xl text-[#0F172A] leading-none">{stage.displayWord.toUpperCase()}</span>
-              <span className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#22D3EE] border-[2px] border-[#0F172A] font-display font-black text-[10px] sm:text-xs text-[#0F172A]">
-                <SpeakerIcon className="w-3.5 h-3.5" /><span>Hear</span>
-              </span>
+        {/* Slim Shonen VS Strip */}
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1.5 bg-white/95 rounded-xl border-[2.5px] border-[#0F172A] shadow-[2px_3px_0_#0F172A] px-2 py-1">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="font-display font-black text-[10px] text-[#0F172A] truncate">{hero.id === 'hesman' ? 'Hesman' : hero.nameEn}</span>
+            <div className="flex-1 h-2.5 rounded-full bg-slate-200 border-[2px] border-[#0F172A] overflow-hidden">
+              <div data-testid="hero-hp-bar" className="h-full bg-[#22C55E] transition-all duration-300" style={{ width: `${heroHp}%` }} />
             </div>
+            <span data-testid="hero-hp-text" className="font-mono font-black text-[10px] text-[#0F172A] tabular-nums">{heroHp}%</span>
           </div>
-        </div>
-
-        <div className="relative flex-1 min-h-0 flex items-end justify-between gap-2 pb-1">
-          {calloutText && (
-            <div className="absolute top-1 left-1/2 -translate-x-1/2 z-20 px-3 py-1 rounded-xl bg-[#FACC15] border-[3px] border-[#0F172A] shadow-[3px_4px_0_#0F172A] font-display font-black text-xs sm:text-base text-[#0F172A] animate-bounce whitespace-nowrap">
-              {calloutText}
+          <div data-testid="battle-combo" className="px-2 py-0.5 rounded-lg bg-[#FACC15] border-[2px] border-[#0F172A] font-display font-black text-[10px] text-[#0F172A] whitespace-nowrap">
+            x{combo}
+          </div>
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span data-testid="villain-hp-text" className="font-mono font-black text-[10px] text-[#0F172A] tabular-nums">{villainHp}%</span>
+            <div className="flex-1 h-2.5 rounded-full bg-slate-200 border-[2px] border-[#0F172A] overflow-hidden">
+              <div data-testid="villain-hp-bar" className="h-full bg-[#EF4444] transition-all duration-300" style={{ width: `${villainHp}%` }} />
             </div>
-          )}
-          <div className="w-[46%] h-full max-h-[210px] sm:max-h-[280px] flex items-end justify-center">
-            <img data-testid="battle-hero-sprite" data-pose={heroPose} src={hero.sprites[heroPose]} alt={`${hero.nameEn} ${heroPose}`} className={`max-h-full max-w-full object-contain drop-shadow-[0_8px_0_rgba(15,23,42,0.45)] transition-transform duration-200 ${heroPose === 'hit' ? 'animate-hit-shake' : heroPose === 'attack' ? 'scale-110 translate-x-2' : 'animate-hero-idle'}`} draggable={false} />
-          </div>
-          <div className="w-[46%] h-full max-h-[210px] sm:max-h-[280px] flex items-end justify-center">
-            <img data-testid="battle-villain-sprite" data-pose={villainPose} src={villain.sprites[villainPose]} alt={`${villain.nameEn} ${villainPose}`} className={`max-h-full max-w-full object-contain drop-shadow-[0_8px_0_rgba(15,23,42,0.45)] transition-transform duration-200 ${villainPose === 'hit' ? 'animate-hit-shake opacity-85' : 'animate-float'}`} draggable={false} />
+            <span className="font-display font-black text-[10px] text-[#0F172A] truncate">{villain.nameEn}</span>
           </div>
         </div>
       </div>
 
-      {/* Bottom Mic & Telemetry */}
-      <div className="relative z-10 shrink-0 max-w-4xl w-full mx-auto bg-white/95 rounded-2xl border-[3.5px] border-[#0F172A] shadow-[4px_5px_0_#0F172A] p-2 sm:p-2.5 flex flex-col gap-1.5">
-        <div className="flex items-center gap-2">
-          <AccuracyArcMeter value={lastAccuracy} />
-          <div className="flex-1 min-w-0">
-            <MicWaveformOrb testId="btn-battle-mic" bars={bars} volume={volume} isListening={isListening} statusLabel={orbLabel} tone={orbTone} compact onClick={handleMicBattle} />
-          </div>
+      {/* Main Living Manga Page (70%+ vertical height) */}
+      <div className="relative z-10 flex-1 min-h-0 flex flex-col">
+        <MangaBattleStage
+          shot={activeShot}
+          hero={hero}
+          villain={villain}
+          stage={stage}
+          heroPose={heroPose}
+          villainPose={villainPose}
+          volume={volume}
+          isListening={isListening}
+          calloutText={calloutText}
+          lastAccuracy={lastAccuracy}
+          combo={combo}
+          onHearWord={handleHearWord}
+          onNextBattle={handleCycleWord}
+        />
+      </div>
+
+      {/* Compact Bottom Mic Trigger Strip */}
+      <div className="relative z-10 shrink-0 max-w-4xl w-full mx-auto bg-white/95 rounded-2xl border-[3px] border-[#0F172A] shadow-[3px_4px_0_#0F172A] px-2 py-1 flex items-center gap-2">
+        <AccuracyArcMeter value={lastAccuracy} />
+        <div className="flex-1 min-w-0">
+          <MicWaveformOrb testId="btn-battle-mic" bars={bars} volume={volume} isListening={isListening} statusLabel={orbLabel} tone={orbTone} compact onClick={handleMicBattle} />
         </div>
-        <div className="flex items-center justify-between gap-2">
+        <div className="shrink-0 flex flex-col gap-1">
           <ComicActionButton data-testid="btn-power-assist" variant="cyan" size="xs" onClick={handlePowerAssist} disabled={isListening}>
-            Power Assist
+            Assist
           </ComicActionButton>
-          {lastResult?.transcript && <span className="truncate font-mono font-bold text-[11px] text-[#0F172A]/80">Heard: "{lastResult.transcript}"</span>}
           {villainHp === 0 && (
             <ComicActionButton data-testid="btn-battle-next" variant="lime" size="xs" onClick={handleCycleWord}>
-              <StarIcon className="w-3.5 h-3.5" /><span>Next Battle</span>
+              <StarIcon className="w-3 h-3" /><span>Next</span>
             </ComicActionButton>
           )}
         </div>

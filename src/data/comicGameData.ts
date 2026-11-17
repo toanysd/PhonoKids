@@ -32,6 +32,10 @@ export const COMIC_HEROES: ComicHero[] = [
     arenaScene: '/assets/comic/scenes/arena_galra.webp',
     lockHorizontalSymmetry: true,
     sprites: makeSprites('mecha_lion'),
+    mangaCutinUrl: '/assets/comic/manga/cutin_hesman.webp',
+    mangaSplashUrl: '/assets/comic/manga/splash_hesman.webp',
+    mangaSfxEn: 'SLASH!!',
+    mangaKatakana: 'ズバァン!',
   },
   {
     id: 'anpanman',
@@ -44,6 +48,10 @@ export const COMIC_HEROES: ComicHero[] = [
     arenaScene: '/assets/comic/scenes/arena_city.webp',
     lockHorizontalSymmetry: false,
     sprites: makeSprites('bread_hero'),
+    mangaCutinUrl: '/assets/comic/manga/cutin_anpanman.webp',
+    mangaSplashUrl: '/assets/comic/manga/splash_anpanman.webp',
+    mangaSfxEn: 'POW!!',
+    mangaKatakana: 'ドカーン!',
   },
   {
     id: 'spiderman',
@@ -56,6 +64,10 @@ export const COMIC_HEROES: ComicHero[] = [
     arenaScene: '/assets/comic/scenes/arena_city.webp',
     lockHorizontalSymmetry: false,
     sprites: makeSprites('spider_hero'),
+    mangaCutinUrl: '/assets/comic/manga/cutin_spiderman.webp',
+    mangaSplashUrl: '/assets/comic/manga/splash_spiderman.webp',
+    mangaSfxEn: 'THWIP!!',
+    mangaKatakana: 'ビュッ!',
   },
   {
     id: 'ultraman',
@@ -68,16 +80,20 @@ export const COMIC_HEROES: ComicHero[] = [
     arenaScene: '/assets/comic/scenes/arena_cosmos.webp',
     lockHorizontalSymmetry: false,
     sprites: makeSprites('cosmic_ultra'),
+    mangaCutinUrl: '/assets/comic/manga/cutin_ultraman.webp',
+    mangaSplashUrl: '/assets/comic/manga/splash_ultraman.webp',
+    mangaSfxEn: 'ZAP!!',
+    mangaKatakana: 'ジュワァ!',
   },
 ];
 
 export const COMIC_VILLAINS: ComicVillain[] = [
-  { id: 'galra_boss', nameEn: 'Emperor Galra', tauntEn: 'Repeat my words if you can!', sprites: makeSprites('galra_boss'), accentColor: '#A855F7', taglineVi: 'Chúa tể Galra thách thức giọng đọc dũng mãnh của Hesman.' },
-  { id: 'robeast_mech', nameEn: 'Robeast Mech', tauntEn: 'Beep boop! Say the secret word!', sprites: makeSprites('robeast_mech'), accentColor: '#EF4444', taglineVi: 'Robot khổng lồ thử thách phát âm phụ âm bật hơi.' },
-  { id: 'germ_ufo', nameEn: 'Baikinman UFO', tauntEn: 'Hahiha! Tell me the magic word!', sprites: makeSprites('germ_ufo'), accentColor: '#A3E635', taglineVi: 'Phi thuyền tinh nghịch thách thức bé nói rõ từng âm.' },
-  { id: 'goblin_glider', nameEn: 'Green Goblin', tauntEn: 'Catch my glider and speak loud!', sprites: makeSprites('goblin_glider'), accentColor: '#22C55E', taglineVi: 'Yêu tinh ván lượn giữa bầu trời thành phố truyện tranh.' },
-  { id: 'octo_mech', nameEn: 'Doc Ock Mech', tauntEn: 'Four steel arms test your voice!', sprites: makeSprites('octo_mech'), accentColor: '#F59E0B', taglineVi: 'Tiến sĩ bốn cánh tay cơ khí kiểm tra độ chính xác của bé.' },
-  { id: 'alien_baltan', nameEn: 'Alien Baltan', tauntEn: 'Ho ho ho! Answer my space quiz!', sprites: makeSprites('alien_baltan'), accentColor: '#22D3EE', taglineVi: 'Chiến binh ngoài hành tinh đối đầu Ultraman Zero.' },
+  { id: 'galra_boss', nameEn: 'Emperor Galra', tauntEn: 'Repeat my words if you can!', sprites: makeSprites('galra_boss'), mangaMenaceUrl: '/assets/comic/manga/menace_galra_boss.webp', accentColor: '#A855F7', taglineVi: 'Chúa tể Galra thách thức giọng đọc dũng mãnh của Hesman.' },
+  { id: 'robeast_mech', nameEn: 'Robeast Mech', tauntEn: 'Beep boop! Say the secret word!', sprites: makeSprites('robeast_mech'), mangaMenaceUrl: '/assets/comic/manga/menace_robeast_mech.webp', accentColor: '#EF4444', taglineVi: 'Robot khổng lồ thử thách phát âm phụ âm bật hơi.' },
+  { id: 'germ_ufo', nameEn: 'Baikinman UFO', tauntEn: 'Hahiha! Tell me the magic word!', sprites: makeSprites('germ_ufo'), mangaMenaceUrl: '/assets/comic/manga/menace_germ_ufo.webp', accentColor: '#A3E635', taglineVi: 'Phi thuyền tinh nghịch thách thức bé nói rõ từng âm.' },
+  { id: 'goblin_glider', nameEn: 'Green Goblin', tauntEn: 'Catch my glider and speak loud!', sprites: makeSprites('goblin_glider'), mangaMenaceUrl: '/assets/comic/manga/menace_goblin_glider.webp', accentColor: '#22C55E', taglineVi: 'Yêu tinh ván lượn giữa bầu trời thành phố truyện tranh.' },
+  { id: 'octo_mech', nameEn: 'Doc Ock Mech', tauntEn: 'Four steel arms test your voice!', sprites: makeSprites('octo_mech'), mangaMenaceUrl: '/assets/comic/manga/menace_octo_mech.webp', accentColor: '#F59E0B', taglineVi: 'Tiến sĩ bốn cánh tay cơ khí kiểm tra độ chính xác của bé.' },
+  { id: 'alien_baltan', nameEn: 'Alien Baltan', tauntEn: 'Ho ho ho! Answer my space quiz!', sprites: makeSprites('alien_baltan'), mangaMenaceUrl: '/assets/comic/manga/menace_alien_baltan.webp', accentColor: '#22D3EE', taglineVi: 'Chiến binh ngoài hành tinh đối đầu Ultraman Zero.' },
 ];
 
 function mkStage(

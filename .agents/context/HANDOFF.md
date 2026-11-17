@@ -1,17 +1,17 @@
-# HANDOFF.md — englishStudy (PhonoKids v4 Comic Hero Phonics & Sound Lab)
+# HANDOFF.md — englishStudy (PhonoKids v4.1 Living Manga Battle)
 
 - **Cập nhật:** 2026-11-17
-- **Trạng thái mới nhất:** Đã tích hợp **PhonoKids v4** (`src/App.tsx` 232L, `src/index.css` 216L), dọn sạch toàn bộ tệp/ảnh `v3` cũ (`src/components/v3/`, `public/assets/v3/`, `starGameData.ts`, `starGame.ts`, `starStorage.ts`, `voiceCombatService.ts`, `scripts/build_v3_*.py`).
+- **Trạng thái mới nhất:** Hoàn thành nâng cấp **Living Manga Page (5 góc máy)** cho Đấu Trường Mic từ nhánh `ab97c22` (`src/components/comic/MangaBattleStage.tsx` + `ComicBattleScreen.tsx`).
 
-## 1. Kiến Trúc PhonoKids v4 (`<= 400 dòng/tệp`)
-- **8-Portal Comic Hub (`ComicCommandHub.tsx`, `ComicTopHud`):** Bố cục không cuộn trên `390x844` & `1440x900` với 8 cổng độc nhất (`Story Map`, `Sound Lab`, `Battle Arena`, `Mini Games`, `Reading Room`, `Hero Squad`, `Star Zone`, `Daily Quest`) và 4 Anh hùng chính chủ (`Hesman (ゴライオン)` `lockHorizontalSymmetry: true`, `Anpanman`, `Spider-Man`, `Ultraman Zero`).
-- **Sayshape Sound Lab (`SoundLabScreen.tsx`, `SagittalMouthSvg.tsx`, `soundLabData.ts`):** 24 âm vị chia nhóm `All / Air / Pop / Voice/Nasal / Vowels`, SVG mặt cắt khẩu hình động (hàm, môi, 9 tư thế lưỡi, nắp ngạc mềm, luồng hơi cyan, rung cổ họng) kèm ống kính tròn `MOUTH CAM`.
-- **Mic Engine Đa Tầng (`micEngine.ts`, `ComicBattleScreen.tsx`, `pronunciationScorer.ts`):** Khởi chạy `SpeechRecognition` đồng bộ và WebAudio `AnalyserNode` 16 cột sóng; tự động rơi về **Acoustic Voice Wave** (`peakVolume >= 18`, `220..3000ms`) khi STT gặp lỗi mạng/thiếu hỗ trợ, đồng thời vẫn chấm `retry` trung thực khi STT nghe sai từ.
-- **Free Story Map, Reading Room, Mini-Games & Star Zone:** Mở tự do 100% `6` thế giới × `30` chặng (`FreeStoryMapScreen`), `12` truyện ngắn `aa..C` kèm Picture Quiz (`ReadingPlanetScreen`), `3` mini-game (`MiniGamesScreen`), `8` nâng cấp khoang tàu (`StarZoneScreen`, save `phonokids_v4_comic_save`), `HeroSquadModal`, `DailyQuestsModal`, `VietnameseGuideModal` (nút `?`, PIN `1234`), và `RestBreakModal`.
-- **Tài Nguyên & Giọng Đọc (`scripts/build_v4_*.py`):** `81` ảnh `.webp` tại `public/assets/comic/` (`50` sprite `74d3547` + `24` từ + `2` props + `5` cảnh nền) và `235` clip US Studio `.mp3` (`voiceManifest.json`).
+## 1. Kiến Trúc PhonoKids v4.1 (`<= 400 dòng/tệp`)
+- **Living Manga Battle (`MangaBattleStage.tsx`, `ComicBattleScreen.tsx`, `comicGame.ts`, `comicGameData.ts`):** Trang truyện chiếm `74.4%` (`390x844`) đến `76.5%` (`1440x900`) màn hình, tự động chuyển 5 góc máy theo nhịp giọng nói (`1:VS` khung chéo đối đầu + huy hiệu `VS`, `2:EYE` dải cắt mắt + speed lines theo âm lượng, `3:SPL` trang đôi tung tuyệt chiêu + ô `HIT!`, `4:OTS` qua vai khích lệ, `5:COV` bìa tập truyện `CLEAR!`) kèm thanh chuyển nhanh `CAM`. Giữ khóa cứng đối xứng ngang Hesman (`lockHorizontalSymmetry: true`).
+- **Tài Nguyên Đồ Họa Manga (`scripts/build_v4_manga_shots.py`):** Đủ `14/14` tranh góc máy `.webp` trong `public/assets/comic/manga/` (`cutin_*` `1200x450`, `splash_*` `960x1280`, `menace_*` `800x800`), nâng tổng kho comic lên `95` tệp `.webp` (kèm `235` clip US Studio `.mp3`).
+- **Hub 8 Cổng, Sound Lab, Reading Room & Star Zone:** Giữ nguyên toàn bộ luồng PhonoKids v4 đã triển khai tại `ComicCommandHub.tsx`, `SoundLabScreen.tsx`, `ReadingPlanetScreen.tsx`, `StarZoneScreen.tsx`.
 
-## 2. Kiểm Chứng Đã Chạy Sau Chỉnh Sửa Cuối
-- `npx tsc --noEmit --pretty false`: `exit 0`; `npm run build` (`tsc -b && vite build`): `exit 0` (`33.10s`, `dist/assets/index-BwPuht6E.js`, `310.73 kB`).
-- Kiểm tra trần dòng & độ sạch: `OVER_400_COUNT=0`, `0` lỗi UTF-8 (`encoding_guard.py` `0 finding(s)`), `81` `.webp` & `235` `.mp3` hợp lệ.
-- Kiểm định E2E (`20261117-064510_phono_v4_comic_swarm.md`): `ALL_PASS` (`390x844` & `1440x900`), qua đủ 8 cổng, Sound Lab, Mic Battle 3 kịch bản & Reading Room / Star Zone.
-- **Deploy & vận hành:** Đẩy toàn bộ PhonoKids v4 lên `origin main` -> tự động deploy production tại `https://phonokids.vercel.app`; tuân thủ Quy tắc #9 (không tự sync `D:` ⟷ USB).
+## 2. Kiểm Chứng Đã Chạy Sau Chỉnh Sửa Cuối (`20261117-122105_manga_battle_v4_2.md`)
+- `npx.cmd tsc --noEmit --pretty false`: `exit 0` (`4.5s`, không lỗi).
+- `encoding_guard.py`: `exit 0`, `0 finding(s)` trên 4 tệp chỉnh sửa chính.
+- `palace_cli.py check-modularity englishStudy` & `verify_modular_line_ceiling()`: `exit 0`, toàn bộ `src/` `<= 400` dòng (`0` độc khối `> 600` dòng).
+- `python scripts/verify_manga_battle.py`: `exit 0` (`390x844` & `1440x900` không tràn cuộn, `stageRatio >= 0.744`, `ALL_4_HEROES_MANGA_OK=True`, `BATTLE_LOOP_OK=True`).
+- `npm run build` (`20261117-133000_prod_build_v4_1.md`): `exit 0` (`15.32s`, `dist/assets/index-CHKjQbg9.js` `323.16 kB`, `dist/assets/index-Bnsn_p1W.css` `44.49 kB`).
+- **Deploy & Đồng bộ:** Đẩy bản PhonoKids v4.1 lên `origin/main` (auto-deploy `https://phonokids.vercel.app`) và đồng bộ gương `D: -> G:\AntiGravity\apps\englishStudy`.

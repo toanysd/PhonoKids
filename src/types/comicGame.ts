@@ -21,6 +21,13 @@ export type VillainId =
 
 export type SpritePose = 'idle' | 'speaking' | 'attack' | 'hit' | 'victory';
 
+export type MangaCameraShot =
+  | 'vs_split'
+  | 'eye_cutin'
+  | 'finisher_splash'
+  | 'clash_shoulder'
+  | 'victory_cover';
+
 export interface ComicHero {
   id: HeroId;
   nameEn: string;
@@ -32,6 +39,10 @@ export interface ComicHero {
   arenaScene: string;
   lockHorizontalSymmetry?: boolean;
   sprites: Record<SpritePose, string>;
+  mangaCutinUrl: string;
+  mangaSplashUrl: string;
+  mangaSfxEn: string;
+  mangaKatakana: string;
 }
 
 export interface ComicVillain {
@@ -39,6 +50,7 @@ export interface ComicVillain {
   nameEn: string;
   tauntEn: string;
   sprites: Record<SpritePose, string>;
+  mangaMenaceUrl: string;
   accentColor?: string;
   taglineVi?: string;
 }
